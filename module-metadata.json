@@ -1,12 +1,957 @@
 {
   "path": ".",
-  "variables": {},
-  "outputs": {},
+  "variables": {
+    "cluster_name": {
+      "name": "cluster_name",
+      "type": "string",
+      "description": "The name to give the OCP cluster provisioned by the module.",
+      "required": true,
+      "source": [
+        "module.ocp_base.ibm_container_vpc_cluster.autoscaling_cluster.name",
+        "module.ocp_base.ibm_container_vpc_cluster.cluster.name"
+      ],
+      "pos": {
+        "filename": "variables.tf",
+        "line": 43
+      },
+      "immutable": true
+    },
+    "cluster_ready_when": {
+      "name": "cluster_ready_when",
+      "type": "string",
+      "description": "The cluster is ready when one of the following: MasterNodeReady (not recommended), OneWorkerNodeReady, Normal, IngressReady",
+      "default": "IngressReady",
+      "source": [
+        "module.ocp_base.ibm_container_vpc_cluster.autoscaling_cluster.wait_till",
+        "module.ocp_base.ibm_container_vpc_cluster.cluster.wait_till"
+      ],
+      "pos": {
+        "filename": "variables.tf",
+        "line": 133
+      }
+    },
+    "cluster_tags": {
+      "name": "cluster_tags",
+      "type": "list(string)",
+      "description": "List of metadata labels to add to cluster.",
+      "default": [],
+      "source": [
+        "module.ocp_base.ibm_container_vpc_cluster.autoscaling_cluster.tags",
+        "module.ocp_base.ibm_container_vpc_cluster.cluster.tags"
+      ],
+      "pos": {
+        "filename": "variables.tf",
+        "line": 127
+      },
+      "min_length": 1,
+      "max_length": 128,
+      "matches": "^[A-Za-z0-9:_ .-]+$",
+      "computed": true,
+      "elem": {
+        "type": "TypeString"
+      }
+    },
+    "cos_name": {
+      "name": "cos_name",
+      "type": "string",
+      "description": "The name to give the COS instance that will be provisioned by this module if var.use_existing_cos is false. COS is required to back up the OpenShift internal registry.",
+      "source": [
+        "module.ocp_base"
+      ],
+      "pos": {
+        "filename": "variables.tf",
+        "line": 170
+      }
+    },
+    "disable_public_endpoint": {
+      "name": "disable_public_endpoint",
+      "type": "bool",
+      "description": "Flag indicating that the public endpoint should be disabled",
+      "default": false,
+      "source": [
+        "module.ocp_base.ibm_container_vpc_cluster.autoscaling_cluster.disable_public_service_endpoint",
+        "module.ocp_base.ibm_container_vpc_cluster.cluster.disable_public_service_endpoint"
+      ],
+      "pos": {
+        "filename": "variables.tf",
+        "line": 146
+      }
+    },
+    "existing_cos_id": {
+      "name": "existing_cos_id",
+      "type": "string",
+      "description": "The COS ID of an already existing COS instance which will be used to back up the OpenShift internal registry. Required if var.use_existing_cos is true.",
+      "source": [
+        "module.ocp_base"
+      ],
+      "pos": {
+        "filename": "variables.tf",
+        "line": 176
+      }
+    },
+    "existing_key_protect_instance_guid": {
+      "name": "existing_key_protect_instance_guid",
+      "type": "string",
+      "description": "The GUID of an existing Key Protect instance which will be used for cluster encryption. If no value passed, cluster data is stored in the Kubernetes etcd, which ends up on the local disk of the Kubernetes master (not recommended).",
+      "pos": {
+        "filename": "variables.tf",
+        "line": 186
+      }
+    },
+    "existing_key_protect_root_key_id": {
+      "name": "existing_key_protect_root_key_id",
+      "type": "string",
+      "description": "The Key ID of a root key, existing in the Key Protect instance passed in var.existing_key_protect_instance_guid, which will be used to encrypt the data encryption keys (DEKs) which are then used to encrypt the secrets in the cluster. Required if value passed for var.existing_key_protect_instance_guid.",
+      "pos": {
+        "filename": "variables.tf",
+        "line": 192
+      }
+    },
+    "force_delete_storage": {
+      "name": "force_delete_storage",
+      "type": "bool",
+      "description": "Delete attached storage when destroying the cluster - Default: false",
+      "default": false,
+      "source": [
+        "module.ocp_base.ibm_container_vpc_cluster.autoscaling_cluster.force_delete_storage",
+        "module.ocp_base.ibm_container_vpc_cluster.cluster.force_delete_storage"
+      ],
+      "pos": {
+        "filename": "variables.tf",
+        "line": 158
+      }
+    },
+    "ibmcloud_api_key": {
+      "name": "ibmcloud_api_key",
+      "type": "string",
+      "description": "An IBM Cloud API key with permissions to provision resources.",
+      "required": true,
+      "sensitive": true,
+      "source": [
+        "module.ocp_base"
+      ],
+      "pos": {
+        "filename": "variables.tf",
+        "line": 5
+      }
+    },
+    "ignore_worker_pool_size_changes": {
+      "name": "ignore_worker_pool_size_changes",
+      "type": "bool",
+      "description": "Enable if using worker autoscaling. Stops Terraform managing worker count",
+      "default": false,
+      "source": [
+        "module.ocp_base.ibm_container_vpc_cluster.autoscaling_cluster.count",
+        "module.ocp_base.ibm_container_vpc_cluster.cluster.count"
+      ],
+      "pos": {
+        "filename": "variables.tf",
+        "line": 208
+      }
+    },
+    "key_protect_use_private_endpoint": {
+      "name": "key_protect_use_private_endpoint",
+      "type": "bool",
+      "description": "Set as true to use the Private endpoint when communicating between cluster and Key Protect Instance.",
+      "default": true,
+      "pos": {
+        "filename": "variables.tf",
+        "line": 198
+      }
+    },
+    "logdna_agent_version": {
+      "name": "logdna_agent_version",
+      "type": "string",
+      "description": "Optionally override the default LogDNA agent version. If the value is null, this version is set to the version of 'logdna_agent_version' variable in the Observability agents module. To list available versions, run: `ibmcloud cr images --restrict ext/logdna-agent`.",
+      "source": [
+        "module.observability_agents"
+      ],
+      "pos": {
+        "filename": "variables.tf",
+        "line": 237
+      }
+    },
+    "logdna_ingestion_key": {
+      "name": "logdna_ingestion_key",
+      "type": "string",
+      "description": "Ingestion key for the LogDNA agent to communicate with the instance.",
+      "sensitive": true,
+      "source": [
+        "module.observability_agents.data.ibm_resource_instance.logdna_instance.depends_on"
+      ],
+      "pos": {
+        "filename": "variables.tf",
+        "line": 224
+      }
+    },
+    "logdna_instance_name": {
+      "name": "logdna_instance_name",
+      "type": "string",
+      "description": "The name of the LogDNA instance to point the LogDNA agent to. If left at null, no agent will be deployed.",
+      "required": true,
+      "source": [
+        "module.observability_agents.data.ibm_resource_instance.logdna_instance.name"
+      ],
+      "pos": {
+        "filename": "variables.tf",
+        "line": 218
+      }
+    },
+    "logdna_resource_group_id": {
+      "name": "logdna_resource_group_id",
+      "type": "string",
+      "description": "Resource group id that the LogDNA instance is in. If left at null, the value of var.resource_group_id will be used.",
+      "pos": {
+        "filename": "variables.tf",
+        "line": 231
+      }
+    },
+    "ocp_entitlement": {
+      "name": "ocp_entitlement",
+      "type": "string",
+      "description": "Value that is applied to the entitlements for OCP cluster provisioning",
+      "default": "cloud_pak",
+      "source": [
+        "module.ocp_base.ibm_container_vpc_cluster.autoscaling_cluster.entitlement",
+        "module.ocp_base.ibm_container_vpc_cluster.cluster.entitlement"
+      ],
+      "pos": {
+        "filename": "variables.tf",
+        "line": 152
+      }
+    },
+    "ocp_version": {
+      "name": "ocp_version",
+      "type": "string",
+      "description": "The version of the OpenShift cluster that should be provisioned (format 4.x). This is only used during initial cluster provisioning, but ignored for future updates. If no value is passed, or the string 'default' is passed, the current default OCP version will be used.",
+      "source": [
+        "module.ocp_base"
+      ],
+      "pos": {
+        "filename": "variables.tf",
+        "line": 48
+      }
+    },
+    "region": {
+      "name": "region",
+      "type": "string",
+      "description": "The IBM Cloud region where all resources will be provisioned.",
+      "required": true,
+      "source": [
+        "module.ocp_base"
+      ],
+      "pos": {
+        "filename": "variables.tf",
+        "line": 16
+      }
+    },
+    "resource_group_id": {
+      "name": "resource_group_id",
+      "type": "string",
+      "description": "The IBM Cloud resource group ID to provision all resources in.",
+      "required": true,
+      "source": [
+        "module.observability_agents.data.ibm_container_cluster_config.cluster_config.resource_group_id",
+        "module.observability_agents.data.ibm_container_vpc_cluster.cluster.resource_group_id",
+        "module.ocp_base.data.ibm_container_cluster_config.cluster_config.resource_group_id",
+        "module.ocp_base.ibm_container_vpc_cluster.autoscaling_cluster.resource_group_id",
+        "module.ocp_base.ibm_container_vpc_cluster.cluster.resource_group_id",
+        "module.ocp_base.ibm_container_vpc_worker_pool.autoscaling_pool.resource_group_id",
+        "module.ocp_base.ibm_container_vpc_worker_pool.pool.resource_group_id",
+        "module.ocp_base.ibm_resource_instance.cos_instance.resource_group_id"
+      ],
+      "pos": {
+        "filename": "variables.tf",
+        "line": 11
+      },
+      "cloud_data_type": "resource_group",
+      "immutable": true,
+      "computed": true,
+      "cloud_data_range": [
+        "resolved_to:id"
+      ]
+    },
+    "sysdig_access_key": {
+      "name": "sysdig_access_key",
+      "type": "string",
+      "description": "Access key for the Sysdig agent to communicate with the instance.",
+      "sensitive": true,
+      "source": [
+        "module.observability_agents.data.ibm_resource_instance.sysdig_instance.depends_on"
+      ],
+      "pos": {
+        "filename": "variables.tf",
+        "line": 253
+      }
+    },
+    "sysdig_agent_version": {
+      "name": "sysdig_agent_version",
+      "type": "string",
+      "description": "Optionally override the default Sysdig agent version. If the value is null, this version is set to the version of 'sysdig_agent_version' variable in the Observability agents module. To list available versions, run: `ibmcloud cr images --restrict ext/sysdig/agent`.",
+      "source": [
+        "module.observability_agents"
+      ],
+      "pos": {
+        "filename": "variables.tf",
+        "line": 266
+      }
+    },
+    "sysdig_instance_name": {
+      "name": "sysdig_instance_name",
+      "type": "string",
+      "description": "The name of the Sysdig instance to point the Sysdig agent to. If left at null, no agent will be deployed.",
+      "required": true,
+      "source": [
+        "module.observability_agents.data.ibm_resource_instance.sysdig_instance.name"
+      ],
+      "pos": {
+        "filename": "variables.tf",
+        "line": 247
+      }
+    },
+    "sysdig_resource_group_id": {
+      "name": "sysdig_resource_group_id",
+      "type": "string",
+      "description": "Resource group id that the Sysdig instance is in. If left at null, the value of var.resource_group_id will be used.",
+      "pos": {
+        "filename": "variables.tf",
+        "line": 260
+      }
+    },
+    "use_existing_cos": {
+      "name": "use_existing_cos",
+      "type": "bool",
+      "description": "COS is required to back up the OpenShift internal registry. Set this to true and pass a value for var.existing_cos_id if you want to use an existing COS instance.",
+      "default": false,
+      "source": [
+        "module.ocp_base.ibm_resource_instance.cos_instance.count"
+      ],
+      "pos": {
+        "filename": "variables.tf",
+        "line": 164
+      }
+    },
+    "vpc_id": {
+      "name": "vpc_id",
+      "type": "string",
+      "description": "The ID of the VPC to use.",
+      "required": true,
+      "source": [
+        "module.ocp_base.ibm_container_vpc_cluster.autoscaling_cluster.vpc_id",
+        "module.ocp_base.ibm_container_vpc_cluster.cluster.vpc_id",
+        "module.ocp_base.ibm_container_vpc_worker_pool.autoscaling_pool.vpc_id",
+        "module.ocp_base.ibm_container_vpc_worker_pool.pool.vpc_id"
+      ],
+      "pos": {
+        "filename": "variables.tf",
+        "line": 25
+      },
+      "immutable": true
+    },
+    "vpc_subnets": {
+      "name": "vpc_subnets",
+      "type": "map(list(object({\n    id         = string\n    zone       = string\n    cidr_block = string\n  })))",
+      "description": "Subnet metadata by VPC tier.",
+      "required": true,
+      "source": [
+        "module.ocp_base"
+      ],
+      "pos": {
+        "filename": "variables.tf",
+        "line": 30
+      }
+    },
+    "worker_pools": {
+      "name": "worker_pools",
+      "type": "list(object({\n    subnet_prefix     = string\n    pool_name         = string\n    machine_type      = string\n    workers_per_zone  = number\n    resource_group_id = optional(string)\n    labels            = optional(map(string))\n  }))",
+      "description": "List of worker pools",
+      "default": [
+        {
+          "labels": {},
+          "machine_type": "bx2.4x16",
+          "pool_name": "default",
+          "subnet_prefix": "zone-1",
+          "workers_per_zone": 2
+        },
+        {
+          "labels": {
+            "dedicated": "zone-2"
+          },
+          "machine_type": "bx2.4x16",
+          "pool_name": "zone-2",
+          "subnet_prefix": "zone-2",
+          "workers_per_zone": 2
+        },
+        {
+          "labels": {
+            "dedicated": "zone-3"
+          },
+          "machine_type": "bx2.4x16",
+          "pool_name": "zone-3",
+          "subnet_prefix": "zone-3",
+          "workers_per_zone": 2
+        }
+      ],
+      "source": [
+        "module.ocp_base"
+      ],
+      "pos": {
+        "filename": "variables.tf",
+        "line": 65
+      }
+    }
+  },
+  "outputs": {
+    "cluster_crn": {
+      "name": "cluster_crn",
+      "description": "CRN for the created cluster",
+      "value": "module.ocp_base.cluster_crn",
+      "pos": {
+        "filename": "outputs.tf",
+        "line": 15
+      }
+    },
+    "cluster_id": {
+      "name": "cluster_id",
+      "description": "ID of cluster created",
+      "value": "module.ocp_base.cluster_id",
+      "pos": {
+        "filename": "outputs.tf",
+        "line": 5
+      }
+    },
+    "cluster_name": {
+      "name": "cluster_name",
+      "description": "Name of the created cluster",
+      "value": "module.ocp_base.cluster_name",
+      "pos": {
+        "filename": "outputs.tf",
+        "line": 10
+      }
+    },
+    "cos_crn": {
+      "name": "cos_crn",
+      "description": "CRN of the COS instance",
+      "value": "module.ocp_base.cos_crn",
+      "pos": {
+        "filename": "outputs.tf",
+        "line": 30
+      }
+    },
+    "ingress_hostname": {
+      "name": "ingress_hostname",
+      "description": "Ingress hostname",
+      "value": "module.ocp_base.ingress_hostname",
+      "pos": {
+        "filename": "outputs.tf",
+        "line": 50
+      }
+    },
+    "ocp_version": {
+      "name": "ocp_version",
+      "description": "Openshift Version of the cluster",
+      "value": "module.ocp_base.ocp_version",
+      "pos": {
+        "filename": "outputs.tf",
+        "line": 25
+      }
+    },
+    "private_service_endpoint_url": {
+      "name": "private_service_endpoint_url",
+      "description": "Private service endpoint URL",
+      "value": "module.ocp_base.private_service_endpoint_url",
+      "pos": {
+        "filename": "outputs.tf",
+        "line": 55
+      }
+    },
+    "public_service_endpoint_url": {
+      "name": "public_service_endpoint_url",
+      "description": "Public service endpoint URL",
+      "value": "module.ocp_base.public_service_endpoint_url",
+      "pos": {
+        "filename": "outputs.tf",
+        "line": 60
+      }
+    },
+    "region": {
+      "name": "region",
+      "description": "The IBM Cloud region where all resources will be provisioned.",
+      "value": "var.region",
+      "pos": {
+        "filename": "outputs.tf",
+        "line": 40
+      },
+      "type": "string"
+    },
+    "resource_group_id": {
+      "name": "resource_group_id",
+      "description": "Resource group ID the cluster is deployed in",
+      "value": "module.ocp_base.resource_group_id",
+      "pos": {
+        "filename": "outputs.tf",
+        "line": 45
+      }
+    },
+    "vpc_id": {
+      "name": "vpc_id",
+      "description": "ID of the clusters VPC",
+      "value": "module.ocp_base.vpc_id",
+      "pos": {
+        "filename": "outputs.tf",
+        "line": 35
+      }
+    },
+    "workerpools": {
+      "name": "workerpools",
+      "description": "Worker pools created",
+      "value": "module.ocp_base.workerpools",
+      "pos": {
+        "filename": "outputs.tf",
+        "line": 20
+      }
+    }
+  },
   "required_core": [
-    "\u003e= 1.0.0"
+    "\u003e= 1.3.0"
   ],
-  "required_providers": {},
+  "required_providers": {
+    "external": {
+      "source": "hashicorp/external",
+      "version_constraints": [
+        "\u003e= 2.2.3"
+      ]
+    },
+    "helm": {
+      "source": "hashicorp/helm",
+      "version_constraints": [
+        "\u003e= 2.8.0"
+      ]
+    },
+    "ibm": {
+      "source": "ibm-cloud/ibm",
+      "version_constraints": [
+        "\u003e= 1.49.0"
+      ]
+    },
+    "kubernetes": {
+      "source": "hashicorp/kubernetes",
+      "version_constraints": [
+        "\u003e= 2.16.1"
+      ]
+    },
+    "local": {
+      "source": "hashicorp/local",
+      "version_constraints": [
+        "\u003e= 2.2.3"
+      ]
+    },
+    "null": {
+      "version_constraints": [
+        "\u003e= 3.2.1"
+      ]
+    },
+    "time": {
+      "version_constraints": [
+        "\u003e= 0.9.1"
+      ]
+    }
+  },
   "managed_resources": {},
   "data_resources": {},
-  "module_calls": {}
+  "module_calls": {
+    "observability_agents": {
+      "name": "observability_agents",
+      "source": "git::https://github.com/terraform-ibm-modules/terraform-ibm-observability-agents?ref=v1.0.0",
+      "attributes": {
+        "cluster_resource_group_id": "resource_group_id",
+        "logdna_agent_version": "logdna_agent_version",
+        "logdna_ingestion_key": "logdna_ingestion_key",
+        "logdna_instance_name": "logdna_instance_name",
+        "sysdig_access_key": "sysdig_access_key",
+        "sysdig_agent_version": "sysdig_agent_version",
+        "sysdig_instance_name": "sysdig_instance_name"
+      },
+      "managed_resources": {
+        "helm_release.logdna_agent": {
+          "mode": "managed",
+          "type": "helm_release",
+          "name": "logdna_agent",
+          "attributes": {
+            "count": "logdna_enabled"
+          },
+          "provider": {
+            "name": "helm"
+          },
+          "pos": {
+            "filename": ".terraform/modules/observability_agents/main.tf",
+            "line": 67
+          }
+        },
+        "helm_release.sysdig_agent": {
+          "mode": "managed",
+          "type": "helm_release",
+          "name": "sysdig_agent",
+          "attributes": {
+            "count": "sysdig_enabled"
+          },
+          "provider": {
+            "name": "helm"
+          },
+          "pos": {
+            "filename": ".terraform/modules/observability_agents/main.tf",
+            "line": 121
+          }
+        }
+      },
+      "data_resources": {
+        "data.ibm_container_cluster_config.cluster_config": {
+          "mode": "data",
+          "type": "ibm_container_cluster_config",
+          "name": "cluster_config",
+          "attributes": {
+            "cluster_name_id": "cluster_id",
+            "resource_group_id": "cluster_resource_group_id"
+          },
+          "provider": {
+            "name": "ibm"
+          },
+          "pos": {
+            "filename": ".terraform/modules/observability_agents/main.tf",
+            "line": 12
+          }
+        },
+        "data.ibm_container_vpc_cluster.cluster": {
+          "mode": "data",
+          "type": "ibm_container_vpc_cluster",
+          "name": "cluster",
+          "attributes": {
+            "name": "cluster_id",
+            "resource_group_id": "cluster_resource_group_id"
+          },
+          "provider": {
+            "name": "ibm"
+          },
+          "pos": {
+            "filename": ".terraform/modules/observability_agents/main.tf",
+            "line": 7
+          }
+        },
+        "data.ibm_resource_instance.logdna_instance": {
+          "mode": "data",
+          "type": "ibm_resource_instance",
+          "name": "logdna_instance",
+          "attributes": {
+            "count": "logdna_enabled",
+            "depends_on": "logdna_ingestion_key",
+            "name": "logdna_instance_name"
+          },
+          "provider": {
+            "name": "ibm"
+          },
+          "pos": {
+            "filename": ".terraform/modules/observability_agents/main.tf",
+            "line": 28
+          }
+        },
+        "data.ibm_resource_instance.sysdig_instance": {
+          "mode": "data",
+          "type": "ibm_resource_instance",
+          "name": "sysdig_instance",
+          "attributes": {
+            "count": "sysdig_enabled",
+            "depends_on": "sysdig_access_key",
+            "name": "sysdig_instance_name"
+          },
+          "provider": {
+            "name": "ibm"
+          },
+          "pos": {
+            "filename": ".terraform/modules/observability_agents/main.tf",
+            "line": 36
+          }
+        }
+      },
+      "pos": {
+        "filename": "main.tf",
+        "line": 66
+      }
+    },
+    "ocp_base": {
+      "name": "ocp_base",
+      "source": "git::https://github.com/terraform-ibm-modules/terraform-ibm-base-ocp-vpc.git?ref=add-base-ocp",
+      "attributes": {
+        "cluster_name": "cluster_name",
+        "cluster_ready_when": "cluster_ready_when",
+        "cos_name": "cos_name",
+        "disable_public_endpoint": "disable_public_endpoint",
+        "existing_cos_id": "existing_cos_id",
+        "force_delete_storage": "force_delete_storage",
+        "ibmcloud_api_key": "ibmcloud_api_key",
+        "ignore_worker_pool_size_changes": "ignore_worker_pool_size_changes",
+        "ocp_entitlement": "ocp_entitlement",
+        "ocp_version": "ocp_version",
+        "region": "region",
+        "resource_group_id": "resource_group_id",
+        "tags": "cluster_tags",
+        "use_existing_cos": "use_existing_cos",
+        "vpc_id": "vpc_id",
+        "vpc_subnets": "vpc_subnets",
+        "worker_pools": "worker_pools"
+      },
+      "managed_resources": {
+        "ibm_container_vpc_cluster.autoscaling_cluster": {
+          "mode": "managed",
+          "type": "ibm_container_vpc_cluster",
+          "name": "autoscaling_cluster",
+          "attributes": {
+            "count": "ignore_worker_pool_size_changes",
+            "disable_public_service_endpoint": "disable_public_endpoint",
+            "entitlement": "ocp_entitlement",
+            "force_delete_storage": "force_delete_storage",
+            "name": "cluster_name",
+            "resource_group_id": "resource_group_id",
+            "tags": "tags",
+            "vpc_id": "vpc_id",
+            "wait_till": "cluster_ready_when"
+          },
+          "provider": {
+            "name": "ibm"
+          },
+          "pos": {
+            "filename": ".terraform/modules/ocp_base/main.tf",
+            "line": 112
+          }
+        },
+        "ibm_container_vpc_cluster.cluster": {
+          "mode": "managed",
+          "type": "ibm_container_vpc_cluster",
+          "name": "cluster",
+          "attributes": {
+            "count": "ignore_worker_pool_size_changes",
+            "disable_public_service_endpoint": "disable_public_endpoint",
+            "entitlement": "ocp_entitlement",
+            "force_delete_storage": "force_delete_storage",
+            "name": "cluster_name",
+            "resource_group_id": "resource_group_id",
+            "tags": "tags",
+            "vpc_id": "vpc_id",
+            "wait_till": "cluster_ready_when"
+          },
+          "provider": {
+            "name": "ibm"
+          },
+          "pos": {
+            "filename": ".terraform/modules/ocp_base/main.tf",
+            "line": 51
+          }
+        },
+        "ibm_container_vpc_worker_pool.autoscaling_pool": {
+          "mode": "managed",
+          "type": "ibm_container_vpc_worker_pool",
+          "name": "autoscaling_pool",
+          "attributes": {
+            "resource_group_id": "resource_group_id",
+            "vpc_id": "vpc_id"
+          },
+          "provider": {
+            "name": "ibm"
+          },
+          "pos": {
+            "filename": ".terraform/modules/ocp_base/main.tf",
+            "line": 244
+          }
+        },
+        "ibm_container_vpc_worker_pool.pool": {
+          "mode": "managed",
+          "type": "ibm_container_vpc_worker_pool",
+          "name": "pool",
+          "attributes": {
+            "resource_group_id": "resource_group_id",
+            "vpc_id": "vpc_id"
+          },
+          "provider": {
+            "name": "ibm"
+          },
+          "pos": {
+            "filename": ".terraform/modules/ocp_base/main.tf",
+            "line": 210
+          }
+        },
+        "ibm_resource_instance.cos_instance": {
+          "mode": "managed",
+          "type": "ibm_resource_instance",
+          "name": "cos_instance",
+          "attributes": {
+            "count": "use_existing_cos",
+            "resource_group_id": "resource_group_id"
+          },
+          "provider": {
+            "name": "ibm"
+          },
+          "pos": {
+            "filename": ".terraform/modules/ocp_base/main.tf",
+            "line": 37
+          }
+        },
+        "null_resource.confirm_network_healthy": {
+          "mode": "managed",
+          "type": "null_resource",
+          "name": "confirm_network_healthy",
+          "provider": {
+            "name": "null"
+          },
+          "pos": {
+            "filename": ".terraform/modules/ocp_base/main.tf",
+            "line": 297
+          }
+        },
+        "null_resource.reset_api_key": {
+          "mode": "managed",
+          "type": "null_resource",
+          "name": "reset_api_key",
+          "provider": {
+            "name": "null"
+          },
+          "pos": {
+            "filename": ".terraform/modules/ocp_base/main.tf",
+            "line": 186
+          }
+        }
+      },
+      "data_resources": {
+        "data.ibm_container_cluster_config.cluster_config": {
+          "mode": "data",
+          "type": "ibm_container_cluster_config",
+          "name": "cluster_config",
+          "attributes": {
+            "resource_group_id": "resource_group_id"
+          },
+          "provider": {
+            "name": "ibm"
+          },
+          "pos": {
+            "filename": ".terraform/modules/ocp_base/main.tf",
+            "line": 200
+          }
+        },
+        "data.ibm_container_cluster_versions.cluster_versions": {
+          "mode": "data",
+          "type": "ibm_container_cluster_versions",
+          "name": "cluster_versions",
+          "provider": {
+            "name": "ibm"
+          },
+          "pos": {
+            "filename": ".terraform/modules/ocp_base/main.tf",
+            "line": 35
+          }
+        }
+      },
+      "outputs": {
+        "cluster_crn": {
+          "name": "cluster_crn",
+          "description": "CRN for the created cluster",
+          "pos": {
+            "filename": ".terraform/modules/ocp_base/outputs.tf",
+            "line": 17
+          }
+        },
+        "cluster_id": {
+          "name": "cluster_id",
+          "description": "ID of cluster created",
+          "pos": {
+            "filename": ".terraform/modules/ocp_base/outputs.tf",
+            "line": 5
+          }
+        },
+        "cluster_name": {
+          "name": "cluster_name",
+          "description": "Name of the created cluster",
+          "pos": {
+            "filename": ".terraform/modules/ocp_base/outputs.tf",
+            "line": 11
+          }
+        },
+        "cos_crn": {
+          "name": "cos_crn",
+          "description": "CRN of the COS instance",
+          "pos": {
+            "filename": ".terraform/modules/ocp_base/outputs.tf",
+            "line": 33
+          }
+        },
+        "ingress_hostname": {
+          "name": "ingress_hostname",
+          "description": "Ingress hostname",
+          "pos": {
+            "filename": ".terraform/modules/ocp_base/outputs.tf",
+            "line": 53
+          }
+        },
+        "ocp_version": {
+          "name": "ocp_version",
+          "description": "Openshift Version of the cluster",
+          "pos": {
+            "filename": ".terraform/modules/ocp_base/outputs.tf",
+            "line": 28
+          }
+        },
+        "private_service_endpoint_url": {
+          "name": "private_service_endpoint_url",
+          "description": "Private service endpoint URL",
+          "pos": {
+            "filename": ".terraform/modules/ocp_base/outputs.tf",
+            "line": 58
+          }
+        },
+        "public_service_endpoint_url": {
+          "name": "public_service_endpoint_url",
+          "description": "Public service endpoint URL",
+          "pos": {
+            "filename": ".terraform/modules/ocp_base/outputs.tf",
+            "line": 63
+          }
+        },
+        "region": {
+          "name": "region",
+          "description": "The IBM Cloud region where the cluster will be provisioned.",
+          "value": "var.region",
+          "pos": {
+            "filename": ".terraform/modules/ocp_base/outputs.tf",
+            "line": 43
+          },
+          "type": "string"
+        },
+        "resource_group_id": {
+          "name": "resource_group_id",
+          "description": "Resource group ID the cluster is deployed in",
+          "pos": {
+            "filename": ".terraform/modules/ocp_base/outputs.tf",
+            "line": 48
+          }
+        },
+        "vpc_id": {
+          "name": "vpc_id",
+          "description": "ID of the clusters VPC",
+          "pos": {
+            "filename": ".terraform/modules/ocp_base/outputs.tf",
+            "line": 38
+          }
+        },
+        "workerpools": {
+          "name": "workerpools",
+          "description": "Worker pools created",
+          "pos": {
+            "filename": ".terraform/modules/ocp_base/outputs.tf",
+            "line": 23
+          }
+        }
+      },
+      "pos": {
+        "filename": "main.tf",
+        "line": 22
+      }
+    }
+  }
 }
