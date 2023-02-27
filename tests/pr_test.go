@@ -24,7 +24,6 @@ func setupOptions(t *testing.T, prefix string, terraformVars map[string]interfac
 		},
 		ImplicitDestroy: []string{ // Ignore full destroy to speed up tests
 			"module.ocp_all_inclusive.module.observability_agents",
-			"module.ocp_all_inclusive.module.ocp_base.ibm_container_vpc_worker_pool.pool",
 			"module.ocp_all_inclusive.module.ocp_base.null_resource.confirm_network_healthy",
 		},
 		ImplicitRequired: false,
