@@ -98,5 +98,3 @@ module "ocp_all_inclusive" {
   sysdig_access_key                  = module.observability_instances.sysdig_access_key
   # service_mesh_control_planes        = [module.service_mesh_profiles.public_ingress_egress_no_transit]
 }
-
-

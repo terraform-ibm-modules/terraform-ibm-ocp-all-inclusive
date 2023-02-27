@@ -51,7 +51,7 @@ func TestRunCompleteExample(t *testing.T) {
 	t.Parallel()
 
 	// This test should always test the latest supported OCP version. Previous versions will be tested in other_test.go
-	versions := []string{"4.12"}
+	versions := []string{"4.11"}
 	for _, version := range versions {
 		t.Run(version, func(t *testing.T) { testRunComplete(t, version) })
 	}
@@ -64,7 +64,7 @@ func TestRunUpgradeCompleteExample(t *testing.T) {
 
 	terraformVars := map[string]interface{}{
 		// This test should always test the latest supported OCP version. Previous versions will be tested in other_test.go
-		"ocp_version": "4.12",
+		"ocp_version": "4.11",
 	}
 	options := setupOptions(t, "ocp-all-inc-upg", terraformVars)
 
