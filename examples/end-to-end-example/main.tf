@@ -96,5 +96,4 @@ module "ocp_all_inclusive" {
   logdna_ingestion_key               = module.observability_instances.logdna_ingestion_key
   sysdig_instance_name               = module.observability_instances.sysdig_name
   sysdig_access_key                  = module.observability_instances.sysdig_access_key
-  # service_mesh_control_planes        = [module.service_mesh_profiles.public_ingress_egress_no_transit]
 }

@@ -64,7 +64,6 @@ locals {
 }
 
 module "observability_agents" {
-  # cluster-proxy required so observability images can be pulled from public registry
   count                     = local.run_observability_agents_module == true ? 1 : 0
   source                    = "git::https://github.com/terraform-ibm-modules/terraform-ibm-observability-agents?ref=v1.0.0"
   cluster_id                = module.ocp_base.cluster_id
