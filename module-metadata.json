@@ -679,7 +679,7 @@
     },
     "ocp_base": {
       "name": "ocp_base",
-      "source": "git::https://github.com/terraform-ibm-modules/terraform-ibm-base-ocp-vpc.git?ref=add-base-ocp",
+      "source": "git::https://github.com/terraform-ibm-modules/terraform-ibm-base-ocp-vpc.git?ref=v1.0.0",
       "attributes": {
         "cluster_name": "cluster_name",
         "cluster_ready_when": "cluster_ready_when",

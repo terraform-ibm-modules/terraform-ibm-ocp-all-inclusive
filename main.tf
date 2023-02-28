@@ -20,7 +20,7 @@ locals {
 }
 
 module "ocp_base" {
-  source                          = "git::https://github.com/terraform-ibm-modules/terraform-ibm-base-ocp-vpc.git?ref=add-base-ocp"
+  source                          = "git::https://github.com/terraform-ibm-modules/terraform-ibm-base-ocp-vpc.git?ref=v1.0.0"
   cluster_name                    = var.cluster_name
   ocp_version                     = var.ocp_version
   resource_group_id               = var.resource_group_id
