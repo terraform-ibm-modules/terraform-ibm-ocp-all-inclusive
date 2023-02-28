@@ -50,7 +50,7 @@ func TestRunCompleteExample(t *testing.T) {
 	t.Parallel()
 
 	// This test should always test the latest supported OCP version. Previous versions will be tested in other_test.go
-	versions := []string{"4.11"}
+	versions := []string{"4.11", "4.12"}
 	for _, version := range versions {
 		t.Run(version, func(t *testing.T) { testRunComplete(t, version) })
 	}

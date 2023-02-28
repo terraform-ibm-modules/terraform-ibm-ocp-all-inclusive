@@ -14,7 +14,7 @@ This module is a wrapper module that groups the following modules:
 - [base-ocp-vpc-module](https://github.com/terraform-ibm-modules/terraform-ibm-base-ocp-vpc) - Provisions a base (bare) Red Hat OpenShift Container Platform cluster on VPC Gen2 (supports passing Key Protect details to encrypt cluster).
 - [observability-agents-module](https://github.com/terraform-ibm-modules/terraform-ibm-observability-agents) - Deploys LogDNA and Sysdig agents to a cluster.
 
-:exclamation: **Important:** You can't update Red Hat OpenShift cluster nodes by using this module. The Terraform logic ignores updates to prevent possible destructive changes. Use the [IKS Nodes Updater](https://github.ibm.com/cloud-platform-sre/iks-nodes-updater) tool to make updates.
+:exclamation: **Important:** You can't update Red Hat OpenShift cluster nodes by using this module. The Terraform logic ignores updates to prevent possible destructive changes.
 
 ## Before you begin
 

@@ -27,7 +27,7 @@
       ],
       "pos": {
         "filename": "variables.tf",
-        "line": 133
+        "line": 107
       }
     },
     "cluster_tags": {
@@ -41,7 +41,7 @@
       ],
       "pos": {
         "filename": "variables.tf",
-        "line": 127
+        "line": 101
       },
       "min_length": 1,
       "max_length": 128,
@@ -60,7 +60,7 @@
       ],
       "pos": {
         "filename": "variables.tf",
-        "line": 170
+        "line": 144
       }
     },
     "disable_public_endpoint": {
@@ -74,7 +74,7 @@
       ],
       "pos": {
         "filename": "variables.tf",
-        "line": 146
+        "line": 120
       }
     },
     "existing_cos_id": {
@@ -86,7 +86,7 @@
       ],
       "pos": {
         "filename": "variables.tf",
-        "line": 176
+        "line": 150
       }
     },
     "existing_key_protect_instance_guid": {
@@ -95,7 +95,7 @@
       "description": "The GUID of an existing Key Protect instance which will be used for cluster encryption. If no value passed, cluster data is stored in the Kubernetes etcd, which ends up on the local disk of the Kubernetes master (not recommended).",
       "pos": {
         "filename": "variables.tf",
-        "line": 186
+        "line": 160
       }
     },
     "existing_key_protect_root_key_id": {
@@ -104,7 +104,7 @@
       "description": "The Key ID of a root key, existing in the Key Protect instance passed in var.existing_key_protect_instance_guid, which will be used to encrypt the data encryption keys (DEKs) which are then used to encrypt the secrets in the cluster. Required if value passed for var.existing_key_protect_instance_guid.",
       "pos": {
         "filename": "variables.tf",
-        "line": 192
+        "line": 166
       }
     },
     "force_delete_storage": {
@@ -118,7 +118,7 @@
       ],
       "pos": {
         "filename": "variables.tf",
-        "line": 158
+        "line": 132
       }
     },
     "ibmcloud_api_key": {
@@ -146,7 +146,7 @@
       ],
       "pos": {
         "filename": "variables.tf",
-        "line": 208
+        "line": 182
       }
     },
     "key_protect_use_private_endpoint": {
@@ -156,7 +156,7 @@
       "default": true,
       "pos": {
         "filename": "variables.tf",
-        "line": 198
+        "line": 172
       }
     },
     "logdna_agent_version": {
@@ -168,7 +168,7 @@
       ],
       "pos": {
         "filename": "variables.tf",
-        "line": 237
+        "line": 211
       }
     },
     "logdna_ingestion_key": {
@@ -181,7 +181,7 @@
       ],
       "pos": {
         "filename": "variables.tf",
-        "line": 224
+        "line": 198
       }
     },
     "logdna_instance_name": {
@@ -194,7 +194,7 @@
       ],
       "pos": {
         "filename": "variables.tf",
-        "line": 218
+        "line": 192
       }
     },
     "logdna_resource_group_id": {
@@ -203,7 +203,7 @@
       "description": "Resource group id that the LogDNA instance is in. If left at null, the value of var.resource_group_id will be used.",
       "pos": {
         "filename": "variables.tf",
-        "line": 231
+        "line": 205
       }
     },
     "ocp_entitlement": {
@@ -217,7 +217,7 @@
       ],
       "pos": {
         "filename": "variables.tf",
-        "line": 152
+        "line": 126
       }
     },
     "ocp_version": {
@@ -281,7 +281,7 @@
       ],
       "pos": {
         "filename": "variables.tf",
-        "line": 253
+        "line": 227
       }
     },
     "sysdig_agent_version": {
@@ -293,7 +293,7 @@
       ],
       "pos": {
         "filename": "variables.tf",
-        "line": 266
+        "line": 240
       }
     },
     "sysdig_instance_name": {
@@ -306,7 +306,7 @@
       ],
       "pos": {
         "filename": "variables.tf",
-        "line": 247
+        "line": 221
       }
     },
     "sysdig_resource_group_id": {
@@ -315,7 +315,7 @@
       "description": "Resource group id that the Sysdig instance is in. If left at null, the value of var.resource_group_id will be used.",
       "pos": {
         "filename": "variables.tf",
-        "line": 260
+        "line": 234
       }
     },
     "use_existing_cos": {
@@ -328,7 +328,7 @@
       ],
       "pos": {
         "filename": "variables.tf",
-        "line": 164
+        "line": 138
       }
     },
     "vpc_id": {
@@ -397,7 +397,7 @@
       ],
       "pos": {
         "filename": "variables.tf",
-        "line": 65
+        "line": 66
       }
     }
   },
