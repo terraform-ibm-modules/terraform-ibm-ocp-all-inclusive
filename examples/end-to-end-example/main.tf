@@ -14,7 +14,7 @@ module "resource_group" {
 ##############################################################################
 
 module "vpc" {
-  source            = "git::https://github.com/terraform-ibm-modules/terraform-ibm-landing-zone-vpc.git?ref=v3.0.0"
+  source            = "git::https://github.com/terraform-ibm-modules/terraform-ibm-landing-zone-vpc.git?ref=v4.0.0"
   resource_group_id = module.resource_group.resource_group_id
   region            = var.region
   prefix            = var.prefix
@@ -27,7 +27,7 @@ module "vpc" {
 ##############################################################################
 
 module "observability_instances" {
-  source                     = "git::https://github.com/terraform-ibm-modules/terraform-ibm-observability-instances?ref=v1.1.1"
+  source                     = "git::https://github.com/terraform-ibm-modules/terraform-ibm-observability-instances?ref=v2.2.0"
   region                     = var.region
   resource_group_id          = module.resource_group.resource_group_id
   activity_tracker_provision = false
@@ -51,7 +51,7 @@ locals {
 }
 
 module "key_protect_all_inclusive" {
-  source                    = "git::https://github.com/terraform-ibm-modules/terraform-ibm-key-protect-all-inclusive.git?ref=v3.1.2"
+  source                    = "git::https://github.com/terraform-ibm-modules/terraform-ibm-key-protect-all-inclusive.git?ref=v4.0.0"
   resource_group_id         = module.resource_group.resource_group_id
   region                    = var.region
   key_protect_instance_name = "${var.prefix}-kp"
