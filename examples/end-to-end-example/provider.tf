@@ -23,7 +23,7 @@ provider "kubernetes" {
   host  = data.ibm_container_cluster_config.cluster_config.host
   token = data.ibm_container_cluster_config.cluster_config.token
 }
-    
+
 locals {
   at_endpoint = "https://api.${var.region}.logging.cloud.ibm.com"
 }
