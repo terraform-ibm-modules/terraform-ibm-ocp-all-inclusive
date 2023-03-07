@@ -65,7 +65,7 @@ locals {
 
 module "observability_agents" {
   count                     = local.run_observability_agents_module == true ? 1 : 0
-  source                    = "git::https://github.com/terraform-ibm-modules/terraform-ibm-observability-agents?ref=v1.0.0"
+  source                    = "git::https://github.com/terraform-ibm-modules/terraform-ibm-observability-agents?ref=v1.0.2"
   cluster_id                = module.ocp_base.cluster_id
   cluster_resource_group_id = var.resource_group_id
   logdna_enabled            = local.provision_logdna_agent

@@ -562,7 +562,7 @@
   "module_calls": {
     "observability_agents": {
       "name": "observability_agents",
-      "source": "git::https://github.com/terraform-ibm-modules/terraform-ibm-observability-agents?ref=v1.0.0",
+      "source": "git::https://github.com/terraform-ibm-modules/terraform-ibm-observability-agents?ref=v1.0.2",
       "attributes": {
         "cluster_resource_group_id": "resource_group_id",
         "logdna_agent_version": "logdna_agent_version",
@@ -600,7 +600,7 @@
           },
           "pos": {
             "filename": ".terraform/modules/observability_agents/main.tf",
-            "line": 121
+            "line": 116
           }
         }
       },
