@@ -223,7 +223,7 @@
     "ocp_version": {
       "name": "ocp_version",
       "type": "string",
-      "description": "The version of the OpenShift cluster that should be provisioned (format 4.x). This is only used during initial cluster provisioning, but ignored for future updates. If no value is passed, or the string 'default' is passed, the current default OCP version will be used.",
+      "description": "The version of the OpenShift cluster that should be provisioned (format 4.x). This is only used during initial cluster provisioning, but ignored for future updates. If no value is passed, or the string 'latest' is passed, the current latest OCP version will be used.",
       "source": [
         "module.ocp_base"
       ],
@@ -679,7 +679,7 @@
     },
     "ocp_base": {
       "name": "ocp_base",
-      "source": "git::https://github.com/terraform-ibm-modules/terraform-ibm-base-ocp-vpc.git?ref=v1.0.0",
+      "source": "git::https://github.com/terraform-ibm-modules/terraform-ibm-base-ocp-vpc.git?ref=v2.0.0",
       "attributes": {
         "cluster_name": "cluster_name",
         "cluster_ready_when": "cluster_ready_when",
