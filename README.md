@@ -123,7 +123,7 @@ You need the following permissions to run this module.
 | Name | Source | Version |
 |------|--------|---------|
 | <a name="module_observability_agents"></a> [observability\_agents](#module\_observability\_agents) | git::https://github.com/terraform-ibm-modules/terraform-ibm-observability-agents | v1.0.0 |
-| <a name="module_ocp_base"></a> [ocp\_base](#module\_ocp\_base) | git::https://github.com/terraform-ibm-modules/terraform-ibm-base-ocp-vpc.git | v1.0.0 |
+| <a name="module_ocp_base"></a> [ocp\_base](#module\_ocp\_base) | git::https://github.com/terraform-ibm-modules/terraform-ibm-base-ocp-vpc.git | v2.0.0 |
 
 ## Resources
 
@@ -150,7 +150,7 @@ No resources.
 | <a name="input_logdna_instance_name"></a> [logdna\_instance\_name](#input\_logdna\_instance\_name) | The name of the LogDNA instance to point the LogDNA agent to. If left at null, no agent will be deployed. | `string` | `null` | no |
 | <a name="input_logdna_resource_group_id"></a> [logdna\_resource\_group\_id](#input\_logdna\_resource\_group\_id) | Resource group id that the LogDNA instance is in. If left at null, the value of var.resource\_group\_id will be used. | `string` | `null` | no |
 | <a name="input_ocp_entitlement"></a> [ocp\_entitlement](#input\_ocp\_entitlement) | Value that is applied to the entitlements for OCP cluster provisioning | `string` | `"cloud_pak"` | no |
-| <a name="input_ocp_version"></a> [ocp\_version](#input\_ocp\_version) | The version of the OpenShift cluster that should be provisioned (format 4.x). This is only used during initial cluster provisioning, but ignored for future updates. If no value is passed, or the string 'default' is passed, the current default OCP version will be used. | `string` | `null` | no |
+| <a name="input_ocp_version"></a> [ocp\_version](#input\_ocp\_version) | The version of the OpenShift cluster that should be provisioned (format 4.x). This is only used during initial cluster provisioning, but ignored for future updates. If no value is passed, or the string 'latest' is passed, the current latest OCP version will be used. | `string` | `null` | no |
 | <a name="input_region"></a> [region](#input\_region) | The IBM Cloud region where all resources will be provisioned. | `string` | n/a | yes |
 | <a name="input_resource_group_id"></a> [resource\_group\_id](#input\_resource\_group\_id) | The IBM Cloud resource group ID to provision all resources in. | `string` | n/a | yes |
 | <a name="input_sysdig_access_key"></a> [sysdig\_access\_key](#input\_sysdig\_access\_key) | Access key for the Sysdig agent to communicate with the instance. | `string` | `null` | no |
