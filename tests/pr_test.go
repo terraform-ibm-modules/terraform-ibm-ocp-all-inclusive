@@ -63,7 +63,7 @@ func TestRunUpgradeCompleteExample(t *testing.T) {
 		// This test should always test the latest supported OCP version. Previous versions will be tested in other_test.go
 		"ocp_version": "4.11",
 	}
-	options := setupOptions(t, "ocp-all-inc-upg", terraformVars)
+	options := setupOptions(t, "ocp-all-upg", terraformVars)
 
 	output, err := options.RunTestUpgrade()
 	if !options.UpgradeTestSkipped {
