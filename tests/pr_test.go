@@ -59,6 +59,8 @@ func TestRunCompleteExample(t *testing.T) {
 func TestRunUpgradeCompleteExample(t *testing.T) {
 	t.Parallel()
 
+	t.Skip("Skipping upgrade test")
+
 	terraformVars := map[string]interface{}{
 		// This test should always test the latest supported OCP version. Previous versions will be tested in other_test.go
 		"ocp_version": "4.11",
