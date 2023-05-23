@@ -1,6 +1,5 @@
 <!-- BEGIN MODULE HOOK -->
 
-<!-- Update the title to match the module name and add a description -->
 # Red Hat OCP (OpenShift Container Platform) All Inclusive Module
 <!-- UPDATE BADGE: Update the link for the following badge-->
 [![Stable (With quality checks)](https://img.shields.io/badge/Status-Stable%20(With%20quality%20checks)-green)](https://terraform-ibm-modules.github.io/documentation/#/badge-status)
