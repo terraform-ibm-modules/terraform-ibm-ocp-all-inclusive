@@ -4,11 +4,16 @@ import (
 	"testing"
 
 	"github.com/stretchr/testify/assert"
+	"github.com/terraform-ibm-modules/ibmcloud-terratest-wrapper/common"
 	"github.com/terraform-ibm-modules/ibmcloud-terratest-wrapper/testhelper"
 )
 
 const basicExampleTerraformDir = "examples/end-to-end-example"
 const resourceGroup = "geretain-test-ocp-all-inclusive"
+
+const yamlLocation = "../common-dev-assets/common-go-assets/common-permanent-resources.yaml"
+
+var permanentResources map[string]interface{}
 
 func setupOptions(t *testing.T, prefix string, terraformVars map[string]interface{}) *testhelper.TestOptions {
 	options := testhelper.TestOptionsDefaultWithVars(&testhelper.TestOptions{
@@ -38,6 +43,7 @@ func testRunComplete(t *testing.T, version string) {
 
 	terraformVars := map[string]interface{}{
 		"ocp_version": version,
+		"access_tags": permanentResources["accessTags"],
 	}
 	options := setupOptions(t, "ocp-all-inc", terraformVars)
 
