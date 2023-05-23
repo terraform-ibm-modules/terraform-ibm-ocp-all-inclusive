@@ -34,6 +34,12 @@ variable "resource_tags" {
   default     = []
 }
 
+variable "access_tags" {
+  type        = list(string)
+  description = "Optional list of access management tags to add to the OCP Cluster created by this module."
+  default     = []
+}
+
 variable "worker_pools" {
   type = list(object({
     subnet_prefix     = string
