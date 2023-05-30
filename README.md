@@ -111,7 +111,7 @@ You need the following permissions to run this module.
 | <a name="requirement_terraform"></a> [terraform](#requirement\_terraform) | >= 1.3.0 |
 | <a name="requirement_external"></a> [external](#requirement\_external) | >= 2.2.3 |
 | <a name="requirement_helm"></a> [helm](#requirement\_helm) | >= 2.8.0 |
-| <a name="requirement_ibm"></a> [ibm](#requirement\_ibm) | >= 1.49.0 |
+| <a name="requirement_ibm"></a> [ibm](#requirement\_ibm) | >= 1.51.0 |
 | <a name="requirement_kubernetes"></a> [kubernetes](#requirement\_kubernetes) | >= 2.16.1 |
 | <a name="requirement_local"></a> [local](#requirement\_local) | >= 2.2.3 |
 | <a name="requirement_null"></a> [null](#requirement\_null) | >= 3.2.1 |
@@ -121,8 +121,8 @@ You need the following permissions to run this module.
 
 | Name | Source | Version |
 |------|--------|---------|
-| <a name="module_observability_agents"></a> [observability\_agents](#module\_observability\_agents) | git::https://github.com/terraform-ibm-modules/terraform-ibm-observability-agents | v1.0.0 |
-| <a name="module_ocp_base"></a> [ocp\_base](#module\_ocp\_base) | git::https://github.com/terraform-ibm-modules/terraform-ibm-base-ocp-vpc.git | v2.0.0 |
+| <a name="module_observability_agents"></a> [observability\_agents](#module\_observability\_agents) | git::https://github.com/terraform-ibm-modules/terraform-ibm-observability-agents | v1.3.4 |
+| <a name="module_ocp_base"></a> [ocp\_base](#module\_ocp\_base) | git::https://github.com/terraform-ibm-modules/terraform-ibm-base-ocp-vpc.git | v3.3.2 |
 
 ## Resources
 
@@ -132,6 +132,7 @@ No resources.
 
 | Name | Description | Type | Default | Required |
 |------|-------------|------|---------|:--------:|
+| <a name="input_addons"></a> [addons](#input\_addons) | List of all addons supported by the ocp cluster. | <pre>object({<br>    alb-oauth-proxy           = optional(string)<br>    debug-tool                = optional(string)<br>    image-key-synchronizer    = optional(string)<br>    istio                     = optional(string)<br>    openshift-data-foundation = optional(string)<br>    static-route              = optional(string)<br>    cluster-autoscaler        = optional(string)<br>    vpc-block-csi-driver      = optional(string)<br>  })</pre> | `null` | no |
 | <a name="input_cluster_name"></a> [cluster\_name](#input\_cluster\_name) | The name to give the OCP cluster provisioned by the module. | `string` | n/a | yes |
 | <a name="input_cluster_ready_when"></a> [cluster\_ready\_when](#input\_cluster\_ready\_when) | The cluster is ready when one of the following: MasterNodeReady (not recommended), OneWorkerNodeReady, Normal, IngressReady | `string` | `"IngressReady"` | no |
 | <a name="input_cluster_tags"></a> [cluster\_tags](#input\_cluster\_tags) | List of metadata labels to add to cluster. | `list(string)` | `[]` | no |
@@ -159,7 +160,7 @@ No resources.
 | <a name="input_use_existing_cos"></a> [use\_existing\_cos](#input\_use\_existing\_cos) | COS is required to back up the OpenShift internal registry. Set this to true and pass a value for var.existing\_cos\_id if you want to use an existing COS instance. | `bool` | `false` | no |
 | <a name="input_vpc_id"></a> [vpc\_id](#input\_vpc\_id) | The ID of the VPC to use. | `string` | n/a | yes |
 | <a name="input_vpc_subnets"></a> [vpc\_subnets](#input\_vpc\_subnets) | Subnet metadata by VPC tier. | <pre>map(list(object({<br>    id         = string<br>    zone       = string<br>    cidr_block = string<br>  })))</pre> | n/a | yes |
-| <a name="input_worker_pools"></a> [worker\_pools](#input\_worker\_pools) | List of worker pools | <pre>list(object({<br>    subnet_prefix     = string<br>    pool_name         = string<br>    machine_type      = string<br>    workers_per_zone  = number<br>    resource_group_id = optional(string)<br>    labels            = optional(map(string))<br>  }))</pre> | <pre>[<br>  {<br>    "labels": {},<br>    "machine_type": "bx2.4x16",<br>    "pool_name": "default",<br>    "subnet_prefix": "zone-1",<br>    "workers_per_zone": 2<br>  },<br>  {<br>    "labels": {<br>      "dedicated": "zone-2"<br>    },<br>    "machine_type": "bx2.4x16",<br>    "pool_name": "zone-2",<br>    "subnet_prefix": "zone-2",<br>    "workers_per_zone": 2<br>  },<br>  {<br>    "labels": {<br>      "dedicated": "zone-3"<br>    },<br>    "machine_type": "bx2.4x16",<br>    "pool_name": "zone-3",<br>    "subnet_prefix": "zone-3",<br>    "workers_per_zone": 2<br>  }<br>]</pre> | no |
+| <a name="input_worker_pools"></a> [worker\_pools](#input\_worker\_pools) | List of worker pools | <pre>list(object({<br>    subnet_prefix = optional(string)<br>    vpc_subnets = optional(list(object({<br>      id         = string<br>      zone       = string<br>      cidr_block = string<br>    })))<br>    pool_name         = string<br>    machine_type      = string<br>    workers_per_zone  = number<br>    resource_group_id = optional(string)<br>    labels            = optional(map(string))<br>    minSize           = optional(number)<br>    maxSize           = optional(number)<br>    enableAutoscaling = optional(bool)<br>    boot_volume_encryption_kms_config = optional(object({<br>      crk             = string<br>      kms_instance_id = string<br>      kms_account_id  = optional(string)<br>    }))<br>  }))</pre> | <pre>[<br>  {<br>    "enableAutoscaling": true,<br>    "labels": {},<br>    "machine_type": "bx2.4x16",<br>    "maxSize": 3,<br>    "minSize": 1,<br>    "pool_name": "default",<br>    "subnet_prefix": "zone-1",<br>    "workers_per_zone": 2<br>  },<br>  {<br>    "enableAutoscaling": true,<br>    "labels": {<br>      "dedicated": "zone-2"<br>    },<br>    "machine_type": "bx2.4x16",<br>    "maxSize": 3,<br>    "minSize": 1,<br>    "pool_name": "zone-2",<br>    "subnet_prefix": "zone-2",<br>    "workers_per_zone": 2<br>  },<br>  {<br>    "enableAutoscaling": true,<br>    "labels": {<br>      "dedicated": "zone-3"<br>    },<br>    "machine_type": "bx2.4x16",<br>    "maxSize": 3,<br>    "minSize": 1,<br>    "pool_name": "zone-3",<br>    "subnet_prefix": "zone-3",<br>    "workers_per_zone": 2<br>  }<br>]</pre> | no |
 
 ## Outputs
 
