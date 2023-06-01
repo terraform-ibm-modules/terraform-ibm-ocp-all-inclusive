@@ -9,3 +9,4 @@ An end-to-end example that will:
   - provision an OCP VPC cluster in the given resource group and region, passing the details of the Key Protect instance and key for cluster encryption
   - deploy LogDNA and Sysdig agents to the cluster
   - deploy service mesh on the cluster
+  - install autoscaler addon and configure certain nodepools to have autoscaling enabled.
