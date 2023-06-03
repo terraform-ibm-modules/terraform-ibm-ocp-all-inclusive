@@ -595,7 +595,7 @@
   "module_calls": {
     "observability_agents": {
       "name": "observability_agents",
-      "source": "git::https://github.com/terraform-ibm-modules/terraform-ibm-observability-agents?ref=v1.3.4",
+      "source": "git::https://github.com/terraform-ibm-modules/terraform-ibm-observability-agents?ref=v1.4.0",
       "attributes": {
         "cluster_resource_group_id": "resource_group_id",
         "logdna_agent_version": "logdna_agent_version",

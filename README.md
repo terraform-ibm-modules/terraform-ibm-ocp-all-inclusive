@@ -121,7 +121,7 @@ You need the following permissions to run this module.
 
 | Name | Source | Version |
 |------|--------|---------|
-| <a name="module_observability_agents"></a> [observability\_agents](#module\_observability\_agents) | git::https://github.com/terraform-ibm-modules/terraform-ibm-observability-agents | v1.3.4 |
+| <a name="module_observability_agents"></a> [observability\_agents](#module\_observability\_agents) | git::https://github.com/terraform-ibm-modules/terraform-ibm-observability-agents | v1.4.0 |
 | <a name="module_ocp_base"></a> [ocp\_base](#module\_ocp\_base) | git::https://github.com/terraform-ibm-modules/terraform-ibm-base-ocp-vpc.git | v3.3.2 |
 
 ## Resources
