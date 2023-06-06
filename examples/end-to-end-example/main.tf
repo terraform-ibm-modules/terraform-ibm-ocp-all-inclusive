@@ -105,4 +105,5 @@ module "ocp_all_inclusive" {
   sysdig_instance_name               = module.observability_instances.sysdig_name
   sysdig_access_key                  = module.observability_instances.sysdig_access_key
   addons                             = local.addons
+  disable_public_endpoint            = var.disable_public_endpoint
 }

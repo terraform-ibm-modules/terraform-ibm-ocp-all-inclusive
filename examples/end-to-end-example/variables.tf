@@ -57,3 +57,9 @@ variable "worker_pools" {
   ]
   description = "List of worker pools"
 }
+
+variable "disable_public_endpoint" {
+  type        = bool
+  description = "Flag indicating that the public endpoint should be disabled"
+  default     = false
+}
