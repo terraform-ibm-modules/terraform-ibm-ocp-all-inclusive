@@ -13,7 +13,7 @@
       ],
       "pos": {
         "filename": "variables.tf",
-        "line": 107
+        "line": 151
       },
       "min_length": 1,
       "max_length": 128,
@@ -21,6 +21,18 @@
       "computed": true,
       "elem": {
         "type": "TypeString"
+      }
+    },
+    "addons": {
+      "name": "addons",
+      "type": "object({\n    alb-oauth-proxy           = optional(string)\n    debug-tool                = optional(string)\n    image-key-synchronizer    = optional(string)\n    istio                     = optional(string)\n    openshift-data-foundation = optional(string)\n    static-route              = optional(string)\n    cluster-autoscaler        = optional(string)\n    vpc-block-csi-driver      = optional(string)\n  })",
+      "description": "List of all addons supported by the ocp cluster.",
+      "source": [
+        "module.ocp_base"
+      ],
+      "pos": {
+        "filename": "variables.tf",
+        "line": 206
       }
     },
     "cluster_name": {
@@ -49,7 +61,7 @@
       ],
       "pos": {
         "filename": "variables.tf",
-        "line": 113
+        "line": 157
       }
     },
     "cluster_tags": {
@@ -63,7 +75,7 @@
       ],
       "pos": {
         "filename": "variables.tf",
-        "line": 101
+        "line": 145
       },
       "min_length": 1,
       "max_length": 128,
@@ -82,7 +94,7 @@
       ],
       "pos": {
         "filename": "variables.tf",
-        "line": 150
+        "line": 194
       }
     },
     "disable_public_endpoint": {
@@ -97,7 +109,7 @@
       ],
       "pos": {
         "filename": "variables.tf",
-        "line": 126
+        "line": 170
       }
     },
     "existing_cos_id": {
@@ -109,7 +121,7 @@
       ],
       "pos": {
         "filename": "variables.tf",
-        "line": 156
+        "line": 200
       }
     },
     "existing_key_protect_instance_guid": {
@@ -118,7 +130,7 @@
       "description": "The GUID of an existing Key Protect instance which will be used for cluster encryption. If no value passed, cluster data is stored in the Kubernetes etcd, which ends up on the local disk of the Kubernetes master (not recommended).",
       "pos": {
         "filename": "variables.tf",
-        "line": 166
+        "line": 226
       }
     },
     "existing_key_protect_root_key_id": {
@@ -127,7 +139,7 @@
       "description": "The Key ID of a root key, existing in the Key Protect instance passed in var.existing_key_protect_instance_guid, which will be used to encrypt the data encryption keys (DEKs) which are then used to encrypt the secrets in the cluster. Required if value passed for var.existing_key_protect_instance_guid.",
       "pos": {
         "filename": "variables.tf",
-        "line": 172
+        "line": 232
       }
     },
     "force_delete_storage": {
@@ -141,7 +153,7 @@
       ],
       "pos": {
         "filename": "variables.tf",
-        "line": 138
+        "line": 182
       }
     },
     "ibmcloud_api_key": {
@@ -171,7 +183,7 @@
       ],
       "pos": {
         "filename": "variables.tf",
-        "line": 188
+        "line": 248
       },
       "min_length": 1,
       "max_length": 1024,
@@ -184,7 +196,7 @@
       "default": true,
       "pos": {
         "filename": "variables.tf",
-        "line": 178
+        "line": 238
       }
     },
     "logdna_agent_version": {
@@ -196,7 +208,7 @@
       ],
       "pos": {
         "filename": "variables.tf",
-        "line": 217
+        "line": 277
       }
     },
     "logdna_ingestion_key": {
@@ -209,7 +221,7 @@
       ],
       "pos": {
         "filename": "variables.tf",
-        "line": 204
+        "line": 264
       }
     },
     "logdna_instance_name": {
@@ -222,7 +234,7 @@
       ],
       "pos": {
         "filename": "variables.tf",
-        "line": 198
+        "line": 258
       }
     },
     "logdna_resource_group_id": {
@@ -231,7 +243,7 @@
       "description": "Resource group id that the LogDNA instance is in. If left at null, the value of var.resource_group_id will be used.",
       "pos": {
         "filename": "variables.tf",
-        "line": 211
+        "line": 271
       }
     },
     "ocp_entitlement": {
@@ -245,7 +257,7 @@
       ],
       "pos": {
         "filename": "variables.tf",
-        "line": 132
+        "line": 176
       }
     },
     "ocp_version": {
@@ -313,7 +325,7 @@
       ],
       "pos": {
         "filename": "variables.tf",
-        "line": 233
+        "line": 293
       }
     },
     "sysdig_agent_version": {
@@ -325,7 +337,7 @@
       ],
       "pos": {
         "filename": "variables.tf",
-        "line": 246
+        "line": 306
       }
     },
     "sysdig_instance_name": {
@@ -338,7 +350,7 @@
       ],
       "pos": {
         "filename": "variables.tf",
-        "line": 227
+        "line": 287
       }
     },
     "sysdig_resource_group_id": {
@@ -347,7 +359,7 @@
       "description": "Resource group id that the Sysdig instance is in. If left at null, the value of var.resource_group_id will be used.",
       "pos": {
         "filename": "variables.tf",
-        "line": 240
+        "line": 300
       }
     },
     "use_existing_cos": {
@@ -361,7 +373,7 @@
       ],
       "pos": {
         "filename": "variables.tf",
-        "line": 144
+        "line": 188
       }
     },
     "vpc_id": {
@@ -396,30 +408,39 @@
     },
     "worker_pools": {
       "name": "worker_pools",
-      "type": "list(object({\n    subnet_prefix     = string\n    pool_name         = string\n    machine_type      = string\n    workers_per_zone  = number\n    resource_group_id = optional(string)\n    labels            = optional(map(string))\n  }))",
+      "type": "list(object({\n    subnet_prefix = optional(string)\n    vpc_subnets = optional(list(object({\n      id         = string\n      zone       = string\n      cidr_block = string\n    })))\n    pool_name         = string\n    machine_type      = string\n    workers_per_zone  = number\n    resource_group_id = optional(string)\n    labels            = optional(map(string))\n    minSize           = optional(number)\n    maxSize           = optional(number)\n    enableAutoscaling = optional(bool)\n    boot_volume_encryption_kms_config = optional(object({\n      crk             = string\n      kms_instance_id = string\n      kms_account_id  = optional(string)\n    }))\n  }))",
       "description": "List of worker pools",
       "default": [
         {
+          "enableAutoscaling": true,
           "labels": {},
           "machine_type": "bx2.4x16",
+          "maxSize": 3,
+          "minSize": 1,
           "pool_name": "default",
           "subnet_prefix": "zone-1",
           "workers_per_zone": 2
         },
         {
+          "enableAutoscaling": true,
           "labels": {
             "dedicated": "zone-2"
           },
           "machine_type": "bx2.4x16",
+          "maxSize": 3,
+          "minSize": 1,
           "pool_name": "zone-2",
           "subnet_prefix": "zone-2",
           "workers_per_zone": 2
         },
         {
+          "enableAutoscaling": true,
           "labels": {
             "dedicated": "zone-3"
           },
           "machine_type": "bx2.4x16",
+          "maxSize": 3,
+          "minSize": 1,
           "pool_name": "zone-3",
           "subnet_prefix": "zone-3",
           "workers_per_zone": 2
@@ -596,7 +617,7 @@
   "module_calls": {
     "observability_agents": {
       "name": "observability_agents",
-      "source": "git::https://github.com/terraform-ibm-modules/terraform-ibm-observability-agents?ref=v1.0.0",
+      "source": "git::https://github.com/terraform-ibm-modules/terraform-ibm-observability-agents?ref=v1.3.4",
       "attributes": {
         "cluster_resource_group_id": "resource_group_id",
         "logdna_agent_version": "logdna_agent_version",
@@ -619,7 +640,7 @@
           },
           "pos": {
             "filename": ".terraform/modules/observability_agents/main.tf",
-            "line": 67
+            "line": 68
           }
         },
         "helm_release.sysdig_agent": {
@@ -634,7 +655,7 @@
           },
           "pos": {
             "filename": ".terraform/modules/observability_agents/main.tf",
-            "line": 121
+            "line": 122
           }
         }
       },
@@ -652,7 +673,7 @@
           },
           "pos": {
             "filename": ".terraform/modules/observability_agents/main.tf",
-            "line": 12
+            "line": 11
           }
         },
         "data.ibm_container_vpc_cluster.cluster": {
@@ -668,7 +689,7 @@
           },
           "pos": {
             "filename": ".terraform/modules/observability_agents/main.tf",
-            "line": 7
+            "line": 6
           }
         },
         "data.ibm_resource_instance.logdna_instance": {
@@ -685,7 +706,7 @@
           },
           "pos": {
             "filename": ".terraform/modules/observability_agents/main.tf",
-            "line": 28
+            "line": 27
           }
         },
         "data.ibm_resource_instance.sysdig_instance": {
@@ -702,13 +723,13 @@
           },
           "pos": {
             "filename": ".terraform/modules/observability_agents/main.tf",
-            "line": 36
+            "line": 35
           }
         }
       },
       "pos": {
         "filename": "main.tf",
-        "line": 67
+        "line": 68
       }
     },
     "ocp_base": {
@@ -716,6 +737,7 @@
       "source": "git::https://github.com/terraform-ibm-modules/terraform-ibm-base-ocp-vpc.git?ref=v3.3.2",
       "attributes": {
         "access_tags": "access_tags",
+        "addons": "addons",
         "cluster_name": "cluster_name",
         "cluster_ready_when": "cluster_ready_when",
         "cos_name": "cos_name",

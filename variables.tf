@@ -65,37 +65,81 @@ variable "ocp_version" {
 
 variable "worker_pools" {
   type = list(object({
-    subnet_prefix     = string
+    subnet_prefix = optional(string)
+    vpc_subnets = optional(list(object({
+      id         = string
+      zone       = string
+      cidr_block = string
+    })))
     pool_name         = string
     machine_type      = string
     workers_per_zone  = number
     resource_group_id = optional(string)
     labels            = optional(map(string))
+    minSize           = optional(number)
+    maxSize           = optional(number)
+    enableAutoscaling = optional(bool)
+    boot_volume_encryption_kms_config = optional(object({
+      crk             = string
+      kms_instance_id = string
+      kms_account_id  = optional(string)
+    }))
   }))
   default = [
     {
-      subnet_prefix    = "zone-1"
-      pool_name        = "default" # ibm_container_vpc_cluster automatically names default pool "default" (See https://github.com/IBM-Cloud/terraform-provider-ibm/issues/2849)
-      machine_type     = "bx2.4x16"
-      workers_per_zone = 2
-      labels           = {}
+      subnet_prefix     = "zone-1"
+      pool_name         = "default" # ibm_container_vpc_cluster automatically names default pool "default" (See https://github.com/IBM-Cloud/terraform-provider-ibm/issues/2849)
+      machine_type      = "bx2.4x16"
+      workers_per_zone  = 2
+      minSize           = 1
+      maxSize           = 3
+      enableAutoscaling = true
+      labels            = {}
     },
     {
-      subnet_prefix    = "zone-2"
-      pool_name        = "zone-2"
-      machine_type     = "bx2.4x16"
-      workers_per_zone = 2
-      labels           = { "dedicated" : "zone-2" }
+      subnet_prefix     = "zone-2"
+      pool_name         = "zone-2"
+      machine_type      = "bx2.4x16"
+      workers_per_zone  = 2
+      minSize           = 1
+      maxSize           = 3
+      enableAutoscaling = true
+      labels            = { "dedicated" : "zone-2" }
     },
     {
-      subnet_prefix    = "zone-3"
-      pool_name        = "zone-3"
-      machine_type     = "bx2.4x16"
-      workers_per_zone = 2
-      labels           = { "dedicated" : "zone-3" }
+      subnet_prefix     = "zone-3"
+      pool_name         = "zone-3"
+      machine_type      = "bx2.4x16"
+      workers_per_zone  = 2
+      minSize           = 1
+      maxSize           = 3
+      enableAutoscaling = true
+      labels            = { "dedicated" : "zone-3" }
     }
   ]
   description = "List of worker pools"
+  validation {
+    error_message = "Please provide value for minSize and maxSize while enableAutoscaling is set to true."
+    condition = length(
+      flatten(
+        [
+          for worker in var.worker_pools :
+          worker if worker.enableAutoscaling == true && worker.minSize != null && worker.maxSize != null
+        ]
+      )
+      ) == length(
+      flatten(
+        [
+          for worker in var.worker_pools :
+          worker if worker.enableAutoscaling == true
+        ]
+      )
+    )
+  }
+  validation {
+    condition     = length([for worker_pool in var.worker_pools : worker_pool if(worker_pool.subnet_prefix == null && worker_pool.vpc_subnets == null) || (worker_pool.subnet_prefix != null && worker_pool.vpc_subnets != null)]) == 0
+    error_message = "Please provide exactly one of subnet_prefix or vpc_subnets. Passing neither or both is invalid."
+  }
 }
 
 variable "cluster_tags" {
@@ -158,6 +202,22 @@ variable "existing_cos_id" {
   description = "The COS ID of an already existing COS instance which will be used to back up the OpenShift internal registry. Required if var.use_existing_cos is true."
   default     = null
 }
+
+variable "addons" {
+  type = object({
+    alb-oauth-proxy           = optional(string)
+    debug-tool                = optional(string)
+    image-key-synchronizer    = optional(string)
+    istio                     = optional(string)
+    openshift-data-foundation = optional(string)
+    static-route              = optional(string)
+    cluster-autoscaler        = optional(string)
+    vpc-block-csi-driver      = optional(string)
+  })
+  description = "List of all addons supported by the ocp cluster."
+  default     = null
+}
+
 
 ##############################################################################
 # Key Protect Variables
