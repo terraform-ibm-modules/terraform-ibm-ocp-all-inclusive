@@ -1,6 +1,8 @@
 package test
 
 import (
+	"log"
+	"os"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
@@ -14,6 +16,17 @@ const resourceGroup = "geretain-test-ocp-all-inclusive"
 const yamlLocation = "../common-dev-assets/common-go-assets/common-permanent-resources.yaml"
 
 var permanentResources map[string]interface{}
+
+func TestMain(m *testing.M) {
+	// Read the YAML file contents
+	var err error
+	permanentResources, err = common.LoadMapFromYaml(yamlLocation)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	os.Exit(m.Run())
+}
 
 func setupOptions(t *testing.T, prefix string, terraformVars map[string]interface{}) *testhelper.TestOptions {
 	options := testhelper.TestOptionsDefaultWithVars(&testhelper.TestOptions{
