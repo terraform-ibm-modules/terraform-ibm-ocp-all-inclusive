@@ -14,7 +14,7 @@ module "resource_group" {
 ##############################################################################
 
 module "vpc" {
-  source            = "git::https://github.com/terraform-ibm-modules/terraform-ibm-landing-zone-vpc.git?ref=v4.0.0"
+  source            = "git::https://github.com/terraform-ibm-modules/terraform-ibm-landing-zone-vpc.git?ref=v5.0.1"
   resource_group_id = module.resource_group.resource_group_id
   region            = var.region
   prefix            = var.prefix
@@ -27,7 +27,7 @@ module "vpc" {
 ##############################################################################
 
 module "observability_instances" {
-  source = "git::https://github.com/terraform-ibm-modules/terraform-ibm-observability-instances?ref=v2.2.0"
+  source = "git::https://github.com/terraform-ibm-modules/terraform-ibm-observability-instances?ref=v2.7.0"
   providers = {
     logdna.at = logdna.at
     logdna.ld = logdna.ld
@@ -70,6 +70,10 @@ module "key_protect_all_inclusive" {
 ##############################################################################
 
 locals {
+  addons = {
+    "cluster-autoscaler" = "1.0.8"
+  }
+
   cluster_vpc_subnets = {
     zone-1 = [
       for zone in module.vpc.subnet_zone_list :
@@ -100,4 +104,6 @@ module "ocp_all_inclusive" {
   logdna_ingestion_key               = module.observability_instances.logdna_ingestion_key
   sysdig_instance_name               = module.observability_instances.sysdig_name
   sysdig_access_key                  = module.observability_instances.sysdig_access_key
+  addons                             = local.addons
+  disable_public_endpoint            = var.disable_public_endpoint
 }

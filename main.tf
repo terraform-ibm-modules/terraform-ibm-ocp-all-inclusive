@@ -20,7 +20,7 @@ locals {
 }
 
 module "ocp_base" {
-  source                          = "git::https://github.com/terraform-ibm-modules/terraform-ibm-base-ocp-vpc.git?ref=v2.0.0"
+  source                          = "git::https://github.com/terraform-ibm-modules/terraform-ibm-base-ocp-vpc.git?ref=v3.3.2"
   cluster_name                    = var.cluster_name
   ocp_version                     = var.ocp_version
   resource_group_id               = var.resource_group_id
@@ -39,6 +39,7 @@ module "ocp_base" {
   ignore_worker_pool_size_changes = var.ignore_worker_pool_size_changes
   kms_config                      = local.kms_config
   ibmcloud_api_key                = var.ibmcloud_api_key
+  addons                          = var.addons
 }
 
 ##############################################################################
@@ -65,7 +66,7 @@ locals {
 
 module "observability_agents" {
   count                     = local.run_observability_agents_module == true ? 1 : 0
-  source                    = "git::https://github.com/terraform-ibm-modules/terraform-ibm-observability-agents?ref=v1.0.0"
+  source                    = "git::https://github.com/terraform-ibm-modules/terraform-ibm-observability-agents?ref=v1.3.4"
   cluster_id                = module.ocp_base.cluster_id
   cluster_resource_group_id = var.resource_group_id
   logdna_enabled            = local.provision_logdna_agent

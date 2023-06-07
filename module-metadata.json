@@ -1,6 +1,18 @@
 {
   "path": ".",
   "variables": {
+    "addons": {
+      "name": "addons",
+      "type": "object({\n    alb-oauth-proxy           = optional(string)\n    debug-tool                = optional(string)\n    image-key-synchronizer    = optional(string)\n    istio                     = optional(string)\n    openshift-data-foundation = optional(string)\n    static-route              = optional(string)\n    cluster-autoscaler        = optional(string)\n    vpc-block-csi-driver      = optional(string)\n  })",
+      "description": "List of all addons supported by the ocp cluster.",
+      "source": [
+        "module.ocp_base"
+      ],
+      "pos": {
+        "filename": "variables.tf",
+        "line": 200
+      }
+    },
     "cluster_name": {
       "name": "cluster_name",
       "type": "string",
@@ -27,7 +39,7 @@
       ],
       "pos": {
         "filename": "variables.tf",
-        "line": 107
+        "line": 151
       }
     },
     "cluster_tags": {
@@ -41,7 +53,7 @@
       ],
       "pos": {
         "filename": "variables.tf",
-        "line": 101
+        "line": 145
       },
       "min_length": 1,
       "max_length": 128,
@@ -60,7 +72,7 @@
       ],
       "pos": {
         "filename": "variables.tf",
-        "line": 144
+        "line": 188
       }
     },
     "disable_public_endpoint": {
@@ -70,11 +82,12 @@
       "default": false,
       "source": [
         "module.ocp_base.ibm_container_vpc_cluster.autoscaling_cluster.disable_public_service_endpoint",
-        "module.ocp_base.ibm_container_vpc_cluster.cluster.disable_public_service_endpoint"
+        "module.ocp_base.ibm_container_vpc_cluster.cluster.disable_public_service_endpoint",
+        "module.ocp_base.kubernetes_config_map_v1_data.set_autoscaling.count"
       ],
       "pos": {
         "filename": "variables.tf",
-        "line": 120
+        "line": 164
       }
     },
     "existing_cos_id": {
@@ -86,7 +99,7 @@
       ],
       "pos": {
         "filename": "variables.tf",
-        "line": 150
+        "line": 194
       }
     },
     "existing_key_protect_instance_guid": {
@@ -95,7 +108,7 @@
       "description": "The GUID of an existing Key Protect instance which will be used for cluster encryption. If no value passed, cluster data is stored in the Kubernetes etcd, which ends up on the local disk of the Kubernetes master (not recommended).",
       "pos": {
         "filename": "variables.tf",
-        "line": 160
+        "line": 220
       }
     },
     "existing_key_protect_root_key_id": {
@@ -104,7 +117,7 @@
       "description": "The Key ID of a root key, existing in the Key Protect instance passed in var.existing_key_protect_instance_guid, which will be used to encrypt the data encryption keys (DEKs) which are then used to encrypt the secrets in the cluster. Required if value passed for var.existing_key_protect_instance_guid.",
       "pos": {
         "filename": "variables.tf",
-        "line": 166
+        "line": 226
       }
     },
     "force_delete_storage": {
@@ -118,7 +131,7 @@
       ],
       "pos": {
         "filename": "variables.tf",
-        "line": 132
+        "line": 176
       }
     },
     "ibmcloud_api_key": {
@@ -140,14 +153,19 @@
       "type": "bool",
       "description": "Enable if using worker autoscaling. Stops Terraform managing worker count",
       "default": false,
+      "required": true,
       "source": [
         "module.ocp_base.ibm_container_vpc_cluster.autoscaling_cluster.count",
-        "module.ocp_base.ibm_container_vpc_cluster.cluster.count"
+        "module.ocp_base.ibm_container_vpc_cluster.cluster.count",
+        "module.ocp_base.ibm_resource_tag.cluster_access_tag.resource_id"
       ],
       "pos": {
         "filename": "variables.tf",
-        "line": 182
-      }
+        "line": 242
+      },
+      "min_length": 1,
+      "max_length": 1024,
+      "matches": "^crn:v1(:[a-zA-Z0-9 \\-\\._~\\*\\+,;=!$\u0026'\\(\\)\\/\\?#\\[\\]@]*){8}$|^[0-9]+$"
     },
     "key_protect_use_private_endpoint": {
       "name": "key_protect_use_private_endpoint",
@@ -156,7 +174,7 @@
       "default": true,
       "pos": {
         "filename": "variables.tf",
-        "line": 172
+        "line": 232
       }
     },
     "logdna_agent_version": {
@@ -168,7 +186,7 @@
       ],
       "pos": {
         "filename": "variables.tf",
-        "line": 211
+        "line": 271
       }
     },
     "logdna_ingestion_key": {
@@ -181,7 +199,7 @@
       ],
       "pos": {
         "filename": "variables.tf",
-        "line": 198
+        "line": 258
       }
     },
     "logdna_instance_name": {
@@ -194,7 +212,7 @@
       ],
       "pos": {
         "filename": "variables.tf",
-        "line": 192
+        "line": 252
       }
     },
     "logdna_resource_group_id": {
@@ -203,7 +221,7 @@
       "description": "Resource group id that the LogDNA instance is in. If left at null, the value of var.resource_group_id will be used.",
       "pos": {
         "filename": "variables.tf",
-        "line": 205
+        "line": 265
       }
     },
     "ocp_entitlement": {
@@ -217,7 +235,7 @@
       ],
       "pos": {
         "filename": "variables.tf",
-        "line": 126
+        "line": 170
       }
     },
     "ocp_version": {
@@ -238,12 +256,14 @@
       "description": "The IBM Cloud region where all resources will be provisioned.",
       "required": true,
       "source": [
-        "module.ocp_base"
+        "module.ocp_base.data.ibm_container_cluster_versions.cluster_versions.region"
       ],
       "pos": {
         "filename": "variables.tf",
         "line": 16
-      }
+      },
+      "cloud_data_type": "region",
+      "deprecated": "This field is deprecated"
     },
     "resource_group_id": {
       "name": "resource_group_id",
@@ -254,11 +274,13 @@
         "module.observability_agents.data.ibm_container_cluster_config.cluster_config.resource_group_id",
         "module.observability_agents.data.ibm_container_vpc_cluster.cluster.resource_group_id",
         "module.ocp_base.data.ibm_container_cluster_config.cluster_config.resource_group_id",
+        "module.ocp_base.data.ibm_container_cluster_versions.cluster_versions.resource_group_id",
+        "module.ocp_base.ibm_container_addons.addons.resource_group_id",
         "module.ocp_base.ibm_container_vpc_cluster.autoscaling_cluster.resource_group_id",
         "module.ocp_base.ibm_container_vpc_cluster.cluster.resource_group_id",
         "module.ocp_base.ibm_container_vpc_worker_pool.autoscaling_pool.resource_group_id",
         "module.ocp_base.ibm_container_vpc_worker_pool.pool.resource_group_id",
-        "module.ocp_base.ibm_resource_instance.cos_instance.resource_group_id"
+        "module.ocp_base.module.cos_instance.ibm_resource_instance.cos_instance.resource_group_id"
       ],
       "pos": {
         "filename": "variables.tf",
@@ -281,7 +303,7 @@
       ],
       "pos": {
         "filename": "variables.tf",
-        "line": 227
+        "line": 287
       }
     },
     "sysdig_agent_version": {
@@ -293,7 +315,7 @@
       ],
       "pos": {
         "filename": "variables.tf",
-        "line": 240
+        "line": 300
       }
     },
     "sysdig_instance_name": {
@@ -306,7 +328,7 @@
       ],
       "pos": {
         "filename": "variables.tf",
-        "line": 221
+        "line": 281
       }
     },
     "sysdig_resource_group_id": {
@@ -315,7 +337,7 @@
       "description": "Resource group id that the Sysdig instance is in. If left at null, the value of var.resource_group_id will be used.",
       "pos": {
         "filename": "variables.tf",
-        "line": 234
+        "line": 294
       }
     },
     "use_existing_cos": {
@@ -324,11 +346,12 @@
       "description": "COS is required to back up the OpenShift internal registry. Set this to true and pass a value for var.existing_cos_id if you want to use an existing COS instance.",
       "default": false,
       "source": [
-        "module.ocp_base.ibm_resource_instance.cos_instance.count"
+        "module.ocp_base.ibm_resource_tag.cos_access_tag.count",
+        "module.ocp_base.module.cos_instance"
       ],
       "pos": {
         "filename": "variables.tf",
-        "line": 138
+        "line": 182
       }
     },
     "vpc_id": {
@@ -363,30 +386,39 @@
     },
     "worker_pools": {
       "name": "worker_pools",
-      "type": "list(object({\n    subnet_prefix     = string\n    pool_name         = string\n    machine_type      = string\n    workers_per_zone  = number\n    resource_group_id = optional(string)\n    labels            = optional(map(string))\n  }))",
+      "type": "list(object({\n    subnet_prefix = optional(string)\n    vpc_subnets = optional(list(object({\n      id         = string\n      zone       = string\n      cidr_block = string\n    })))\n    pool_name         = string\n    machine_type      = string\n    workers_per_zone  = number\n    resource_group_id = optional(string)\n    labels            = optional(map(string))\n    minSize           = optional(number)\n    maxSize           = optional(number)\n    enableAutoscaling = optional(bool)\n    boot_volume_encryption_kms_config = optional(object({\n      crk             = string\n      kms_instance_id = string\n      kms_account_id  = optional(string)\n    }))\n  }))",
       "description": "List of worker pools",
       "default": [
         {
+          "enableAutoscaling": true,
           "labels": {},
           "machine_type": "bx2.4x16",
+          "maxSize": 3,
+          "minSize": 1,
           "pool_name": "default",
           "subnet_prefix": "zone-1",
           "workers_per_zone": 2
         },
         {
+          "enableAutoscaling": true,
           "labels": {
             "dedicated": "zone-2"
           },
           "machine_type": "bx2.4x16",
+          "maxSize": 3,
+          "minSize": 1,
           "pool_name": "zone-2",
           "subnet_prefix": "zone-2",
           "workers_per_zone": 2
         },
         {
+          "enableAutoscaling": true,
           "labels": {
             "dedicated": "zone-3"
           },
           "machine_type": "bx2.4x16",
+          "maxSize": 3,
+          "minSize": 1,
           "pool_name": "zone-3",
           "subnet_prefix": "zone-3",
           "workers_per_zone": 2
@@ -482,7 +514,8 @@
         "filename": "outputs.tf",
         "line": 40
       },
-      "type": "string"
+      "type": "string",
+      "cloud_data_type": "region"
     },
     "resource_group_id": {
       "name": "resource_group_id",
@@ -531,7 +564,7 @@
     "ibm": {
       "source": "ibm-cloud/ibm",
       "version_constraints": [
-        "\u003e= 1.49.0"
+        "\u003e= 1.51.0"
       ]
     },
     "kubernetes": {
@@ -562,7 +595,7 @@
   "module_calls": {
     "observability_agents": {
       "name": "observability_agents",
-      "source": "git::https://github.com/terraform-ibm-modules/terraform-ibm-observability-agents?ref=v1.0.0",
+      "source": "git::https://github.com/terraform-ibm-modules/terraform-ibm-observability-agents?ref=v1.3.4",
       "attributes": {
         "cluster_resource_group_id": "resource_group_id",
         "logdna_agent_version": "logdna_agent_version",
@@ -585,7 +618,7 @@
           },
           "pos": {
             "filename": ".terraform/modules/observability_agents/main.tf",
-            "line": 67
+            "line": 68
           }
         },
         "helm_release.sysdig_agent": {
@@ -600,7 +633,7 @@
           },
           "pos": {
             "filename": ".terraform/modules/observability_agents/main.tf",
-            "line": 121
+            "line": 122
           }
         }
       },
@@ -618,7 +651,7 @@
           },
           "pos": {
             "filename": ".terraform/modules/observability_agents/main.tf",
-            "line": 12
+            "line": 11
           }
         },
         "data.ibm_container_vpc_cluster.cluster": {
@@ -634,7 +667,7 @@
           },
           "pos": {
             "filename": ".terraform/modules/observability_agents/main.tf",
-            "line": 7
+            "line": 6
           }
         },
         "data.ibm_resource_instance.logdna_instance": {
@@ -651,7 +684,7 @@
           },
           "pos": {
             "filename": ".terraform/modules/observability_agents/main.tf",
-            "line": 28
+            "line": 27
           }
         },
         "data.ibm_resource_instance.sysdig_instance": {
@@ -668,19 +701,20 @@
           },
           "pos": {
             "filename": ".terraform/modules/observability_agents/main.tf",
-            "line": 36
+            "line": 35
           }
         }
       },
       "pos": {
         "filename": "main.tf",
-        "line": 66
+        "line": 67
       }
     },
     "ocp_base": {
       "name": "ocp_base",
-      "source": "git::https://github.com/terraform-ibm-modules/terraform-ibm-base-ocp-vpc.git?ref=v2.0.0",
+      "source": "git::https://github.com/terraform-ibm-modules/terraform-ibm-base-ocp-vpc.git?ref=v3.3.2",
       "attributes": {
+        "addons": "addons",
         "cluster_name": "cluster_name",
         "cluster_ready_when": "cluster_ready_when",
         "cos_name": "cos_name",
@@ -700,6 +734,21 @@
         "worker_pools": "worker_pools"
       },
       "managed_resources": {
+        "ibm_container_addons.addons": {
+          "mode": "managed",
+          "type": "ibm_container_addons",
+          "name": "addons",
+          "attributes": {
+            "resource_group_id": "resource_group_id"
+          },
+          "provider": {
+            "name": "ibm"
+          },
+          "pos": {
+            "filename": ".terraform/modules/ocp_base/main.tf",
+            "line": 360
+          }
+        },
         "ibm_container_vpc_cluster.autoscaling_cluster": {
           "mode": "managed",
           "type": "ibm_container_vpc_cluster",
@@ -720,7 +769,7 @@
           },
           "pos": {
             "filename": ".terraform/modules/ocp_base/main.tf",
-            "line": 112
+            "line": 133
           }
         },
         "ibm_container_vpc_cluster.cluster": {
@@ -743,7 +792,7 @@
           },
           "pos": {
             "filename": ".terraform/modules/ocp_base/main.tf",
-            "line": 51
+            "line": 71
           }
         },
         "ibm_container_vpc_worker_pool.autoscaling_pool": {
@@ -759,7 +808,7 @@
           },
           "pos": {
             "filename": ".terraform/modules/ocp_base/main.tf",
-            "line": 244
+            "line": 284
           }
         },
         "ibm_container_vpc_worker_pool.pool": {
@@ -775,35 +824,70 @@
           },
           "pos": {
             "filename": ".terraform/modules/ocp_base/main.tf",
-            "line": 210
+            "line": 243
           }
         },
-        "ibm_resource_instance.cos_instance": {
+        "ibm_resource_tag.cluster_access_tag": {
           "mode": "managed",
-          "type": "ibm_resource_instance",
-          "name": "cos_instance",
+          "type": "ibm_resource_tag",
+          "name": "cluster_access_tag",
           "attributes": {
-            "count": "use_existing_cos",
-            "resource_group_id": "resource_group_id"
+            "count": "access_tags",
+            "resource_id": "ignore_worker_pool_size_changes",
+            "tags": "access_tags"
           },
           "provider": {
             "name": "ibm"
           },
           "pos": {
             "filename": ".terraform/modules/ocp_base/main.tf",
-            "line": 37
+            "line": 197
+          }
+        },
+        "ibm_resource_tag.cos_access_tag": {
+          "mode": "managed",
+          "type": "ibm_resource_tag",
+          "name": "cos_access_tag",
+          "attributes": {
+            "count": "use_existing_cos",
+            "tags": "access_tags"
+          },
+          "provider": {
+            "name": "ibm"
+          },
+          "pos": {
+            "filename": ".terraform/modules/ocp_base/main.tf",
+            "line": 60
+          }
+        },
+        "kubernetes_config_map_v1_data.set_autoscaling": {
+          "mode": "managed",
+          "type": "kubernetes_config_map_v1_data",
+          "name": "set_autoscaling",
+          "attributes": {
+            "count": "disable_public_endpoint"
+          },
+          "provider": {
+            "name": "kubernetes"
+          },
+          "pos": {
+            "filename": ".terraform/modules/ocp_base/main.tf",
+            "line": 397
           }
         },
         "null_resource.confirm_network_healthy": {
           "mode": "managed",
           "type": "null_resource",
           "name": "confirm_network_healthy",
+          "attributes": {
+            "count": "verify_worker_network_readiness"
+          },
           "provider": {
             "name": "null"
           },
           "pos": {
             "filename": ".terraform/modules/ocp_base/main.tf",
-            "line": 297
+            "line": 344
           }
         },
         "null_resource.reset_api_key": {
@@ -815,7 +899,19 @@
           },
           "pos": {
             "filename": ".terraform/modules/ocp_base/main.tf",
-            "line": 186
+            "line": 218
+          }
+        },
+        "time_sleep.wait_operators": {
+          "mode": "managed",
+          "type": "time_sleep",
+          "name": "wait_operators",
+          "provider": {
+            "name": "time"
+          },
+          "pos": {
+            "filename": ".terraform/modules/ocp_base/main.tf",
+            "line": 379
           }
         }
       },
@@ -825,6 +921,7 @@
           "type": "ibm_container_cluster_config",
           "name": "cluster_config",
           "attributes": {
+            "count": "verify_worker_network_readiness",
             "resource_group_id": "resource_group_id"
           },
           "provider": {
@@ -832,19 +929,23 @@
           },
           "pos": {
             "filename": ".terraform/modules/ocp_base/main.tf",
-            "line": 200
+            "line": 232
           }
         },
         "data.ibm_container_cluster_versions.cluster_versions": {
           "mode": "data",
           "type": "ibm_container_cluster_versions",
           "name": "cluster_versions",
+          "attributes": {
+            "region": "region",
+            "resource_group_id": "resource_group_id"
+          },
           "provider": {
             "name": "ibm"
           },
           "pos": {
             "filename": ".terraform/modules/ocp_base/main.tf",
-            "line": 35
+            "line": 38
           }
         }
       },
@@ -921,7 +1022,8 @@
             "filename": ".terraform/modules/ocp_base/outputs.tf",
             "line": 43
           },
-          "type": "string"
+          "type": "string",
+          "cloud_data_type": "region"
         },
         "resource_group_id": {
           "name": "resource_group_id",
