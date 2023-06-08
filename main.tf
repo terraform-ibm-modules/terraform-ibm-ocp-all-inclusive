@@ -26,6 +26,7 @@ module "ocp_base" {
   resource_group_id               = var.resource_group_id
   region                          = var.region
   tags                            = var.cluster_tags
+  access_tags                     = var.access_tags
   force_delete_storage            = var.force_delete_storage
   vpc_id                          = var.vpc_id
   vpc_subnets                     = var.vpc_subnets

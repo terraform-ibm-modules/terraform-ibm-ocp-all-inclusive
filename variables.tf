@@ -148,6 +148,12 @@ variable "cluster_tags" {
   default     = []
 }
 
+variable "access_tags" {
+  type        = list(string)
+  description = "Optional list of access management tags to add to the OCP Cluster created by this module."
+  default     = []
+}
+
 variable "cluster_ready_when" {
   type        = string
   description = "The cluster is ready when one of the following: MasterNodeReady (not recommended), OneWorkerNodeReady, Normal, IngressReady"
