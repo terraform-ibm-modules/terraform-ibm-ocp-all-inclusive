@@ -98,6 +98,7 @@ module "ocp_all_inclusive" {
   worker_pools                       = var.worker_pools
   ocp_version                        = var.ocp_version
   cluster_tags                       = var.resource_tags
+  access_tags                        = var.access_tags
   existing_key_protect_instance_guid = module.key_protect_all_inclusive.key_protect_guid
   existing_key_protect_root_key_id   = module.key_protect_all_inclusive.keys["${local.key_ring_name}.${local.key_name}"].key_id
   logdna_instance_name               = module.observability_instances.logdna_name
@@ -105,4 +106,5 @@ module "ocp_all_inclusive" {
   sysdig_instance_name               = module.observability_instances.sysdig_name
   sysdig_access_key                  = module.observability_instances.sysdig_access_key
   addons                             = local.addons
+  disable_public_endpoint            = var.disable_public_endpoint
 }

@@ -34,6 +34,12 @@ variable "resource_tags" {
   default     = []
 }
 
+variable "access_tags" {
+  type        = list(string)
+  description = "Optional list of access management tags to add to the OCP Cluster created by this module."
+  default     = []
+}
+
 variable "worker_pools" {
   type = list(object({
     subnet_prefix     = string
@@ -56,4 +62,10 @@ variable "worker_pools" {
     }
   ]
   description = "List of worker pools"
+}
+
+variable "disable_public_endpoint" {
+  type        = bool
+  description = "Flag indicating that the public endpoint should be disabled"
+  default     = false
 }
