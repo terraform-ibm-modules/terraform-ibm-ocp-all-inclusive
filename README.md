@@ -53,8 +53,8 @@ provider "kubernetes" {
 ##############################################################################
 
 module "ocp_all_inclusive" {
-  # Replace "master" with a GIT release version to lock into a specific release
-  source                        = "git::https://github.com/terraform-ibm-modules/terraform-ibm-ocp-all-inclusive.git?ref=master"
+  source  = "terraform-ibm-modules/ocp-all-inclusive/ibm"
+  version = "latest" # Replace "latest" with a release version to lock into a specific release
   ibmcloud_api_key              = "XXXXXXXXXX" # pragma: allowlist secret
   resource_group_id             = "xxXXxxXXxXxXXXXxxXxxxXXXXxXXXXX"
   region                        = "us-south"
@@ -121,8 +121,8 @@ You need the following permissions to run this module.
 
 | Name | Source | Version |
 |------|--------|---------|
-| <a name="module_observability_agents"></a> [observability\_agents](#module\_observability\_agents) | git::https://github.com/terraform-ibm-modules/terraform-ibm-observability-agents | v1.3.4 |
-| <a name="module_ocp_base"></a> [ocp\_base](#module\_ocp\_base) | git::https://github.com/terraform-ibm-modules/terraform-ibm-base-ocp-vpc.git | v3.3.2 |
+| <a name="module_observability_agents"></a> [observability\_agents](#module\_observability\_agents) | terraform-ibm-modules/observability-agents/ibm | 1.5.1 |
+| <a name="module_ocp_base"></a> [ocp\_base](#module\_ocp\_base) | terraform-ibm-modules/base-ocp-vpc/ibm | 3.3.3 |
 
 ## Resources
 

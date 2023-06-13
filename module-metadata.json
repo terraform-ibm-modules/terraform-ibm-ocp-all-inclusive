@@ -617,7 +617,8 @@
   "module_calls": {
     "observability_agents": {
       "name": "observability_agents",
-      "source": "git::https://github.com/terraform-ibm-modules/terraform-ibm-observability-agents?ref=v1.3.4",
+      "source": "terraform-ibm-modules/observability-agents/ibm",
+      "version": "1.5.1",
       "attributes": {
         "cluster_resource_group_id": "resource_group_id",
         "logdna_agent_version": "logdna_agent_version",
@@ -729,12 +730,13 @@
       },
       "pos": {
         "filename": "main.tf",
-        "line": 68
+        "line": 69
       }
     },
     "ocp_base": {
       "name": "ocp_base",
-      "source": "git::https://github.com/terraform-ibm-modules/terraform-ibm-base-ocp-vpc.git?ref=v3.3.2",
+      "source": "terraform-ibm-modules/base-ocp-vpc/ibm",
+      "version": "3.3.3",
       "attributes": {
         "access_tags": "access_tags",
         "addons": "addons",
