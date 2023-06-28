@@ -38,6 +38,8 @@ func setupOptions(t *testing.T, prefix string, terraformVars map[string]interfac
 			List: []string{
 				"module.ocp_all_inclusive.module.observability_agents[0].helm_release.logdna_agent[0]",
 				"module.ocp_all_inclusive.module.observability_agents[0].helm_release.sysdig_agent[0]",
+				// Workaround for https://github.com/IBM-Cloud/terraform-provider-ibm/issues/4658
+				"module.ocp_all_inclusive.module.ocp_base.ibm_container_addons.addons",
 			},
 		},
 		ImplicitDestroy: []string{ // Ignore full destroy to speed up tests
