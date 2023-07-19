@@ -278,14 +278,12 @@
       "description": "The IBM Cloud region where all resources will be provisioned.",
       "required": true,
       "source": [
-        "module.ocp_base.data.ibm_container_cluster_versions.cluster_versions.region"
+        "module.ocp_base"
       ],
       "pos": {
         "filename": "variables.tf",
         "line": 16
-      },
-      "cloud_data_type": "region",
-      "deprecated": "This field is deprecated"
+      }
     },
     "resource_group_id": {
       "name": "resource_group_id",
@@ -536,8 +534,7 @@
         "filename": "outputs.tf",
         "line": 40
       },
-      "type": "string",
-      "cloud_data_type": "region"
+      "type": "string"
     },
     "resource_group_id": {
       "name": "resource_group_id",
@@ -736,7 +733,7 @@
     "ocp_base": {
       "name": "ocp_base",
       "source": "terraform-ibm-modules/base-ocp-vpc/ibm",
-      "version": "3.3.3",
+      "version": "3.3.4",
       "attributes": {
         "access_tags": "access_tags",
         "addons": "addons",
@@ -771,7 +768,7 @@
           },
           "pos": {
             "filename": ".terraform/modules/ocp_base/main.tf",
-            "line": 360
+            "line": 358
           }
         },
         "ibm_container_vpc_cluster.autoscaling_cluster": {
@@ -794,7 +791,7 @@
           },
           "pos": {
             "filename": ".terraform/modules/ocp_base/main.tf",
-            "line": 133
+            "line": 131
           }
         },
         "ibm_container_vpc_cluster.cluster": {
@@ -817,7 +814,7 @@
           },
           "pos": {
             "filename": ".terraform/modules/ocp_base/main.tf",
-            "line": 71
+            "line": 69
           }
         },
         "ibm_container_vpc_worker_pool.autoscaling_pool": {
@@ -833,7 +830,7 @@
           },
           "pos": {
             "filename": ".terraform/modules/ocp_base/main.tf",
-            "line": 284
+            "line": 282
           }
         },
         "ibm_container_vpc_worker_pool.pool": {
@@ -849,7 +846,7 @@
           },
           "pos": {
             "filename": ".terraform/modules/ocp_base/main.tf",
-            "line": 243
+            "line": 241
           }
         },
         "ibm_resource_tag.cluster_access_tag": {
@@ -866,7 +863,7 @@
           },
           "pos": {
             "filename": ".terraform/modules/ocp_base/main.tf",
-            "line": 197
+            "line": 195
           }
         },
         "ibm_resource_tag.cos_access_tag": {
@@ -882,7 +879,7 @@
           },
           "pos": {
             "filename": ".terraform/modules/ocp_base/main.tf",
-            "line": 60
+            "line": 58
           }
         },
         "kubernetes_config_map_v1_data.set_autoscaling": {
@@ -897,7 +894,7 @@
           },
           "pos": {
             "filename": ".terraform/modules/ocp_base/main.tf",
-            "line": 397
+            "line": 395
           }
         },
         "null_resource.confirm_network_healthy": {
@@ -912,7 +909,7 @@
           },
           "pos": {
             "filename": ".terraform/modules/ocp_base/main.tf",
-            "line": 344
+            "line": 342
           }
         },
         "null_resource.reset_api_key": {
@@ -924,7 +921,7 @@
           },
           "pos": {
             "filename": ".terraform/modules/ocp_base/main.tf",
-            "line": 218
+            "line": 216
           }
         },
         "time_sleep.wait_operators": {
@@ -936,7 +933,7 @@
           },
           "pos": {
             "filename": ".terraform/modules/ocp_base/main.tf",
-            "line": 379
+            "line": 377
           }
         }
       },
@@ -954,7 +951,7 @@
           },
           "pos": {
             "filename": ".terraform/modules/ocp_base/main.tf",
-            "line": 232
+            "line": 230
           }
         },
         "data.ibm_container_cluster_versions.cluster_versions": {
@@ -962,7 +959,6 @@
           "type": "ibm_container_cluster_versions",
           "name": "cluster_versions",
           "attributes": {
-            "region": "region",
             "resource_group_id": "resource_group_id"
           },
           "provider": {
@@ -1047,8 +1043,7 @@
             "filename": ".terraform/modules/ocp_base/outputs.tf",
             "line": 43
           },
-          "type": "string",
-          "cloud_data_type": "region"
+          "type": "string"
         },
         "resource_group_id": {
           "name": "resource_group_id",
