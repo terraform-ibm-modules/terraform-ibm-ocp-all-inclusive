@@ -53,8 +53,8 @@ provider "kubernetes" {
 ##############################################################################
 
 module "ocp_all_inclusive" {
-  # Replace "master" with a GIT release version to lock into a specific release
-  source                        = "git::https://github.com/terraform-ibm-modules/terraform-ibm-ocp-all-inclusive.git?ref=master"
+  source  = "terraform-ibm-modules/ocp-all-inclusive/ibm"
+  version = "latest" # Replace "latest" with a release version to lock into a specific release
   ibmcloud_api_key              = "XXXXXXXXXX" # pragma: allowlist secret
   resource_group_id             = "xxXXxxXXxXxXXXXxxXxxxXXXXxXXXXX"
   region                        = "us-south"
@@ -111,7 +111,7 @@ You need the following permissions to run this module.
 | <a name="requirement_terraform"></a> [terraform](#requirement\_terraform) | >= 1.3.0 |
 | <a name="requirement_external"></a> [external](#requirement\_external) | >= 2.2.3 |
 | <a name="requirement_helm"></a> [helm](#requirement\_helm) | >= 2.8.0 |
-| <a name="requirement_ibm"></a> [ibm](#requirement\_ibm) | >= 1.51.0 |
+| <a name="requirement_ibm"></a> [ibm](#requirement\_ibm) | >= 1.55.0, < 2.0.0 |
 | <a name="requirement_kubernetes"></a> [kubernetes](#requirement\_kubernetes) | >= 2.16.1 |
 | <a name="requirement_local"></a> [local](#requirement\_local) | >= 2.2.3 |
 | <a name="requirement_null"></a> [null](#requirement\_null) | >= 3.2.1 |
@@ -121,8 +121,8 @@ You need the following permissions to run this module.
 
 | Name | Source | Version |
 |------|--------|---------|
-| <a name="module_observability_agents"></a> [observability\_agents](#module\_observability\_agents) | git::https://github.com/terraform-ibm-modules/terraform-ibm-observability-agents | v1.3.4 |
-| <a name="module_ocp_base"></a> [ocp\_base](#module\_ocp\_base) | git::https://github.com/terraform-ibm-modules/terraform-ibm-base-ocp-vpc.git | v3.3.4 |
+| <a name="module_observability_agents"></a> [observability\_agents](#module\_observability\_agents) | terraform-ibm-modules/observability-agents/ibm | 1.5.1 |
+| <a name="module_ocp_base"></a> [ocp\_base](#module\_ocp\_base) | terraform-ibm-modules/base-ocp-vpc/ibm | 3.3.4 |
 
 ## Resources
 
