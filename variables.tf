@@ -42,7 +42,7 @@ variable "vpc_subnets" {
 
 variable "cluster_name" {
   type        = string
-  description = "The name to give the OCP cluster provisioned by the module."
+  description = "The name to give the OCP cluster provisioned by the module." 
 }
 
 variable "ocp_version" {
