@@ -599,11 +599,13 @@
       ]
     },
     "null": {
+      "source": "hashicorp/null",
       "version_constraints": [
         "\u003e= 3.2.1"
       ]
     },
     "time": {
+      "source": "hashicorp/time",
       "version_constraints": [
         "\u003e= 0.9.1"
       ]
@@ -733,7 +735,7 @@
     "ocp_base": {
       "name": "ocp_base",
       "source": "terraform-ibm-modules/base-ocp-vpc/ibm",
-      "version": "3.3.4",
+      "version": "3.6.0",
       "attributes": {
         "access_tags": "access_tags",
         "addons": "addons",
@@ -768,7 +770,7 @@
           },
           "pos": {
             "filename": ".terraform/modules/ocp_base/main.tf",
-            "line": 358
+            "line": 363
           }
         },
         "ibm_container_vpc_cluster.autoscaling_cluster": {
@@ -791,7 +793,7 @@
           },
           "pos": {
             "filename": ".terraform/modules/ocp_base/main.tf",
-            "line": 131
+            "line": 133
           }
         },
         "ibm_container_vpc_cluster.cluster": {
@@ -814,7 +816,7 @@
           },
           "pos": {
             "filename": ".terraform/modules/ocp_base/main.tf",
-            "line": 69
+            "line": 71
           }
         },
         "ibm_container_vpc_worker_pool.autoscaling_pool": {
@@ -830,7 +832,7 @@
           },
           "pos": {
             "filename": ".terraform/modules/ocp_base/main.tf",
-            "line": 282
+            "line": 284
           }
         },
         "ibm_container_vpc_worker_pool.pool": {
@@ -846,7 +848,7 @@
           },
           "pos": {
             "filename": ".terraform/modules/ocp_base/main.tf",
-            "line": 241
+            "line": 243
           }
         },
         "ibm_resource_tag.cluster_access_tag": {
@@ -863,7 +865,7 @@
           },
           "pos": {
             "filename": ".terraform/modules/ocp_base/main.tf",
-            "line": 195
+            "line": 197
           }
         },
         "ibm_resource_tag.cos_access_tag": {
@@ -879,7 +881,7 @@
           },
           "pos": {
             "filename": ".terraform/modules/ocp_base/main.tf",
-            "line": 58
+            "line": 60
           }
         },
         "kubernetes_config_map_v1_data.set_autoscaling": {
@@ -894,7 +896,7 @@
           },
           "pos": {
             "filename": ".terraform/modules/ocp_base/main.tf",
-            "line": 395
+            "line": 404
           }
         },
         "null_resource.confirm_network_healthy": {
@@ -909,7 +911,7 @@
           },
           "pos": {
             "filename": ".terraform/modules/ocp_base/main.tf",
-            "line": 342
+            "line": 344
           }
         },
         "null_resource.reset_api_key": {
@@ -921,7 +923,7 @@
           },
           "pos": {
             "filename": ".terraform/modules/ocp_base/main.tf",
-            "line": 216
+            "line": 218
           }
         },
         "time_sleep.wait_operators": {
@@ -933,7 +935,7 @@
           },
           "pos": {
             "filename": ".terraform/modules/ocp_base/main.tf",
-            "line": 377
+            "line": 386
           }
         }
       },
@@ -951,7 +953,7 @@
           },
           "pos": {
             "filename": ".terraform/modules/ocp_base/main.tf",
-            "line": 230
+            "line": 232
           }
         },
         "data.ibm_container_cluster_versions.cluster_versions": {
