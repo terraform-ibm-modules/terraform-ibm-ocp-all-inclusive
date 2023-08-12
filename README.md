@@ -104,7 +104,7 @@ You need the following permissions to run this module.
 - [ Complete Example](examples/end-to-end-example)
 <!-- END EXAMPLES HOOK -->
 <!-- BEGINNING OF PRE-COMMIT-TERRAFORM DOCS HOOK -->
-## Requirements
+### Requirements
 
 | Name | Version |
 |------|---------|
@@ -117,18 +117,18 @@ You need the following permissions to run this module.
 | <a name="requirement_null"></a> [null](#requirement\_null) | >= 3.2.1 |
 | <a name="requirement_time"></a> [time](#requirement\_time) | >= 0.9.1 |
 
-## Modules
+### Modules
 
 | Name | Source | Version |
 |------|--------|---------|
 | <a name="module_observability_agents"></a> [observability\_agents](#module\_observability\_agents) | terraform-ibm-modules/observability-agents/ibm | 1.6.3 |
 | <a name="module_ocp_base"></a> [ocp\_base](#module\_ocp\_base) | terraform-ibm-modules/base-ocp-vpc/ibm | 3.6.0 |
 
-## Resources
+### Resources
 
 No resources.
 
-## Inputs
+### Inputs
 
 | Name | Description | Type | Default | Required |
 |------|-------------|------|---------|:--------:|
@@ -163,7 +163,7 @@ No resources.
 | <a name="input_vpc_subnets"></a> [vpc\_subnets](#input\_vpc\_subnets) | Subnet metadata by VPC tier. | <pre>map(list(object({<br>    id         = string<br>    zone       = string<br>    cidr_block = string<br>  })))</pre> | n/a | yes |
 | <a name="input_worker_pools"></a> [worker\_pools](#input\_worker\_pools) | List of worker pools | <pre>list(object({<br>    subnet_prefix = optional(string)<br>    vpc_subnets = optional(list(object({<br>      id         = string<br>      zone       = string<br>      cidr_block = string<br>    })))<br>    pool_name         = string<br>    machine_type      = string<br>    workers_per_zone  = number<br>    resource_group_id = optional(string)<br>    labels            = optional(map(string))<br>    minSize           = optional(number)<br>    maxSize           = optional(number)<br>    enableAutoscaling = optional(bool)<br>    boot_volume_encryption_kms_config = optional(object({<br>      crk             = string<br>      kms_instance_id = string<br>      kms_account_id  = optional(string)<br>    }))<br>  }))</pre> | <pre>[<br>  {<br>    "enableAutoscaling": true,<br>    "labels": {},<br>    "machine_type": "bx2.4x16",<br>    "maxSize": 3,<br>    "minSize": 1,<br>    "pool_name": "default",<br>    "subnet_prefix": "zone-1",<br>    "workers_per_zone": 2<br>  },<br>  {<br>    "enableAutoscaling": true,<br>    "labels": {<br>      "dedicated": "zone-2"<br>    },<br>    "machine_type": "bx2.4x16",<br>    "maxSize": 3,<br>    "minSize": 1,<br>    "pool_name": "zone-2",<br>    "subnet_prefix": "zone-2",<br>    "workers_per_zone": 2<br>  },<br>  {<br>    "enableAutoscaling": true,<br>    "labels": {<br>      "dedicated": "zone-3"<br>    },<br>    "machine_type": "bx2.4x16",<br>    "maxSize": 3,<br>    "minSize": 1,<br>    "pool_name": "zone-3",<br>    "subnet_prefix": "zone-3",<br>    "workers_per_zone": 2<br>  }<br>]</pre> | no |
 
-## Outputs
+### Outputs
 
 | Name | Description |
 |------|-------------|
