@@ -16,7 +16,7 @@ module "resource_group" {
 
 module "vpc" {
   source            = "terraform-ibm-modules/landing-zone-vpc/ibm"
-  version           = "7.4.1"
+  version           = "7.5.0"
   resource_group_id = module.resource_group.resource_group_id
   region            = var.region
   prefix            = var.prefix
@@ -30,7 +30,7 @@ module "vpc" {
 
 module "observability_instances" {
   source  = "terraform-ibm-modules/observability-instances/ibm"
-  version = "2.8.0"
+  version = "2.9.0"
   providers = {
     logdna.at = logdna.at
     logdna.ld = logdna.ld
