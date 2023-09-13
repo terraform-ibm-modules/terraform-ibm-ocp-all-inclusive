@@ -4,7 +4,7 @@
 
 module "resource_group" {
   source  = "terraform-ibm-modules/resource-group/ibm"
-  version = "1.0.5"
+  version = "1.0.6"
   # if an existing resource group is not set (null) create a new one using prefix
   resource_group_name          = var.resource_group == null ? "${var.prefix}-resource-group" : null
   existing_resource_group_name = var.resource_group
@@ -16,7 +16,7 @@ module "resource_group" {
 
 module "vpc" {
   source            = "terraform-ibm-modules/landing-zone-vpc/ibm"
-  version           = "7.2.0"
+  version           = "7.4.1"
   resource_group_id = module.resource_group.resource_group_id
   region            = var.region
   prefix            = var.prefix
@@ -30,22 +30,22 @@ module "vpc" {
 
 module "observability_instances" {
   source  = "terraform-ibm-modules/observability-instances/ibm"
-  version = "2.7.0"
+  version = "2.8.0"
   providers = {
     logdna.at = logdna.at
     logdna.ld = logdna.ld
   }
-  region                     = var.region
-  resource_group_id          = module.resource_group.resource_group_id
-  activity_tracker_provision = false
-  logdna_instance_name       = "${var.prefix}-logdna"
-  sysdig_instance_name       = "${var.prefix}-sysdig"
-  logdna_plan                = "7-day"
-  sysdig_plan                = "graduated-tier"
-  enable_platform_logs       = false
-  enable_platform_metrics    = false
-  logdna_tags                = var.resource_tags
-  sysdig_tags                = var.resource_tags
+  region                         = var.region
+  resource_group_id              = module.resource_group.resource_group_id
+  activity_tracker_provision     = false
+  log_analysis_instance_name     = "${var.prefix}-logdna"
+  cloud_monitoring_instance_name = "${var.prefix}-sysdig"
+  log_analysis_plan              = "7-day"
+  cloud_monitoring_plan          = "graduated-tier"
+  enable_platform_logs           = false
+  enable_platform_metrics        = false
+  log_analysis_tags              = var.resource_tags
+  cloud_monitoring_tags          = var.resource_tags
 }
 
 ##############################################################################
@@ -105,10 +105,10 @@ module "ocp_all_inclusive" {
   access_tags                        = var.access_tags
   existing_key_protect_instance_guid = module.key_protect_all_inclusive.key_protect_guid
   existing_key_protect_root_key_id   = module.key_protect_all_inclusive.keys["${local.key_ring_name}.${local.key_name}"].key_id
-  logdna_instance_name               = module.observability_instances.logdna_name
-  logdna_ingestion_key               = module.observability_instances.logdna_ingestion_key
-  sysdig_instance_name               = module.observability_instances.sysdig_name
-  sysdig_access_key                  = module.observability_instances.sysdig_access_key
+  logdna_instance_name               = module.observability_instances.log_analysis_name
+  logdna_ingestion_key               = module.observability_instances.log_analysis_ingestion_key
+  sysdig_instance_name               = module.observability_instances.cloud_monitoring_name
+  sysdig_access_key                  = module.observability_instances.cloud_monitoring_access_key
   addons                             = local.addons
   disable_public_endpoint            = var.disable_public_endpoint
 }

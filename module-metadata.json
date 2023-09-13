@@ -617,7 +617,7 @@
     "observability_agents": {
       "name": "observability_agents",
       "source": "terraform-ibm-modules/observability-agents/ibm",
-      "version": "1.5.1",
+      "version": "1.6.3",
       "attributes": {
         "cluster_resource_group_id": "resource_group_id",
         "logdna_agent_version": "logdna_agent_version",
