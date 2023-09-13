@@ -20,4 +20,4 @@ repository:
   # organization page and in the 'About' section of the repository.
 
   description: "A wrapper module around several other modules, which sets up an OpenShift cluster"
-  topics: core-team, terraform, ibm-cloud, terraform-module, openshift-cluster, vpc-cluster, ocp, ocp-all-inclusive
+  topics: core-team, terraform, ibm-cloud, terraform-module, openshift-cluster, vpc-cluster, ocp, ocp-all-inclusive, supported, graduated
