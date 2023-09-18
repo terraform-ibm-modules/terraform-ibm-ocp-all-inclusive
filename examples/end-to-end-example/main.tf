@@ -30,7 +30,7 @@ module "vpc" {
 
 module "observability_instances" {
   source  = "terraform-ibm-modules/observability-instances/ibm"
-  version = "2.9.0"
+  version = "2.9.1"
   providers = {
     logdna.at = logdna.at
     logdna.ld = logdna.ld
