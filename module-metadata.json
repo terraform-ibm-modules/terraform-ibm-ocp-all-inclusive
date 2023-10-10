@@ -735,7 +735,7 @@
     "ocp_base": {
       "name": "ocp_base",
       "source": "terraform-ibm-modules/base-ocp-vpc/ibm",
-      "version": "3.7.1",
+      "version": "3.7.3",
       "attributes": {
         "access_tags": "access_tags",
         "addons": "addons",
