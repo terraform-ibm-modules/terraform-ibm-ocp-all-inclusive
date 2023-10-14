@@ -617,7 +617,7 @@
     "observability_agents": {
       "name": "observability_agents",
       "source": "terraform-ibm-modules/observability-agents/ibm",
-      "version": "1.9.0",
+      "version": "1.9.3",
       "attributes": {
         "cluster_resource_group_id": "resource_group_id",
         "logdna_agent_version": "logdna_agent_version",
@@ -736,7 +736,7 @@
     "ocp_base": {
       "name": "ocp_base",
       "source": "terraform-ibm-modules/base-ocp-vpc/ibm",
-      "version": "3.9.0",
+      "version": "3.9.1",
       "attributes": {
         "access_tags": "access_tags",
         "addons": "addons",
