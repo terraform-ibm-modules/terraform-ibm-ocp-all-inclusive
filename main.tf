@@ -42,6 +42,7 @@ module "ocp_base" {
   kms_config                      = local.kms_config
   ibmcloud_api_key                = var.ibmcloud_api_key
   addons                          = var.addons
+  verify_worker_network_readiness = var.verify_worker_network_readiness
 }
 
 ##############################################################################
