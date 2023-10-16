@@ -13,7 +13,7 @@
       ],
       "pos": {
         "filename": "variables.tf",
-        "line": 157
+        "line": 158
       },
       "min_length": 1,
       "max_length": 128,
@@ -32,7 +32,7 @@
       ],
       "pos": {
         "filename": "variables.tf",
-        "line": 212
+        "line": 213
       }
     },
     "cluster_name": {
@@ -61,7 +61,7 @@
       ],
       "pos": {
         "filename": "variables.tf",
-        "line": 163
+        "line": 164
       }
     },
     "cluster_tags": {
@@ -75,7 +75,7 @@
       ],
       "pos": {
         "filename": "variables.tf",
-        "line": 151
+        "line": 152
       },
       "min_length": 1,
       "max_length": 128,
@@ -94,7 +94,7 @@
       ],
       "pos": {
         "filename": "variables.tf",
-        "line": 200
+        "line": 201
       }
     },
     "disable_public_endpoint": {
@@ -109,7 +109,7 @@
       ],
       "pos": {
         "filename": "variables.tf",
-        "line": 171
+        "line": 177
       }
     },
     "existing_cos_id": {
@@ -121,7 +121,7 @@
       ],
       "pos": {
         "filename": "variables.tf",
-        "line": 201
+        "line": 207
       }
     },
     "existing_key_protect_instance_guid": {
@@ -130,7 +130,7 @@
       "description": "The GUID of an existing Key Protect instance which will be used for cluster encryption. If no value passed, cluster data is stored in the Kubernetes etcd, which ends up on the local disk of the Kubernetes master (not recommended).",
       "pos": {
         "filename": "variables.tf",
-        "line": 227
+        "line": 233
       }
     },
     "existing_key_protect_root_key_id": {
@@ -139,7 +139,7 @@
       "description": "The Key ID of a root key, existing in the Key Protect instance passed in var.existing_key_protect_instance_guid, which will be used to encrypt the data encryption keys (DEKs) which are then used to encrypt the secrets in the cluster. Required if value passed for var.existing_key_protect_instance_guid.",
       "pos": {
         "filename": "variables.tf",
-        "line": 233
+        "line": 239
       }
     },
     "force_delete_storage": {
@@ -153,7 +153,7 @@
       ],
       "pos": {
         "filename": "variables.tf",
-        "line": 183
+        "line": 189
       }
     },
     "ibmcloud_api_key": {
@@ -183,7 +183,7 @@
       ],
       "pos": {
         "filename": "variables.tf",
-        "line": 249
+        "line": 255
       },
       "min_length": 1,
       "max_length": 1024,
@@ -196,7 +196,7 @@
       "default": true,
       "pos": {
         "filename": "variables.tf",
-        "line": 239
+        "line": 245
       }
     },
     "logdna_agent_version": {
@@ -208,7 +208,7 @@
       ],
       "pos": {
         "filename": "variables.tf",
-        "line": 278
+        "line": 284
       }
     },
     "logdna_ingestion_key": {
@@ -221,7 +221,7 @@
       ],
       "pos": {
         "filename": "variables.tf",
-        "line": 270
+        "line": 271
       }
     },
     "logdna_instance_name": {
@@ -234,7 +234,7 @@
       ],
       "pos": {
         "filename": "variables.tf",
-        "line": 264
+        "line": 265
       }
     },
     "logdna_resource_group_id": {
@@ -243,7 +243,7 @@
       "description": "Resource group id that the LogDNA instance is in. If left at null, the value of var.resource_group_id will be used.",
       "pos": {
         "filename": "variables.tf",
-        "line": 272
+        "line": 278
       }
     },
     "ocp_entitlement": {
@@ -257,7 +257,7 @@
       ],
       "pos": {
         "filename": "variables.tf",
-        "line": 177
+        "line": 183
       }
     },
     "ocp_version": {
@@ -323,7 +323,7 @@
       ],
       "pos": {
         "filename": "variables.tf",
-        "line": 294
+        "line": 300
       }
     },
     "sysdig_agent_version": {
@@ -335,7 +335,7 @@
       ],
       "pos": {
         "filename": "variables.tf",
-        "line": 307
+        "line": 313
       }
     },
     "sysdig_instance_name": {
@@ -348,7 +348,7 @@
       ],
       "pos": {
         "filename": "variables.tf",
-        "line": 288
+        "line": 294
       }
     },
     "sysdig_resource_group_id": {
@@ -357,7 +357,7 @@
       "description": "Resource group id that the Sysdig instance is in. If left at null, the value of var.resource_group_id will be used.",
       "pos": {
         "filename": "variables.tf",
-        "line": 301
+        "line": 307
       }
     },
     "use_existing_cos": {
@@ -371,7 +371,21 @@
       ],
       "pos": {
         "filename": "variables.tf",
-        "line": 189
+        "line": 195
+      }
+    },
+    "verify_worker_network_readiness": {
+      "name": "verify_worker_network_readiness",
+      "type": "bool",
+      "description": "By setting this to true, a script will run kubectl commands to verify that all worker nodes can communicate successfully with the master. If the runtime does not have access to the kube cluster to run kubectl commands, this should be set to false.",
+      "default": true,
+      "source": [
+        "module.ocp_base.data.ibm_container_cluster_config.cluster_config.count",
+        "module.ocp_base.null_resource.confirm_network_healthy.count"
+      ],
+      "pos": {
+        "filename": "variables.tf",
+        "line": 39
       }
     },
     "vpc_id": {
@@ -449,7 +463,7 @@
       ],
       "pos": {
         "filename": "variables.tf",
-        "line": 72
+        "line": 73
       }
     }
   },
