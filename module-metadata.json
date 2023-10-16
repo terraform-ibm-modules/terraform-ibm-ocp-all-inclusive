@@ -13,7 +13,7 @@
       ],
       "pos": {
         "filename": "variables.tf",
-        "line": 157
+        "line": 158
       },
       "min_length": 1,
       "max_length": 128,
@@ -32,7 +32,7 @@
       ],
       "pos": {
         "filename": "variables.tf",
-        "line": 212
+        "line": 213
       }
     },
     "cluster_name": {
@@ -61,7 +61,7 @@
       ],
       "pos": {
         "filename": "variables.tf",
-        "line": 163
+        "line": 164
       }
     },
     "cluster_tags": {
@@ -75,7 +75,7 @@
       ],
       "pos": {
         "filename": "variables.tf",
-        "line": 151
+        "line": 152
       },
       "min_length": 1,
       "max_length": 128,
@@ -94,7 +94,7 @@
       ],
       "pos": {
         "filename": "variables.tf",
-        "line": 200
+        "line": 201
       }
     },
     "disable_public_endpoint": {
@@ -109,7 +109,7 @@
       ],
       "pos": {
         "filename": "variables.tf",
-        "line": 176
+        "line": 177
       }
     },
     "existing_cos_id": {
@@ -121,7 +121,7 @@
       ],
       "pos": {
         "filename": "variables.tf",
-        "line": 206
+        "line": 207
       }
     },
     "existing_key_protect_instance_guid": {
@@ -130,7 +130,7 @@
       "description": "The GUID of an existing Key Protect instance which will be used for cluster encryption. If no value passed, cluster data is stored in the Kubernetes etcd, which ends up on the local disk of the Kubernetes master (not recommended).",
       "pos": {
         "filename": "variables.tf",
-        "line": 232
+        "line": 233
       }
     },
     "existing_key_protect_root_key_id": {
@@ -139,7 +139,7 @@
       "description": "The Key ID of a root key, existing in the Key Protect instance passed in var.existing_key_protect_instance_guid, which will be used to encrypt the data encryption keys (DEKs) which are then used to encrypt the secrets in the cluster. Required if value passed for var.existing_key_protect_instance_guid.",
       "pos": {
         "filename": "variables.tf",
-        "line": 238
+        "line": 239
       }
     },
     "force_delete_storage": {
@@ -153,7 +153,7 @@
       ],
       "pos": {
         "filename": "variables.tf",
-        "line": 188
+        "line": 189
       }
     },
     "ibmcloud_api_key": {
@@ -183,7 +183,7 @@
       ],
       "pos": {
         "filename": "variables.tf",
-        "line": 254
+        "line": 255
       },
       "min_length": 1,
       "max_length": 1024,
@@ -196,7 +196,7 @@
       "default": true,
       "pos": {
         "filename": "variables.tf",
-        "line": 244
+        "line": 245
       }
     },
     "logdna_agent_version": {
@@ -208,7 +208,7 @@
       ],
       "pos": {
         "filename": "variables.tf",
-        "line": 283
+        "line": 284
       }
     },
     "logdna_ingestion_key": {
@@ -221,7 +221,7 @@
       ],
       "pos": {
         "filename": "variables.tf",
-        "line": 270
+        "line": 271
       }
     },
     "logdna_instance_name": {
@@ -234,7 +234,7 @@
       ],
       "pos": {
         "filename": "variables.tf",
-        "line": 264
+        "line": 265
       }
     },
     "logdna_resource_group_id": {
@@ -243,7 +243,7 @@
       "description": "Resource group id that the LogDNA instance is in. If left at null, the value of var.resource_group_id will be used.",
       "pos": {
         "filename": "variables.tf",
-        "line": 277
+        "line": 278
       }
     },
     "ocp_entitlement": {
@@ -257,13 +257,13 @@
       ],
       "pos": {
         "filename": "variables.tf",
-        "line": 182
+        "line": 183
       }
     },
     "ocp_version": {
       "name": "ocp_version",
       "type": "string",
-      "description": "The version of the OpenShift cluster that should be provisioned (format 4.x). This is only used during initial cluster provisioning, but ignored for future updates. If no value is passed, or the string 'latest' is passed, the current latest OCP version will be used.",
+      "description": "The version of the OpenShift cluster that should be provisioned (format 4.x). This is only used during initial cluster provisioning, but ignored for future updates. Supports passing the string 'latest' (current latest available version) or 'default' (current IKS default recommended version). If no value is passed, it will default to 'default'.",
       "source": [
         "module.ocp_base"
       ],
@@ -323,7 +323,7 @@
       ],
       "pos": {
         "filename": "variables.tf",
-        "line": 299
+        "line": 300
       }
     },
     "sysdig_agent_version": {
@@ -335,7 +335,7 @@
       ],
       "pos": {
         "filename": "variables.tf",
-        "line": 312
+        "line": 313
       }
     },
     "sysdig_instance_name": {
@@ -348,7 +348,7 @@
       ],
       "pos": {
         "filename": "variables.tf",
-        "line": 293
+        "line": 294
       }
     },
     "sysdig_resource_group_id": {
@@ -357,7 +357,7 @@
       "description": "Resource group id that the Sysdig instance is in. If left at null, the value of var.resource_group_id will be used.",
       "pos": {
         "filename": "variables.tf",
-        "line": 306
+        "line": 307
       }
     },
     "use_existing_cos": {
@@ -371,7 +371,7 @@
       ],
       "pos": {
         "filename": "variables.tf",
-        "line": 194
+        "line": 195
       }
     },
     "verify_worker_network_readiness": {
@@ -463,7 +463,7 @@
       ],
       "pos": {
         "filename": "variables.tf",
-        "line": 72
+        "line": 73
       }
     }
   },
