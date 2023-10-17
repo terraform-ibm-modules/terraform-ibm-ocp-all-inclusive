@@ -287,6 +287,12 @@ variable "logdna_agent_version" {
   default     = null
 }
 
+variable "logdna_agent_tags" {
+  type        = list(string)
+  description = "array of tags to group the host logs pushed by the logdna agent"
+  default     = []
+}
+
 ##############################################################################
 # Sysdig Agent Variables
 ##############################################################################

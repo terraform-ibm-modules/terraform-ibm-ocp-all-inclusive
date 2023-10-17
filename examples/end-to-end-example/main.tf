@@ -111,4 +111,5 @@ module "ocp_all_inclusive" {
   sysdig_access_key                  = module.observability_instances.cloud_monitoring_access_key
   addons                             = local.addons
   disable_public_endpoint            = var.disable_public_endpoint
+  logdna_agent_tags                  = var.logdna_agent_tags
 }

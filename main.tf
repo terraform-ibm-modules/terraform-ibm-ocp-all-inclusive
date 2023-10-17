@@ -83,4 +83,5 @@ module "observability_agents" {
   sysdig_access_key         = var.sysdig_access_key
   sysdig_resource_group_id  = local.sysdig_resource_group_id
   sysdig_agent_version      = var.sysdig_agent_version
+  logdna_agent_tags         = var.logdna_agent_tags
 }
