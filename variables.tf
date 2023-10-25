@@ -289,7 +289,7 @@ variable "logdna_agent_version" {
 
 variable "logdna_agent_tags" {
   type        = list(string)
-  description = "array of tags to group the host logs pushed by the logdna agent"
+  description = "List of tags to associate with the logdna instance"
   default     = []
 }
 

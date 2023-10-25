@@ -69,9 +69,3 @@ variable "disable_public_endpoint" {
   description = "Flag indicating that the public endpoint should be disabled"
   default     = false
 }
-
-variable "logdna_agent_tags" {
-  type        = list(string)
-  description = "array of tags to group the host logs pushed by the logdna agent"
-  default     = []
-}
