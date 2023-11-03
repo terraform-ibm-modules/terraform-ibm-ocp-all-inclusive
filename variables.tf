@@ -289,7 +289,7 @@ variable "logdna_agent_version" {
 
 variable "logdna_agent_tags" {
   type        = list(string)
-  description = "List of tags to associate with the logdna instance"
+  description = "List of tags to associate with the logdna agents"
   default     = []
 }
 
@@ -324,6 +324,6 @@ variable "sysdig_agent_version" {
 
 variable "sysdig_agent_tags" {
   type        = list(string)
-  description = "List of tags to associate with the sysdig instance"
+  description = "List of tags to associate with the sysdig agents"
   default     = []
 }
