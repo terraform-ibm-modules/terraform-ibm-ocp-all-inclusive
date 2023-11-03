@@ -112,4 +112,5 @@ module "ocp_all_inclusive" {
   addons                             = local.addons
   disable_public_endpoint            = var.disable_public_endpoint
   logdna_agent_tags                  = var.resource_tags
+  sysdig_agent_tags                  = var.resource_tags
 }

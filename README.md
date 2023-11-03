@@ -121,7 +121,7 @@ You need the following permissions to run this module.
 
 | Name | Source | Version |
 |------|--------|---------|
-| <a name="module_observability_agents"></a> [observability\_agents](#module\_observability\_agents) | terraform-ibm-modules/observability-agents/ibm | 1.10.2 |
+| <a name="module_observability_agents"></a> [observability\_agents](#module\_observability\_agents) | terraform-ibm-modules/observability-agents/ibm | 1.11.0 |
 | <a name="module_ocp_base"></a> [ocp\_base](#module\_ocp\_base) | terraform-ibm-modules/base-ocp-vpc/ibm | 3.9.2 |
 
 ### Resources
@@ -156,6 +156,7 @@ No resources.
 | <a name="input_region"></a> [region](#input\_region) | The IBM Cloud region where all resources will be provisioned. | `string` | n/a | yes |
 | <a name="input_resource_group_id"></a> [resource\_group\_id](#input\_resource\_group\_id) | The IBM Cloud resource group ID to provision all resources in. | `string` | n/a | yes |
 | <a name="input_sysdig_access_key"></a> [sysdig\_access\_key](#input\_sysdig\_access\_key) | Access key for the Sysdig agent to communicate with the instance. | `string` | `null` | no |
+| <a name="input_sysdig_agent_tags"></a> [sysdig\_agent\_tags](#input\_sysdig\_agent\_tags) | List of tags to associate with the sysdig instance | `list(string)` | `[]` | no |
 | <a name="input_sysdig_agent_version"></a> [sysdig\_agent\_version](#input\_sysdig\_agent\_version) | Optionally override the default Sysdig agent version. If the value is null, this version is set to the version of 'sysdig\_agent\_version' variable in the Observability agents module. To list available versions, run: `ibmcloud cr images --restrict ext/sysdig/agent`. | `string` | `null` | no |
 | <a name="input_sysdig_instance_name"></a> [sysdig\_instance\_name](#input\_sysdig\_instance\_name) | The name of the Sysdig instance to point the Sysdig agent to. If left at null, no agent will be deployed. | `string` | `null` | no |
 | <a name="input_sysdig_resource_group_id"></a> [sysdig\_resource\_group\_id](#input\_sysdig\_resource\_group\_id) | Resource group id that the Sysdig instance is in. If left at null, the value of var.resource\_group\_id will be used. | `string` | `null` | no |
