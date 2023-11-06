@@ -199,6 +199,19 @@
         "line": 245
       }
     },
+    "logdna_agent_tags": {
+      "name": "logdna_agent_tags",
+      "type": "list(string)",
+      "description": "List of tags to associate with the logdna instance",
+      "default": [],
+      "source": [
+        "module.observability_agents"
+      ],
+      "pos": {
+        "filename": "variables.tf",
+        "line": 290
+      }
+    },
     "logdna_agent_version": {
       "name": "logdna_agent_version",
       "type": "string",
@@ -323,7 +336,7 @@
       ],
       "pos": {
         "filename": "variables.tf",
-        "line": 300
+        "line": 306
       }
     },
     "sysdig_agent_version": {
@@ -335,7 +348,7 @@
       ],
       "pos": {
         "filename": "variables.tf",
-        "line": 313
+        "line": 319
       }
     },
     "sysdig_instance_name": {
@@ -348,7 +361,7 @@
       ],
       "pos": {
         "filename": "variables.tf",
-        "line": 294
+        "line": 300
       }
     },
     "sysdig_resource_group_id": {
@@ -357,7 +370,7 @@
       "description": "Resource group id that the Sysdig instance is in. If left at null, the value of var.resource_group_id will be used.",
       "pos": {
         "filename": "variables.tf",
-        "line": 307
+        "line": 313
       }
     },
     "use_existing_cos": {
@@ -634,6 +647,7 @@
       "version": "1.9.3",
       "attributes": {
         "cluster_resource_group_id": "resource_group_id",
+        "logdna_agent_tags": "logdna_agent_tags",
         "logdna_agent_version": "logdna_agent_version",
         "logdna_ingestion_key": "logdna_ingestion_key",
         "logdna_instance_name": "logdna_instance_name",

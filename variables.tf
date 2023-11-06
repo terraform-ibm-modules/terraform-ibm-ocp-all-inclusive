@@ -287,6 +287,12 @@ variable "logdna_agent_version" {
   default     = null
 }
 
+variable "logdna_agent_tags" {
+  type        = list(string)
+  description = "List of tags to associate with the logdna agents"
+  default     = []
+}
+
 ##############################################################################
 # Sysdig Agent Variables
 ##############################################################################
@@ -314,4 +320,10 @@ variable "sysdig_agent_version" {
   type        = string
   description = "Optionally override the default Sysdig agent version. If the value is null, this version is set to the version of 'sysdig_agent_version' variable in the Observability agents module. To list available versions, run: `ibmcloud cr images --restrict ext/sysdig/agent`."
   default     = null
+}
+
+variable "sysdig_agent_tags" {
+  type        = list(string)
+  description = "List of tags to associate with the sysdig agents"
+  default     = []
 }
