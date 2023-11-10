@@ -21,7 +21,7 @@ locals {
 
 module "ocp_base" {
   source                          = "terraform-ibm-modules/base-ocp-vpc/ibm"
-  version                         = "3.9.2"
+  version                         = "3.10.0"
   cluster_name                    = var.cluster_name
   ocp_version                     = var.ocp_version
   resource_group_id               = var.resource_group_id
@@ -43,6 +43,7 @@ module "ocp_base" {
   ibmcloud_api_key                = var.ibmcloud_api_key
   addons                          = var.addons
   verify_worker_network_readiness = var.verify_worker_network_readiness
+  cluster_config_endpoint_type    = var.cluster_config_endpoint_type
 }
 
 ##############################################################################
@@ -68,21 +69,22 @@ locals {
 }
 
 module "observability_agents" {
-  count                     = local.run_observability_agents_module == true ? 1 : 0
-  source                    = "terraform-ibm-modules/observability-agents/ibm"
-  version                   = "1.11.1"
-  cluster_id                = module.ocp_base.cluster_id
-  cluster_resource_group_id = var.resource_group_id
-  logdna_enabled            = local.provision_logdna_agent
-  logdna_instance_name      = var.logdna_instance_name
-  logdna_ingestion_key      = var.logdna_ingestion_key
-  logdna_resource_group_id  = local.logdna_resource_group_id
-  logdna_agent_version      = var.logdna_agent_version
-  logdna_agent_tags         = var.logdna_agent_tags
-  sysdig_enabled            = local.provision_sysdig_agent
-  sysdig_instance_name      = var.sysdig_instance_name
-  sysdig_access_key         = var.sysdig_access_key
-  sysdig_resource_group_id  = local.sysdig_resource_group_id
-  sysdig_agent_version      = var.sysdig_agent_version
-  sysdig_agent_tags         = var.sysdig_agent_tags
+  count                        = local.run_observability_agents_module == true ? 1 : 0
+  source                       = "terraform-ibm-modules/observability-agents/ibm"
+  version                      = "1.12.0"
+  cluster_id                   = module.ocp_base.cluster_id
+  cluster_resource_group_id    = var.resource_group_id
+  logdna_enabled               = local.provision_logdna_agent
+  logdna_instance_name         = var.logdna_instance_name
+  logdna_ingestion_key         = var.logdna_ingestion_key
+  logdna_resource_group_id     = local.logdna_resource_group_id
+  logdna_agent_version         = var.logdna_agent_version
+  logdna_agent_tags            = var.logdna_agent_tags
+  sysdig_enabled               = local.provision_sysdig_agent
+  sysdig_instance_name         = var.sysdig_instance_name
+  sysdig_access_key            = var.sysdig_access_key
+  sysdig_resource_group_id     = local.sysdig_resource_group_id
+  sysdig_agent_version         = var.sysdig_agent_version
+  sysdig_agent_tags            = var.sysdig_agent_tags
+  cluster_config_endpoint_type = var.cluster_config_endpoint_type
 }
