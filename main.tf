@@ -21,7 +21,7 @@ locals {
 
 module "ocp_base" {
   source                          = "terraform-ibm-modules/base-ocp-vpc/ibm"
-  version                         = "3.10.2"
+  version                         = "3.11.0"
   cluster_name                    = var.cluster_name
   ocp_version                     = var.ocp_version
   resource_group_id               = var.resource_group_id
@@ -42,6 +42,7 @@ module "ocp_base" {
   kms_config                      = local.kms_config
   ibmcloud_api_key                = var.ibmcloud_api_key
   addons                          = var.addons
+  manage_all_addons               = var.manage_all_addons
   verify_worker_network_readiness = var.verify_worker_network_readiness
 }
 
