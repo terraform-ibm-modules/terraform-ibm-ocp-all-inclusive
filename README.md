@@ -122,7 +122,7 @@ You need the following permissions to run this module.
 | Name | Source | Version |
 |------|--------|---------|
 | <a name="module_observability_agents"></a> [observability\_agents](#module\_observability\_agents) | terraform-ibm-modules/observability-agents/ibm | 1.12.2 |
-| <a name="module_ocp_base"></a> [ocp\_base](#module\_ocp\_base) | terraform-ibm-modules/base-ocp-vpc/ibm | 3.10.2 |
+| <a name="module_ocp_base"></a> [ocp\_base](#module\_ocp\_base) | terraform-ibm-modules/base-ocp-vpc/ibm | 3.11.0 |
 
 ### Resources
 
@@ -152,6 +152,7 @@ No resources.
 | <a name="input_logdna_ingestion_key"></a> [logdna\_ingestion\_key](#input\_logdna\_ingestion\_key) | Ingestion key for the LogDNA agent to communicate with the instance. | `string` | `null` | no |
 | <a name="input_logdna_instance_name"></a> [logdna\_instance\_name](#input\_logdna\_instance\_name) | The name of the LogDNA instance to point the LogDNA agent to. If left at null, no agent will be deployed. | `string` | `null` | no |
 | <a name="input_logdna_resource_group_id"></a> [logdna\_resource\_group\_id](#input\_logdna\_resource\_group\_id) | Resource group id that the LogDNA instance is in. If left at null, the value of var.resource\_group\_id will be used. | `string` | `null` | no |
+| <a name="input_manage_all_addons"></a> [manage\_all\_addons](#input\_manage\_all\_addons) | Instructs Terraform to manage all cluster addons, even if addons were installed outside of the module. If set to 'true' this module will destroy any addons that were installed by other sources. | `bool` | `false` | no |
 | <a name="input_ocp_entitlement"></a> [ocp\_entitlement](#input\_ocp\_entitlement) | Value that is applied to the entitlements for OCP cluster provisioning | `string` | `"cloud_pak"` | no |
 | <a name="input_ocp_version"></a> [ocp\_version](#input\_ocp\_version) | The version of the OpenShift cluster that should be provisioned (format 4.x). This is only used during initial cluster provisioning, but ignored for future updates. Supports passing the string 'latest' (current latest available version) or 'default' (current IKS default recommended version). If no value is passed, it will default to 'default'. | `string` | `null` | no |
 | <a name="input_region"></a> [region](#input\_region) | The IBM Cloud region where all resources will be provisioned. | `string` | n/a | yes |

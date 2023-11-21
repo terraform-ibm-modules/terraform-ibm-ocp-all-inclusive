@@ -338,3 +338,10 @@ variable "cluster_config_endpoint_type" {
     condition     = contains(["default", "private", "vpe", "link"], var.cluster_config_endpoint_type)
   }
 }
+
+variable "manage_all_addons" {
+  type        = bool
+  default     = false
+  nullable    = false # null values are set to default value
+  description = "Instructs Terraform to manage all cluster addons, even if addons were installed outside of the module. If set to 'true' this module will destroy any addons that were installed by other sources."
+}
