@@ -11,6 +11,4 @@ jobs:
     secrets: inherit
     with:
       craSCCv2: true
-      craTarget: "examples/end-to-end-example"
-      craRuleIgnoreFile: "cra-tf-validate-ignore-rules.json"
-      craEnvironmentVariables: "TF_VAR_disable_public_endpoint=true"
+      craConfigYamlFile: "cra-config.yaml"
