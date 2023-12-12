@@ -44,6 +44,7 @@ module "ocp_base" {
   addons                          = var.addons
   manage_all_addons               = var.manage_all_addons
   verify_worker_network_readiness = var.verify_worker_network_readiness
+  cluster_config_endpoint_type    = var.cluster_config_endpoint_type
 }
 
 ##############################################################################
