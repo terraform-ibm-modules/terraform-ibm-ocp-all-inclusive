@@ -122,7 +122,7 @@ You need the following permissions to run this module.
 | Name | Source | Version |
 |------|--------|---------|
 | <a name="module_observability_agents"></a> [observability\_agents](#module\_observability\_agents) | terraform-ibm-modules/observability-agents/ibm | 1.12.2 |
-| <a name="module_ocp_base"></a> [ocp\_base](#module\_ocp\_base) | terraform-ibm-modules/base-ocp-vpc/ibm | 3.11.0 |
+| <a name="module_ocp_base"></a> [ocp\_base](#module\_ocp\_base) | terraform-ibm-modules/base-ocp-vpc/ibm | 3.11.3 |
 
 ### Resources
 
@@ -133,7 +133,7 @@ No resources.
 | Name | Description | Type | Default | Required |
 |------|-------------|------|---------|:--------:|
 | <a name="input_access_tags"></a> [access\_tags](#input\_access\_tags) | Optional list of access management tags to add to the OCP Cluster created by this module. | `list(string)` | `[]` | no |
-| <a name="input_addons"></a> [addons](#input\_addons) | List of all addons supported by the ocp cluster. | <pre>object({<br>    alb-oauth-proxy           = optional(string)<br>    debug-tool                = optional(string)<br>    image-key-synchronizer    = optional(string)<br>    istio                     = optional(string)<br>    openshift-data-foundation = optional(string)<br>    static-route              = optional(string)<br>    cluster-autoscaler        = optional(string)<br>    vpc-block-csi-driver      = optional(string)<br>  })</pre> | `null` | no |
+| <a name="input_addons"></a> [addons](#input\_addons) | List of all addons supported by the ocp cluster. | <pre>object({<br>    debug-tool                = optional(string)<br>    image-key-synchronizer    = optional(string)<br>    openshift-data-foundation = optional(string)<br>    vpc-file-csi-driver       = optional(string)<br>    static-route              = optional(string)<br>    cluster-autoscaler        = optional(string)<br>    vpc-block-csi-driver      = optional(string)<br>  })</pre> | `null` | no |
 | <a name="input_cluster_config_endpoint_type"></a> [cluster\_config\_endpoint\_type](#input\_cluster\_config\_endpoint\_type) | Specify which type of endpoint to use for for cluster config access: 'default', 'private', 'vpe', 'link'. 'default' value will use the default endpoint of the cluster. | `string` | `"default"` | no |
 | <a name="input_cluster_name"></a> [cluster\_name](#input\_cluster\_name) | The name to give the OCP cluster provisioned by the module. | `string` | n/a | yes |
 | <a name="input_cluster_ready_when"></a> [cluster\_ready\_when](#input\_cluster\_ready\_when) | The cluster is ready when one of the following: MasterNodeReady (not recommended), OneWorkerNodeReady, Normal, IngressReady | `string` | `"IngressReady"` | no |
