@@ -192,22 +192,28 @@ variable "force_delete_storage" {
   default     = false
 }
 
-variable "use_existing_cos" {
-  type        = bool
-  description = "COS is required to back up the OpenShift internal registry. Set this to true and pass a value for var.existing_cos_id if you want to use an existing COS instance."
-  default     = false
-}
-
 variable "cos_name" {
   type        = string
-  description = "The name to give the COS instance that will be provisioned by this module if var.use_existing_cos is false. COS is required to back up the OpenShift internal registry."
+  description = "Name of the COS instance to provision for OpenShift internal registry storage. New instance only provisioned if 'enable_registry_storage' is true and 'use_existing_cos' is false. Default: '<cluster_name>_cos'"
   default     = null
+}
+
+variable "use_existing_cos" {
+  type        = bool
+  description = "Flag indicating whether or not to use an existing COS instance for OpenShift internal registry storage. Only applicable if 'enable_registry_storage' is true"
+  default     = false
 }
 
 variable "existing_cos_id" {
   type        = string
-  description = "The COS ID of an already existing COS instance which will be used to back up the OpenShift internal registry. Required if var.use_existing_cos is true."
+  description = "The COS id of an already existing COS instance to use for OpenShift internal registry storage. Only required if 'enable_registry_storage' and 'use_existing_cos' are true"
   default     = null
+}
+
+variable "enable_registry_storage" {
+  type        = bool
+  description = "Set to `true` to enable IBM Cloud Object Storage for the Red Hat OpenShift internal image registry. Set to `false` only for new cluster deployments in an account that is allowlisted for this feature."
+  default     = true
 }
 
 variable "addons" {

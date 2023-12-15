@@ -21,7 +21,7 @@ locals {
 
 module "ocp_base" {
   source                          = "terraform-ibm-modules/base-ocp-vpc/ibm"
-  version                         = "3.11.3"
+  version                         = "3.14.0"
   cluster_name                    = var.cluster_name
   ocp_version                     = var.ocp_version
   resource_group_id               = var.resource_group_id
@@ -45,6 +45,7 @@ module "ocp_base" {
   manage_all_addons               = var.manage_all_addons
   verify_worker_network_readiness = var.verify_worker_network_readiness
   cluster_config_endpoint_type    = var.cluster_config_endpoint_type
+  enable_registry_storage         = var.enable_registry_storage
 }
 
 ##############################################################################
