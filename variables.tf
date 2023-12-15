@@ -247,6 +247,12 @@ variable "key_protect_use_private_endpoint" {
   default     = true
 }
 
+variable "kms_cross_account_id" {
+  type        = string
+  description = "Id of the account that owns the KMS instance to encrypt the cluster"
+  default     = null
+}
+
 ##############################################################################
 # OCP Worker Variables
 ##############################################################################

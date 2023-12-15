@@ -16,6 +16,7 @@ locals {
     crk_id           = var.existing_key_protect_root_key_id
     instance_id      = var.existing_key_protect_instance_guid
     private_endpoint = var.key_protect_use_private_endpoint
+    account_id       = var.kms_cross_account_id
   } : null
 }
 
