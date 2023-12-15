@@ -75,7 +75,7 @@ module "key_protect_all_inclusive" {
 
 locals {
   addons = {
-    "cluster-autoscaler" = "1.0.8"
+    "cluster-autoscaler" = "1.2.0"
   }
 
   cluster_vpc_subnets = {
