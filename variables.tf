@@ -247,9 +247,9 @@ variable "key_protect_use_private_endpoint" {
   default     = true
 }
 
-variable "kms_cross_account_id" {
+variable "kms_account_id" {
   type        = string
-  description = "Id of the account that owns the KMS instance to encrypt the cluster"
+  description = "Id of the account that owns the KMS instance to encrypt the cluster. It is only required if the KMS instance is in another account."
   default     = null
 }
 
