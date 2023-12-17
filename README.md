@@ -111,7 +111,7 @@ You need the following permissions to run this module.
 | <a name="requirement_terraform"></a> [terraform](#requirement\_terraform) | >= 1.3.0, <1.6.0 |
 | <a name="requirement_external"></a> [external](#requirement\_external) | >= 2.2.3 |
 | <a name="requirement_helm"></a> [helm](#requirement\_helm) | >= 2.8.0 |
-| <a name="requirement_ibm"></a> [ibm](#requirement\_ibm) | >= 1.59.0, < 2.0.0 |
+| <a name="requirement_ibm"></a> [ibm](#requirement\_ibm) | >= 1.60.0, < 2.0.0 |
 | <a name="requirement_kubernetes"></a> [kubernetes](#requirement\_kubernetes) | >= 2.16.1 |
 | <a name="requirement_local"></a> [local](#requirement\_local) | >= 2.2.3 |
 | <a name="requirement_null"></a> [null](#requirement\_null) | >= 3.2.1 |
@@ -147,6 +147,7 @@ No resources.
 | <a name="input_ibmcloud_api_key"></a> [ibmcloud\_api\_key](#input\_ibmcloud\_api\_key) | An IBM Cloud API key with permissions to provision resources. | `string` | n/a | yes |
 | <a name="input_ignore_worker_pool_size_changes"></a> [ignore\_worker\_pool\_size\_changes](#input\_ignore\_worker\_pool\_size\_changes) | Enable if using worker autoscaling. Stops Terraform managing worker count | `bool` | `false` | no |
 | <a name="input_key_protect_use_private_endpoint"></a> [key\_protect\_use\_private\_endpoint](#input\_key\_protect\_use\_private\_endpoint) | Set as true to use the Private endpoint when communicating between cluster and Key Protect Instance. | `bool` | `true` | no |
+| <a name="input_kms_account_id"></a> [kms\_account\_id](#input\_kms\_account\_id) | Id of the account that owns the KMS instance to encrypt the cluster. It is only required if the KMS instance is in another account. | `string` | `null` | no |
 | <a name="input_logdna_agent_tags"></a> [logdna\_agent\_tags](#input\_logdna\_agent\_tags) | List of tags to associate with the logdna agents | `list(string)` | `[]` | no |
 | <a name="input_logdna_agent_version"></a> [logdna\_agent\_version](#input\_logdna\_agent\_version) | Optionally override the default LogDNA agent version. If the value is null, this version is set to the version of 'logdna\_agent\_version' variable in the Observability agents module. To list available versions, run: `ibmcloud cr images --restrict ext/logdna-agent`. | `string` | `null` | no |
 | <a name="input_logdna_ingestion_key"></a> [logdna\_ingestion\_key](#input\_logdna\_ingestion\_key) | Ingestion key for the LogDNA agent to communicate with the instance. | `string` | `null` | no |
