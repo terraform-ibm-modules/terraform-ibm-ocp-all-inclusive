@@ -46,6 +46,7 @@ module "ocp_base" {
   manage_all_addons               = var.manage_all_addons
   verify_worker_network_readiness = var.verify_worker_network_readiness
   cluster_config_endpoint_type    = var.cluster_config_endpoint_type
+  enable_registry_storage         = var.enable_registry_storage
 }
 
 ##############################################################################
