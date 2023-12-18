@@ -88,5 +88,4 @@ module "observability_agents" {
   sysdig_resource_group_id     = local.sysdig_resource_group_id
   sysdig_agent_version         = var.sysdig_agent_version
   sysdig_agent_tags            = var.sysdig_agent_tags
-  cluster_config_endpoint_type = var.cluster_config_endpoint_type
 }
