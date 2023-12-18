@@ -61,10 +61,9 @@ variable "ocp_version" {
       var.ocp_version == null,
       var.ocp_version == "default",
       var.ocp_version == "latest",
-      var.ocp_version == "4.10",
-      var.ocp_version == "4.11",
       var.ocp_version == "4.12",
       var.ocp_version == "4.13",
+      var.ocp_version == "4.14",
     ])
     error_message = "The specified ocp_version is not one of the validated versions."
   }
@@ -251,6 +250,12 @@ variable "key_protect_use_private_endpoint" {
   type        = bool
   description = "Set as true to use the Private endpoint when communicating between cluster and Key Protect Instance."
   default     = true
+}
+
+variable "kms_account_id" {
+  type        = string
+  description = "Id of the account that owns the KMS instance to encrypt the cluster. It is only required if the KMS instance is in another account."
+  default     = null
 }
 
 ##############################################################################
