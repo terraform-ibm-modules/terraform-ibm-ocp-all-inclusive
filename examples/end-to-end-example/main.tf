@@ -25,7 +25,7 @@ module "vpc" {
 }
 
 ##############################################################################
-# Observability Instances (LogDNA + Sysdig)
+# Observability Instances (Log Analysis + Cloud Monitoring)
 ##############################################################################
 
 module "observability_instances" {
@@ -105,12 +105,12 @@ module "ocp_all_inclusive" {
   access_tags                        = var.access_tags
   existing_key_protect_instance_guid = module.key_protect_all_inclusive.key_protect_guid
   existing_key_protect_root_key_id   = module.key_protect_all_inclusive.keys["${local.key_ring_name}.${local.key_name}"].key_id
-  logdna_instance_name               = module.observability_instances.log_analysis_name
-  logdna_ingestion_key               = module.observability_instances.log_analysis_ingestion_key
-  sysdig_instance_name               = module.observability_instances.cloud_monitoring_name
-  sysdig_access_key                  = module.observability_instances.cloud_monitoring_access_key
+  log_analysis_instance_name         = module.observability_instances.log_analysis_name
+  log_analysis_ingestion_key         = module.observability_instances.log_analysis_ingestion_key
+  cloud_monitoring_instance_name     = module.observability_instances.cloud_monitoring_name
+  cloud_monitoring_access_key        = module.observability_instances.cloud_monitoring_access_key
   addons                             = local.addons
   disable_public_endpoint            = var.disable_public_endpoint
-  logdna_agent_tags                  = var.resource_tags
-  sysdig_agent_tags                  = var.resource_tags
+  log_analysis_agent_tags            = var.resource_tags
+  cloud_monitoring_agent_tags        = var.resource_tags
 }
