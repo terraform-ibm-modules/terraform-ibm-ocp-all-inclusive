@@ -11,7 +11,7 @@
 
 This module is a wrapper module that groups the following modules:
 - [base-ocp-vpc-module](https://github.com/terraform-ibm-modules/terraform-ibm-base-ocp-vpc) - Provisions a base (bare) Red Hat OpenShift Container Platform cluster on VPC Gen2 (supports passing Key Protect details to encrypt cluster).
-- [observability-agents-module](https://github.com/terraform-ibm-modules/terraform-ibm-observability-agents) - Deploys LogDNA and Sysdig agents to a cluster.
+- [observability-agents-module](https://github.com/terraform-ibm-modules/terraform-ibm-observability-agents) - Deploys Log Analysis and Cloud Monitoring agents to a cluster.
 
 :exclamation: **Important:** You can't update Red Hat OpenShift cluster nodes by using this module. The Terraform logic ignores updates to prevent possible destructive changes.
 
@@ -82,10 +82,10 @@ module "ocp_all_inclusive" {
       }
     ]
   }
-  logdna_instance_name          = "my-logdna"
-  logdna_ingestion_key          = "xxXXxxXXxXxXXXXxxXxxxXXXXxXXXXX"
-  sysdig_instance_name          = "my-sysdig"
-  sysdig_access_key             = "xxXXxxXXxXxXXXXxxXxxxXXXXxXXXXX"
+  log_analysis_instance_name          = "my-logdna"
+  log_analysis_ingestion_key          = "xxXXxxXXxXxXXXXxxXxxxXXXXxXXXXX"
+  cloud_monitoring_instance_name          = "my-sysdig"
+  cloud_monitoring_access_key             = "xxXXxxXXxXxXXXXxxXxxxXXXXxXXXXX"
 }
 ```
 
@@ -127,7 +127,7 @@ You need the following permissions to run this module.
 
 | Name | Source | Version |
 |------|--------|---------|
-| <a name="module_observability_agents"></a> [observability\_agents](#module\_observability\_agents) | terraform-ibm-modules/observability-agents/ibm | 1.12.2 |
+| <a name="module_observability_agents"></a> [observability\_agents](#module\_observability\_agents) | terraform-ibm-modules/observability-agents/ibm | 1.16.0 |
 | <a name="module_ocp_base"></a> [ocp\_base](#module\_ocp\_base) | terraform-ibm-modules/base-ocp-vpc/ibm | 3.14.0 |
 
 ### Resources
@@ -140,6 +140,11 @@ No resources.
 |------|-------------|------|---------|:--------:|
 | <a name="input_access_tags"></a> [access\_tags](#input\_access\_tags) | Optional list of access management tags to add to the OCP Cluster created by this module. | `list(string)` | `[]` | no |
 | <a name="input_addons"></a> [addons](#input\_addons) | List of all addons supported by the ocp cluster. | <pre>object({<br>    debug-tool                = optional(string)<br>    image-key-synchronizer    = optional(string)<br>    openshift-data-foundation = optional(string)<br>    vpc-file-csi-driver       = optional(string)<br>    static-route              = optional(string)<br>    cluster-autoscaler        = optional(string)<br>    vpc-block-csi-driver      = optional(string)<br>  })</pre> | `null` | no |
+| <a name="input_cloud_monitoring_access_key"></a> [cloud\_monitoring\_access\_key](#input\_cloud\_monitoring\_access\_key) | Access key for the Cloud Monitoring agent to communicate with the instance. | `string` | `null` | no |
+| <a name="input_cloud_monitoring_agent_tags"></a> [cloud\_monitoring\_agent\_tags](#input\_cloud\_monitoring\_agent\_tags) | List of tags to associate with the cloud monitoring agents | `list(string)` | `[]` | no |
+| <a name="input_cloud_monitoring_agent_version"></a> [cloud\_monitoring\_agent\_version](#input\_cloud\_monitoring\_agent\_version) | Optionally override the default Cloud Monitoring agent version. If the value is null, this version is set to the version of 'cloud\_monitoring\_agent\_version' variable in the Observability agents module. To list available versions, run: `ibmcloud cr images --restrict ext/sysdig/agent`. | `string` | `null` | no |
+| <a name="input_cloud_monitoring_instance_name"></a> [cloud\_monitoring\_instance\_name](#input\_cloud\_monitoring\_instance\_name) | The name of the Cloud Monitoring instance to point the Cloud Monitoring agent to. If left at null, no agent will be deployed. | `string` | `null` | no |
+| <a name="input_cloud_monitoring_resource_group_id"></a> [cloud\_monitoring\_resource\_group\_id](#input\_cloud\_monitoring\_resource\_group\_id) | Resource group id that the Cloud Monitoring instance is in. If left at null, the value of var.resource\_group\_id will be used. | `string` | `null` | no |
 | <a name="input_cluster_config_endpoint_type"></a> [cluster\_config\_endpoint\_type](#input\_cluster\_config\_endpoint\_type) | Specify which type of endpoint to use for for cluster config access: 'default', 'private', 'vpe', 'link'. 'default' value will use the default endpoint of the cluster. | `string` | `"default"` | no |
 | <a name="input_cluster_name"></a> [cluster\_name](#input\_cluster\_name) | The name to give the OCP cluster provisioned by the module. | `string` | n/a | yes |
 | <a name="input_cluster_ready_when"></a> [cluster\_ready\_when](#input\_cluster\_ready\_when) | The cluster is ready when one of the following: MasterNodeReady (not recommended), OneWorkerNodeReady, Normal, IngressReady | `string` | `"IngressReady"` | no |
@@ -155,21 +160,16 @@ No resources.
 | <a name="input_ignore_worker_pool_size_changes"></a> [ignore\_worker\_pool\_size\_changes](#input\_ignore\_worker\_pool\_size\_changes) | Enable if using worker autoscaling. Stops Terraform managing worker count | `bool` | `false` | no |
 | <a name="input_key_protect_use_private_endpoint"></a> [key\_protect\_use\_private\_endpoint](#input\_key\_protect\_use\_private\_endpoint) | Set as true to use the Private endpoint when communicating between cluster and Key Protect Instance. | `bool` | `true` | no |
 | <a name="input_kms_account_id"></a> [kms\_account\_id](#input\_kms\_account\_id) | Id of the account that owns the KMS instance to encrypt the cluster. It is only required if the KMS instance is in another account. | `string` | `null` | no |
-| <a name="input_logdna_agent_tags"></a> [logdna\_agent\_tags](#input\_logdna\_agent\_tags) | List of tags to associate with the logdna agents | `list(string)` | `[]` | no |
-| <a name="input_logdna_agent_version"></a> [logdna\_agent\_version](#input\_logdna\_agent\_version) | Optionally override the default LogDNA agent version. If the value is null, this version is set to the version of 'logdna\_agent\_version' variable in the Observability agents module. To list available versions, run: `ibmcloud cr images --restrict ext/logdna-agent`. | `string` | `null` | no |
-| <a name="input_logdna_ingestion_key"></a> [logdna\_ingestion\_key](#input\_logdna\_ingestion\_key) | Ingestion key for the LogDNA agent to communicate with the instance. | `string` | `null` | no |
-| <a name="input_logdna_instance_name"></a> [logdna\_instance\_name](#input\_logdna\_instance\_name) | The name of the LogDNA instance to point the LogDNA agent to. If left at null, no agent will be deployed. | `string` | `null` | no |
-| <a name="input_logdna_resource_group_id"></a> [logdna\_resource\_group\_id](#input\_logdna\_resource\_group\_id) | Resource group id that the LogDNA instance is in. If left at null, the value of var.resource\_group\_id will be used. | `string` | `null` | no |
+| <a name="input_log_analysis_agent_tags"></a> [log\_analysis\_agent\_tags](#input\_log\_analysis\_agent\_tags) | List of tags to associate with the log analysis agents | `list(string)` | `[]` | no |
+| <a name="input_log_analysis_agent_version"></a> [log\_analysis\_agent\_version](#input\_log\_analysis\_agent\_version) | Optionally override the default Log Analysis agent version. If the value is null, this version is set to the version of 'log\_analysis\_agent\_version' variable in the Observability agents module. To list available versions, run: `ibmcloud cr images --restrict ext/logdna-agent`. | `string` | `null` | no |
+| <a name="input_log_analysis_ingestion_key"></a> [log\_analysis\_ingestion\_key](#input\_log\_analysis\_ingestion\_key) | Ingestion key for the Log Analysis agent to communicate with the instance. | `string` | `null` | no |
+| <a name="input_log_analysis_instance_name"></a> [log\_analysis\_instance\_name](#input\_log\_analysis\_instance\_name) | The name of the Log Analysis instance to point the Log Analysis agent to. If left at null, no agent will be deployed. | `string` | `null` | no |
+| <a name="input_log_analysis_resource_group_id"></a> [log\_analysis\_resource\_group\_id](#input\_log\_analysis\_resource\_group\_id) | Resource group id that the Log Analysis instance is in. If left at null, the value of var.resource\_group\_id will be used. | `string` | `null` | no |
 | <a name="input_manage_all_addons"></a> [manage\_all\_addons](#input\_manage\_all\_addons) | Instructs Terraform to manage all cluster addons, even if addons were installed outside of the module. If set to 'true' this module will destroy any addons that were installed by other sources. | `bool` | `false` | no |
 | <a name="input_ocp_entitlement"></a> [ocp\_entitlement](#input\_ocp\_entitlement) | Value that is applied to the entitlements for OCP cluster provisioning | `string` | `"cloud_pak"` | no |
 | <a name="input_ocp_version"></a> [ocp\_version](#input\_ocp\_version) | The version of the OpenShift cluster that should be provisioned (format 4.x). This is only used during initial cluster provisioning, but ignored for future updates. Supports passing the string 'latest' (current latest available version) or 'default' (current IKS default recommended version). If no value is passed, it will default to 'default'. | `string` | `null` | no |
 | <a name="input_region"></a> [region](#input\_region) | The IBM Cloud region where all resources will be provisioned. | `string` | n/a | yes |
 | <a name="input_resource_group_id"></a> [resource\_group\_id](#input\_resource\_group\_id) | The IBM Cloud resource group ID to provision all resources in. | `string` | n/a | yes |
-| <a name="input_sysdig_access_key"></a> [sysdig\_access\_key](#input\_sysdig\_access\_key) | Access key for the Sysdig agent to communicate with the instance. | `string` | `null` | no |
-| <a name="input_sysdig_agent_tags"></a> [sysdig\_agent\_tags](#input\_sysdig\_agent\_tags) | List of tags to associate with the sysdig agents | `list(string)` | `[]` | no |
-| <a name="input_sysdig_agent_version"></a> [sysdig\_agent\_version](#input\_sysdig\_agent\_version) | Optionally override the default Sysdig agent version. If the value is null, this version is set to the version of 'sysdig\_agent\_version' variable in the Observability agents module. To list available versions, run: `ibmcloud cr images --restrict ext/sysdig/agent`. | `string` | `null` | no |
-| <a name="input_sysdig_instance_name"></a> [sysdig\_instance\_name](#input\_sysdig\_instance\_name) | The name of the Sysdig instance to point the Sysdig agent to. If left at null, no agent will be deployed. | `string` | `null` | no |
-| <a name="input_sysdig_resource_group_id"></a> [sysdig\_resource\_group\_id](#input\_sysdig\_resource\_group\_id) | Resource group id that the Sysdig instance is in. If left at null, the value of var.resource\_group\_id will be used. | `string` | `null` | no |
 | <a name="input_use_existing_cos"></a> [use\_existing\_cos](#input\_use\_existing\_cos) | Flag indicating whether or not to use an existing COS instance for OpenShift internal registry storage. Only applicable if 'enable\_registry\_storage' is true | `bool` | `false` | no |
 | <a name="input_verify_worker_network_readiness"></a> [verify\_worker\_network\_readiness](#input\_verify\_worker\_network\_readiness) | By setting this to true, a script will run kubectl commands to verify that all worker nodes can communicate successfully with the master. If the runtime does not have access to the kube cluster to run kubectl commands, this should be set to false. | `bool` | `true` | no |
 | <a name="input_vpc_id"></a> [vpc\_id](#input\_vpc\_id) | The ID of the VPC to use. | `string` | n/a | yes |

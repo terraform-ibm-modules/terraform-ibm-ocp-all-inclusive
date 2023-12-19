@@ -269,72 +269,72 @@ variable "ignore_worker_pool_size_changes" {
 }
 
 ##############################################################################
-# LogDNA Agent Variables
+# Log Analysis Agent Variables
 ##############################################################################
 
-variable "logdna_instance_name" {
+variable "log_analysis_instance_name" {
   type        = string
-  description = "The name of the LogDNA instance to point the LogDNA agent to. If left at null, no agent will be deployed."
+  description = "The name of the Log Analysis instance to point the Log Analysis agent to. If left at null, no agent will be deployed."
   default     = null
 }
 
-variable "logdna_ingestion_key" {
+variable "log_analysis_ingestion_key" {
   type        = string
-  description = "Ingestion key for the LogDNA agent to communicate with the instance."
+  description = "Ingestion key for the Log Analysis agent to communicate with the instance."
   sensitive   = true
   default     = null
 }
 
-variable "logdna_resource_group_id" {
+variable "log_analysis_resource_group_id" {
   type        = string
-  description = "Resource group id that the LogDNA instance is in. If left at null, the value of var.resource_group_id will be used."
+  description = "Resource group id that the Log Analysis instance is in. If left at null, the value of var.resource_group_id will be used."
   default     = null
 }
 
-variable "logdna_agent_version" {
+variable "log_analysis_agent_version" {
   type        = string
-  description = "Optionally override the default LogDNA agent version. If the value is null, this version is set to the version of 'logdna_agent_version' variable in the Observability agents module. To list available versions, run: `ibmcloud cr images --restrict ext/logdna-agent`."
+  description = "Optionally override the default Log Analysis agent version. If the value is null, this version is set to the version of 'log_analysis_agent_version' variable in the Observability agents module. To list available versions, run: `ibmcloud cr images --restrict ext/logdna-agent`."
   default     = null
 }
 
-variable "logdna_agent_tags" {
+variable "log_analysis_agent_tags" {
   type        = list(string)
-  description = "List of tags to associate with the logdna agents"
+  description = "List of tags to associate with the log analysis agents"
   default     = []
 }
 
 ##############################################################################
-# Sysdig Agent Variables
+# Cloud Monitoring Agent Variables
 ##############################################################################
 
-variable "sysdig_instance_name" {
+variable "cloud_monitoring_instance_name" {
   type        = string
-  description = "The name of the Sysdig instance to point the Sysdig agent to. If left at null, no agent will be deployed."
+  description = "The name of the Cloud Monitoring instance to point the Cloud Monitoring agent to. If left at null, no agent will be deployed."
   default     = null
 }
 
-variable "sysdig_access_key" {
+variable "cloud_monitoring_access_key" {
   type        = string
-  description = "Access key for the Sysdig agent to communicate with the instance."
+  description = "Access key for the Cloud Monitoring agent to communicate with the instance."
   sensitive   = true
   default     = null
 }
 
-variable "sysdig_resource_group_id" {
+variable "cloud_monitoring_resource_group_id" {
   type        = string
-  description = "Resource group id that the Sysdig instance is in. If left at null, the value of var.resource_group_id will be used."
+  description = "Resource group id that the Cloud Monitoring instance is in. If left at null, the value of var.resource_group_id will be used."
   default     = null
 }
 
-variable "sysdig_agent_version" {
+variable "cloud_monitoring_agent_version" {
   type        = string
-  description = "Optionally override the default Sysdig agent version. If the value is null, this version is set to the version of 'sysdig_agent_version' variable in the Observability agents module. To list available versions, run: `ibmcloud cr images --restrict ext/sysdig/agent`."
+  description = "Optionally override the default Cloud Monitoring agent version. If the value is null, this version is set to the version of 'cloud_monitoring_agent_version' variable in the Observability agents module. To list available versions, run: `ibmcloud cr images --restrict ext/sysdig/agent`."
   default     = null
 }
 
-variable "sysdig_agent_tags" {
+variable "cloud_monitoring_agent_tags" {
   type        = list(string)
-  description = "List of tags to associate with the sysdig agents"
+  description = "List of tags to associate with the cloud monitoring agents"
   default     = []
 }
 

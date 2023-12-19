@@ -55,38 +55,38 @@ module "ocp_base" {
 
 locals {
   # Locals
-  run_observability_agents_module = (local.provision_logdna_agent == true || local.provision_sysdig_agent) ? true : false
-  provision_logdna_agent          = var.logdna_instance_name != null ? true : false
-  provision_sysdig_agent          = var.sysdig_instance_name != null ? true : false
-  logdna_resource_group_id        = var.logdna_resource_group_id != null ? var.logdna_resource_group_id : var.resource_group_id
-  sysdig_resource_group_id        = var.sysdig_resource_group_id != null ? var.sysdig_resource_group_id : var.resource_group_id
+  run_observability_agents_module    = (local.provision_log_analysis_agent == true || local.provision_cloud_monitoring_agent) ? true : false
+  provision_log_analysis_agent       = var.log_analysis_instance_name != null ? true : false
+  provision_cloud_monitoring_agent   = var.cloud_monitoring_instance_name != null ? true : false
+  log_analysis_resource_group_id     = var.log_analysis_resource_group_id != null ? var.log_analysis_resource_group_id : var.resource_group_id
+  cloud_monitoring_resource_group_id = var.cloud_monitoring_resource_group_id != null ? var.cloud_monitoring_resource_group_id : var.resource_group_id
   # Some input variable validation (approach based on https://stackoverflow.com/a/66682419)
-  logdna_validate_condition = var.logdna_instance_name != null && var.logdna_ingestion_key == null
-  logdna_validate_msg       = "A value for var.logdna_ingestion_key must be passed when providing a value for var.logdna_instance_name"
+  log_analysis_validate_condition = var.log_analysis_instance_name != null && var.log_analysis_ingestion_key == null
+  log_analysis_validate_msg       = "A value for var.log_analysis_ingestion_key must be passed when providing a value for var.log_analysis_instance_name"
   # tflint-ignore: terraform_unused_declarations
-  logdna_validate_check     = regex("^${local.logdna_validate_msg}$", (!local.logdna_validate_condition ? local.logdna_validate_msg : ""))
-  sysdig_validate_condition = var.sysdig_instance_name != null && var.sysdig_access_key == null
-  sysdig_validate_msg       = "A value for var.sysdig_access_key must be passed when providing a value for var.sysdig_instance_name"
+  log_analysis_validate_check         = regex("^${local.log_analysis_validate_msg}$", (!local.log_analysis_validate_condition ? local.log_analysis_validate_msg : ""))
+  cloud_monitoring_validate_condition = var.cloud_monitoring_instance_name != null && var.cloud_monitoring_access_key == null
+  cloud_monitoring_validate_msg       = "A value for var.cloud_monitoring_access_key must be passed when providing a value for var.cloud_monitoring_instance_name"
   # tflint-ignore: terraform_unused_declarations
-  sysdig_validate_check = regex("^${local.sysdig_validate_msg}$", (!local.sysdig_validate_condition ? local.sysdig_validate_msg : ""))
+  cloud_monitoring_validate_check = regex("^${local.cloud_monitoring_validate_msg}$", (!local.cloud_monitoring_validate_condition ? local.cloud_monitoring_validate_msg : ""))
 }
 
 module "observability_agents" {
-  count                     = local.run_observability_agents_module == true ? 1 : 0
-  source                    = "terraform-ibm-modules/observability-agents/ibm"
-  version                   = "1.12.2"
-  cluster_id                = module.ocp_base.cluster_id
-  cluster_resource_group_id = var.resource_group_id
-  logdna_enabled            = local.provision_logdna_agent
-  logdna_instance_name      = var.logdna_instance_name
-  logdna_ingestion_key      = var.logdna_ingestion_key
-  logdna_resource_group_id  = local.logdna_resource_group_id
-  logdna_agent_version      = var.logdna_agent_version
-  logdna_agent_tags         = var.logdna_agent_tags
-  sysdig_enabled            = local.provision_sysdig_agent
-  sysdig_instance_name      = var.sysdig_instance_name
-  sysdig_access_key         = var.sysdig_access_key
-  sysdig_resource_group_id  = local.sysdig_resource_group_id
-  sysdig_agent_version      = var.sysdig_agent_version
-  sysdig_agent_tags         = var.sysdig_agent_tags
+  count                              = local.run_observability_agents_module == true ? 1 : 0
+  source                             = "terraform-ibm-modules/observability-agents/ibm"
+  version                            = "1.16.0"
+  cluster_id                         = module.ocp_base.cluster_id
+  cluster_resource_group_id          = var.resource_group_id
+  log_analysis_enabled               = local.provision_log_analysis_agent
+  log_analysis_instance_name         = var.log_analysis_instance_name
+  log_analysis_ingestion_key         = var.log_analysis_ingestion_key
+  log_analysis_resource_group_id     = local.log_analysis_resource_group_id
+  log_analysis_agent_version         = var.log_analysis_agent_version
+  log_analysis_agent_tags            = var.log_analysis_agent_tags
+  cloud_monitoring_enabled           = local.provision_cloud_monitoring_agent
+  cloud_monitoring_instance_name     = var.cloud_monitoring_instance_name
+  cloud_monitoring_access_key        = var.cloud_monitoring_access_key
+  cloud_monitoring_resource_group_id = local.cloud_monitoring_resource_group_id
+  cloud_monitoring_agent_version     = var.cloud_monitoring_agent_version
+  cloud_monitoring_agent_tags        = var.cloud_monitoring_agent_tags
 }
