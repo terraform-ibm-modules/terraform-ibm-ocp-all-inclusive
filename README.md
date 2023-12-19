@@ -20,7 +20,18 @@ This module is a wrapper module that groups the following modules:
 - Make sure that you have a recent version of the [IBM Cloud CLI](https://cloud.ibm.com/docs/cli?topic=cli-getting-started)
 - Make sure that you have a recent version of the [IBM Cloud Kubernetes service CLI](https://cloud.ibm.com/docs/containers?topic=containers-kubernetes-service-cli)
 
-## Usage
+<!-- Below content is automatically populated via pre-commit hook -->
+<!-- BEGIN OVERVIEW HOOK -->
+## Overview
+* [terraform-ibm-ocp-all-inclusive](#terraform-ibm-ocp-all-inclusive)
+* [Examples](./examples)
+    * [Complete Example](./examples/end-to-end-example)
+* [Contributing](#contributing)
+<!-- END OVERVIEW HOOK -->
+
+## terraform-ibm-ocp-all-inclusive
+
+### Usage
 ```hcl
 ##############################################################################
 # Required providers
@@ -78,7 +89,7 @@ module "ocp_all_inclusive" {
 }
 ```
 
-## Required IAM access policies
+### Required IAM access policies
 You need the following permissions to run this module.
 
 - Account Management
@@ -98,11 +109,6 @@ You need the following permissions to run this module.
         - `Manager` service access
 
 <!-- END MODULE HOOK -->
-<!-- BEGIN EXAMPLES HOOK -->
-## Examples
-
-- [ Complete Example](examples/end-to-end-example)
-<!-- END EXAMPLES HOOK -->
 <!-- BEGINNING OF PRE-COMMIT-TERRAFORM DOCS HOOK -->
 ### Requirements
 
