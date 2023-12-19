@@ -89,7 +89,7 @@ module "ocp_all_inclusive" {
 }
 ```
 
-## Required IAM access policies
+### Required IAM access policies
 You need the following permissions to run this module.
 
 - Account Management
