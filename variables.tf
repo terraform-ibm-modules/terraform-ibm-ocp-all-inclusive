@@ -234,21 +234,21 @@ variable "addons" {
 # Key Protect Variables
 ##############################################################################
 
-variable "existing_key_protect_instance_guid" {
+variable "existing_kms_instance_guid" {
   type        = string
-  description = "The GUID of an existing Key Protect instance which will be used for cluster encryption. If no value passed, cluster data is stored in the Kubernetes etcd, which ends up on the local disk of the Kubernetes master (not recommended)."
+  description = "The GUID of an existing KMS instance which will be used for cluster encryption. If no value passed, cluster data is stored in the Kubernetes etcd, which ends up on the local disk of the Kubernetes master (not recommended)."
   default     = null
 }
 
-variable "existing_key_protect_root_key_id" {
+variable "existing_kms_root_key_id" {
   type        = string
-  description = "The Key ID of a root key, existing in the Key Protect instance passed in var.existing_key_protect_instance_guid, which will be used to encrypt the data encryption keys (DEKs) which are then used to encrypt the secrets in the cluster. Required if value passed for var.existing_key_protect_instance_guid."
+  description = "The Key ID of a root key, existing in the KMS instance passed in var.existing_kms_instance_guid, which will be used to encrypt the data encryption keys (DEKs) which are then used to encrypt the secrets in the cluster. Required if value passed for var.existing_kms_instance_guid."
   default     = null
 }
 
-variable "key_protect_use_private_endpoint" {
+variable "kms_use_private_endpoint" {
   type        = bool
-  description = "Set as true to use the Private endpoint when communicating between cluster and Key Protect Instance."
+  description = "Set as true to use the Private endpoint when communicating between cluster and KMS instance."
   default     = true
 }
 

@@ -9,13 +9,13 @@ locals {
   # tflint-ignore: terraform_unused_declarations
   validate_existing_cos_inputs = (var.use_existing_cos == true && var.existing_cos_id == null) ? tobool("A value must be passed for var.existing_cos_id if var.use_existing_cos is true.") : true
   # tflint-ignore: terraform_unused_declarations
-  validate_kp_inputs = (var.existing_key_protect_instance_guid == null && var.existing_key_protect_root_key_id != null) || (var.existing_key_protect_root_key_id != null && var.existing_key_protect_instance_guid == null) ? tobool("To enable encryption, values must be passed for both var.existing_key_protect_instance_guid and var.existing_key_protect_root_key_id. Set them both to null to create cluster without encryption (not recommended).") : true
+  validate_kp_inputs = (var.existing_kms_instance_guid == null && var.existing_kms_root_key_id != null) || (var.existing_kms_root_key_id != null && var.existing_kms_instance_guid == null) ? tobool("To enable encryption, values must be passed for both var.existing_kms_instance_guid and var.existing_kms_root_key_id. Set them both to null to create cluster without encryption (not recommended).") : true
 
   # If encryption enabled generate kms config to be passed to cluster
-  kms_config = var.existing_key_protect_instance_guid != null && var.existing_key_protect_root_key_id != null ? {
-    crk_id           = var.existing_key_protect_root_key_id
-    instance_id      = var.existing_key_protect_instance_guid
-    private_endpoint = var.key_protect_use_private_endpoint
+  kms_config = var.existing_kms_instance_guid != null && var.existing_kms_root_key_id != null ? {
+    crk_id           = var.existing_kms_root_key_id
+    instance_id      = var.existing_kms_instance_guid
+    private_endpoint = var.kms_use_private_endpoint
     account_id       = var.kms_account_id
   } : null
 }
