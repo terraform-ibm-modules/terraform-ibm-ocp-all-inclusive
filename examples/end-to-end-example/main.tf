@@ -91,26 +91,26 @@ locals {
 }
 
 module "ocp_all_inclusive" {
-  source                         = "../.."
-  ibmcloud_api_key               = var.ibmcloud_api_key
-  resource_group_id              = module.resource_group.resource_group_id
-  region                         = var.region
-  cluster_name                   = "${var.prefix}-cluster"
-  cos_name                       = "${var.prefix}-cos"
-  vpc_id                         = module.vpc.vpc_id
-  vpc_subnets                    = local.cluster_vpc_subnets
-  worker_pools                   = var.worker_pools
-  ocp_version                    = var.ocp_version
-  cluster_tags                   = var.resource_tags
-  access_tags                    = var.access_tags
-  existing_kms_instance_guid     = module.key_protect_all_inclusive.key_protect_guid
-  existing_kms_root_key_id       = module.key_protect_all_inclusive.keys["${local.key_ring_name}.${local.key_name}"].key_id
-  log_analysis_instance_name     = module.observability_instances.log_analysis_name
-  log_analysis_ingestion_key     = module.observability_instances.log_analysis_ingestion_key
-  cloud_monitoring_instance_name = module.observability_instances.cloud_monitoring_name
-  cloud_monitoring_access_key    = module.observability_instances.cloud_monitoring_access_key
-  addons                         = local.addons
-  disable_public_endpoint        = var.disable_public_endpoint
-  log_analysis_agent_tags        = var.resource_tags
-  cloud_monitoring_agent_tags    = var.resource_tags
+  source                           = "../.."
+  ibmcloud_api_key                 = var.ibmcloud_api_key
+  resource_group_id                = module.resource_group.resource_group_id
+  region                           = var.region
+  cluster_name                     = "${var.prefix}-cluster"
+  cos_name                         = "${var.prefix}-cos"
+  vpc_id                           = module.vpc.vpc_id
+  vpc_subnets                      = local.cluster_vpc_subnets
+  worker_pools                     = var.worker_pools
+  ocp_version                      = var.ocp_version
+  cluster_tags                     = var.resource_tags
+  access_tags                      = var.access_tags
+  existing_kms_instance_guid       = module.key_protect_all_inclusive.key_protect_guid
+  existing_kms_root_key_id         = module.key_protect_all_inclusive.keys["${local.key_ring_name}.${local.key_name}"].key_id
+  log_analysis_instance_region     = module.observability_instances.region
+  log_analysis_ingestion_key       = module.observability_instances.log_analysis_ingestion_key
+  cloud_monitoring_access_key      = module.observability_instances.cloud_monitoring_access_key
+  cloud_monitoring_instance_region = module.observability_instances.region
+  addons                           = local.addons
+  disable_public_endpoint          = var.disable_public_endpoint
+  log_analysis_agent_tags          = var.resource_tags
+  cloud_monitoring_agent_tags      = var.resource_tags
 }

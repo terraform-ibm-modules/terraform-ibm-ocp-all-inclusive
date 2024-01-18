@@ -22,7 +22,7 @@ locals {
 
 module "ocp_base" {
   source                          = "terraform-ibm-modules/base-ocp-vpc/ibm"
-  version                         = "3.14.0"
+  version                         = "3.14.4"
   cluster_name                    = var.cluster_name
   ocp_version                     = var.ocp_version
   resource_group_id               = var.resource_group_id
@@ -53,40 +53,34 @@ module "ocp_base" {
 # observability-agents-module
 ##############################################################################
 
-locals {
-  # Locals
-  run_observability_agents_module    = (local.provision_log_analysis_agent == true || local.provision_cloud_monitoring_agent) ? true : false
-  provision_log_analysis_agent       = var.log_analysis_instance_name != null ? true : false
-  provision_cloud_monitoring_agent   = var.cloud_monitoring_instance_name != null ? true : false
-  log_analysis_resource_group_id     = var.log_analysis_resource_group_id != null ? var.log_analysis_resource_group_id : var.resource_group_id
-  cloud_monitoring_resource_group_id = var.cloud_monitoring_resource_group_id != null ? var.cloud_monitoring_resource_group_id : var.resource_group_id
-  # Some input variable validation (approach based on https://stackoverflow.com/a/66682419)
-  log_analysis_validate_condition = var.log_analysis_instance_name != null && var.log_analysis_ingestion_key == null
-  log_analysis_validate_msg       = "A value for var.log_analysis_ingestion_key must be passed when providing a value for var.log_analysis_instance_name"
-  # tflint-ignore: terraform_unused_declarations
-  log_analysis_validate_check         = regex("^${local.log_analysis_validate_msg}$", (!local.log_analysis_validate_condition ? local.log_analysis_validate_msg : ""))
-  cloud_monitoring_validate_condition = var.cloud_monitoring_instance_name != null && var.cloud_monitoring_access_key == null
-  cloud_monitoring_validate_msg       = "A value for var.cloud_monitoring_access_key must be passed when providing a value for var.cloud_monitoring_instance_name"
-  # tflint-ignore: terraform_unused_declarations
-  cloud_monitoring_validate_check = regex("^${local.cloud_monitoring_validate_msg}$", (!local.cloud_monitoring_validate_condition ? local.cloud_monitoring_validate_msg : ""))
-}
-
 module "observability_agents" {
-  count                              = local.run_observability_agents_module == true ? 1 : 0
-  source                             = "terraform-ibm-modules/observability-agents/ibm"
-  version                            = "1.16.0"
-  cluster_id                         = module.ocp_base.cluster_id
-  cluster_resource_group_id          = var.resource_group_id
-  log_analysis_enabled               = local.provision_log_analysis_agent
-  log_analysis_instance_name         = var.log_analysis_instance_name
-  log_analysis_ingestion_key         = var.log_analysis_ingestion_key
-  log_analysis_resource_group_id     = local.log_analysis_resource_group_id
-  log_analysis_agent_version         = var.log_analysis_agent_version
-  log_analysis_agent_tags            = var.log_analysis_agent_tags
-  cloud_monitoring_enabled           = local.provision_cloud_monitoring_agent
-  cloud_monitoring_instance_name     = var.cloud_monitoring_instance_name
-  cloud_monitoring_access_key        = var.cloud_monitoring_access_key
-  cloud_monitoring_resource_group_id = local.cloud_monitoring_resource_group_id
-  cloud_monitoring_agent_version     = var.cloud_monitoring_agent_version
-  cloud_monitoring_agent_tags        = var.cloud_monitoring_agent_tags
+  count                                    = var.log_analysis_enabled == true || var.cloud_monitoring_enabled == true ? 1 : 0
+  source                                   = "terraform-ibm-modules/observability-agents/ibm"
+  version                                  = "1.19.0"
+  cluster_id                               = module.ocp_base.cluster_id
+  cluster_resource_group_id                = var.resource_group_id
+  cluster_config_endpoint_type             = var.cluster_config_endpoint_type
+  log_analysis_enabled                     = var.log_analysis_enabled
+  log_analysis_ingestion_key               = var.log_analysis_ingestion_key
+  log_analysis_agent_tags                  = var.log_analysis_agent_tags
+  log_analysis_add_cluster_name            = var.log_analysis_add_cluster_name
+  log_analysis_secret_name                 = var.log_analysis_secret_name
+  log_analysis_instance_region             = var.log_analysis_instance_region
+  log_analysis_endpoint_type               = var.log_analysis_endpoint_type
+  log_analysis_agent_custom_line_inclusion = var.log_analysis_agent_custom_line_inclusion
+  log_analysis_agent_custom_line_exclusion = var.log_analysis_agent_custom_line_exclusion
+  log_analysis_agent_name                  = var.log_analysis_agent_name
+  log_analysis_agent_namespace             = var.log_analysis_agent_namespace
+  log_analysis_agent_tolerations           = var.log_analysis_agent_tolerations
+  cloud_monitoring_enabled                 = var.cloud_monitoring_enabled
+  cloud_monitoring_access_key              = var.cloud_monitoring_access_key
+  cloud_monitoring_agent_tags              = var.cloud_monitoring_agent_tags
+  cloud_monitoring_secret_name             = var.cloud_monitoring_secret_name
+  cloud_monitoring_instance_region         = var.cloud_monitoring_instance_region
+  cloud_monitoring_endpoint_type           = var.cloud_monitoring_endpoint_type
+  cloud_monitoring_metrics_filter          = var.cloud_monitoring_metrics_filter
+  cloud_monitoring_add_cluster_name        = var.cloud_monitoring_add_cluster_name
+  cloud_monitoring_agent_name              = var.cloud_monitoring_agent_name
+  cloud_monitoring_agent_namespace         = var.cloud_monitoring_agent_namespace
+  cloud_monitoring_agent_tolerations       = var.cloud_monitoring_agent_tolerations
 }
