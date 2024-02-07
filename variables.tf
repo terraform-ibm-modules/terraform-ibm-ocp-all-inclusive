@@ -244,11 +244,11 @@ variable "manage_all_addons" {
   type        = bool
   default     = false
   nullable    = false # null values are set to default value
-  description = "Instructs Terraform to manage all cluster addons, even if addons were installed outside of the module. If set to 'true' this module will destroy any addons that were installed by other sources."
+  description = "Whether Terraform manages all cluster add-ons, even add-ons installed outside of the module. If set to 'true', this module destroys the add-ons installed by other sources."
 }
 
 variable "additional_lb_security_group_ids" {
-  description = "Additional security groups to add to the load balancers associated with the cluster. Ensure that the number_of_lbs is set to the number of LBs associated with the cluster. This comes in addition to the IBM maintained security group."
+  description = "Additional security group IDs to add to the load balancers associated with the cluster. These security groups are in addition to the IBM-maintained security group."
   type        = list(string)
   default     = []
   nullable    = false
@@ -259,18 +259,18 @@ variable "additional_lb_security_group_ids" {
 }
 
 variable "number_of_lbs" {
-  description = "The number of LBs to associated the additional_lb_security_group_names security group with."
+  description = "The number of load balancer to associate with the `additional_lb_security_group_names` security group. Must match the number of load balancers that are associated with the cluster"
   type        = number
   default     = 1
   nullable    = false
   validation {
     condition     = var.number_of_lbs >= 1
-    error_message = "Please set the number_of_lbs to a minumum of."
+    error_message = "Specify at least one load balancer."
   }
 }
 
 variable "additional_vpe_security_group_ids" {
-  description = "Additional security groups to add to all existing load balancers. This comes in addition to the IBM maintained security group."
+  description = "Additional security groups to add to all the load balancers. This comes in addition to the IBM maintained security group."
   type = object({
     master   = optional(list(string), [])
     registry = optional(list(string), [])
@@ -318,13 +318,13 @@ variable "ignore_worker_pool_size_changes" {
 }
 
 variable "attach_ibm_managed_security_group" {
-  description = "Specify whether to attach the IBM-defined default security group (whose name is kube-<clusterid>) to all worker nodes. Only applicable if custom_security_group_ids is set."
+  description = "Whether to attach the IBM-defined default security group (named `kube-<clusterid>`) to all worker nodes. Applies only if `custom_security_group_ids` is set."
   type        = bool
   default     = true
 }
 
 variable "custom_security_group_ids" {
-  description = "Security groups to add to all worker nodes. This comes in addition to the IBM maintained security group if use_ibm_managed_security_group is set to true. If this variable is set, the default VPC security group is NOT assigned to the worker nodes."
+  description = "Up to 4 additional security groups to add to all worker nodes. If `use_ibm_managed_security_group` is set to `true`, these security groups are in addition to the IBM-maintained security group. If additional groups are added, the default VPC security group is not assigned to the worker nodes."
   type        = list(string)
   default     = null
   validation {
