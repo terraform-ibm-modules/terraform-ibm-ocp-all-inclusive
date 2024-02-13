@@ -53,14 +53,13 @@ variable "cluster_name" {
 
 variable "ocp_version" {
   type        = string
-  description = "The version of the OpenShift cluster that should be provisioned (format 4.x). This is only used during initial cluster provisioning, but ignored for future updates. Supports passing the string 'latest' (current latest available version) or 'default' (current IKS default recommended version). If no value is passed, it will default to 'default'."
+  description = "The version of the OpenShift cluster that should be provisioned (format 4.x). This is only used during initial cluster provisioning, but ignored for future updates. Supports passing the string 'default' (current IKS default recommended version). If no value is passed, it will default to 'default'."
   default     = null
 
   validation {
     condition = anytrue([
       var.ocp_version == null,
       var.ocp_version == "default",
-      var.ocp_version == "latest",
       var.ocp_version == "4.12",
       var.ocp_version == "4.13",
       var.ocp_version == "4.14",
@@ -244,7 +243,39 @@ variable "manage_all_addons" {
   type        = bool
   default     = false
   nullable    = false # null values are set to default value
-  description = "Instructs Terraform to manage all cluster addons, even if addons were installed outside of the module. If set to 'true' this module will destroy any addons that were installed by other sources."
+  description = "Whether Terraform manages all cluster add-ons, even add-ons installed outside of the module. If set to 'true', this module destroys the add-ons installed by other sources."
+}
+
+variable "additional_lb_security_group_ids" {
+  description = "Additional security group IDs to add to the load balancers associated with the cluster. These security groups are in addition to the IBM-maintained security group."
+  type        = list(string)
+  default     = []
+  nullable    = false
+  validation {
+    condition     = var.additional_lb_security_group_ids == null ? true : length(var.additional_lb_security_group_ids) <= 4
+    error_message = "Please provide at most 4 additional security groups."
+  }
+}
+
+variable "number_of_lbs" {
+  description = "The number of load balancer to associate with the `additional_lb_security_group_names` security group. Must match the number of load balancers that are associated with the cluster"
+  type        = number
+  default     = 1
+  nullable    = false
+  validation {
+    condition     = var.number_of_lbs >= 1
+    error_message = "Specify at least one load balancer."
+  }
+}
+
+variable "additional_vpe_security_group_ids" {
+  description = "Additional security groups to add to all the load balancers. This comes in addition to the IBM maintained security group."
+  type = object({
+    master   = optional(list(string), [])
+    registry = optional(list(string), [])
+    api      = optional(list(string), [])
+  })
+  default = {}
 }
 
 ##############################################################################
@@ -283,6 +314,22 @@ variable "ignore_worker_pool_size_changes" {
   type        = bool
   description = "Enable if using worker autoscaling. Stops Terraform managing worker count"
   default     = false
+}
+
+variable "attach_ibm_managed_security_group" {
+  description = "Whether to attach the IBM-defined default security group (named `kube-<clusterid>`) to all worker nodes. Applies only if `custom_security_group_ids` is set."
+  type        = bool
+  default     = true
+}
+
+variable "custom_security_group_ids" {
+  description = "Up to 4 additional security groups to add to all worker nodes. If `use_ibm_managed_security_group` is set to `true`, these security groups are in addition to the IBM-maintained security group. If additional groups are added, the default VPC security group is not assigned to the worker nodes."
+  type        = list(string)
+  default     = null
+  validation {
+    condition     = var.custom_security_group_ids == null ? true : length(var.custom_security_group_ids) <= 4
+    error_message = "Please provide at most 4 additional security groups."
+  }
 }
 
 ##############################################################################
