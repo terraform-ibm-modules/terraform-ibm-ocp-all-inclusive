@@ -22,7 +22,7 @@ locals {
 
 module "ocp_base" {
   source                            = "terraform-ibm-modules/base-ocp-vpc/ibm"
-  version                           = "3.16.1"
+  version                           = "3.18.1"
   cluster_name                      = var.cluster_name
   ocp_version                       = var.ocp_version
   resource_group_id                 = var.resource_group_id
@@ -60,7 +60,7 @@ module "ocp_base" {
 module "observability_agents" {
   count                                    = var.log_analysis_enabled == true || var.cloud_monitoring_enabled == true ? 1 : 0
   source                                   = "terraform-ibm-modules/observability-agents/ibm"
-  version                                  = "1.19.0"
+  version                                  = "1.21.0"
   cluster_id                               = module.ocp_base.cluster_id
   cluster_resource_group_id                = var.resource_group_id
   cluster_config_endpoint_type             = var.cluster_config_endpoint_type
