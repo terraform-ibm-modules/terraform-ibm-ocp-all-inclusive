@@ -59,14 +59,21 @@ locals {
 
 module "key_protect_all_inclusive" {
   source                    = "terraform-ibm-modules/kms-all-inclusive/ibm"
-  version                   = "4.4.2"
+  version                   = "4.8.3"
   resource_group_id         = module.resource_group.resource_group_id
   region                    = var.region
   key_protect_instance_name = "${var.prefix}-kp"
   resource_tags             = var.resource_tags
-  key_map = {
-    (local.key_ring_name) = [local.key_name]
-  }
+  keys = [
+    {
+      key_ring_name = (local.key_ring_name)
+      keys = [
+        {
+          key_name = local.key_name
+        }
+      ]
+    }
+  ]
 }
 
 ##############################################################################
@@ -103,7 +110,7 @@ module "ocp_all_inclusive" {
   ocp_version                      = var.ocp_version
   cluster_tags                     = var.resource_tags
   access_tags                      = var.access_tags
-  existing_kms_instance_guid       = module.key_protect_all_inclusive.key_protect_guid
+  existing_kms_instance_guid       = module.key_protect_all_inclusive.kms_guid
   existing_kms_root_key_id         = module.key_protect_all_inclusive.keys["${local.key_ring_name}.${local.key_name}"].key_id
   log_analysis_instance_region     = module.observability_instances.region
   log_analysis_ingestion_key       = module.observability_instances.log_analysis_ingestion_key
