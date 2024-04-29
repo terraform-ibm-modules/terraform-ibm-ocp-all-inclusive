@@ -62,4 +62,14 @@ output "public_service_endpoint_url" {
   value       = module.ocp_base.public_service_endpoint_url
 }
 
+output "master_url" {
+  description = "The URL of the Kubernetes master."
+  value       = module.ocp_base.master_url
+}
+
+output "vpe_url" {
+  description = "The virtual private endpoint URL of the Kubernetes cluster."
+  value       = module.ocp_base.vpe_url
+}
+
 ##############################################################################
