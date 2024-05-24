@@ -63,6 +63,7 @@ variable "ocp_version" {
       var.ocp_version == "4.12",
       var.ocp_version == "4.13",
       var.ocp_version == "4.14",
+      var.ocp_version == "4.15",
     ])
     error_message = "The specified ocp_version is not one of the validated versions."
   }
@@ -276,6 +277,12 @@ variable "additional_vpe_security_group_ids" {
     api      = optional(list(string), [])
   })
   default = {}
+}
+
+variable "disable_outbound_traffic_protection" {
+  type        = bool
+  description = "Whether to allow public outbound access from the cluster workers. This is only applicable for Red Hat OpenShift 4.15."
+  default     = false
 }
 
 ##############################################################################
