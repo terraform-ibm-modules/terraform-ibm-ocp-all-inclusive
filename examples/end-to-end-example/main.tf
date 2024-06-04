@@ -16,7 +16,7 @@ module "resource_group" {
 
 module "vpc" {
   source            = "terraform-ibm-modules/landing-zone-vpc/ibm"
-  version           = "7.15.0"
+  version           = "7.18.1"
   resource_group_id = module.resource_group.resource_group_id
   region            = var.region
   prefix            = var.prefix
@@ -30,7 +30,7 @@ module "vpc" {
 
 module "observability_instances" {
   source  = "terraform-ibm-modules/observability-instances/ibm"
-  version = "2.11.0"
+  version = "2.12.2"
   providers = {
     logdna.at = logdna.at
     logdna.ld = logdna.ld
@@ -59,7 +59,7 @@ locals {
 
 module "key_protect_all_inclusive" {
   source                    = "terraform-ibm-modules/kms-all-inclusive/ibm"
-  version                   = "4.8.3"
+  version                   = "4.13.1"
   resource_group_id         = module.resource_group.resource_group_id
   region                    = var.region
   key_protect_instance_name = "${var.prefix}-kp"
