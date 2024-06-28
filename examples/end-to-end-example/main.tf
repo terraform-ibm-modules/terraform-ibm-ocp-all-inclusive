@@ -14,6 +14,64 @@ module "resource_group" {
 # VPC
 ##############################################################################
 
+locals {
+  # extending ACL rules to allow outbound and inbound traffic for the openshift ingress healthcheck operator
+  acl_rules = [
+    {
+      name                         = "${var.prefix}-acls"
+      add_ibm_cloud_internal_rules = true
+      add_vpc_connectivity_rules   = true
+      prepend_ibm_rules            = true
+      rules = [
+        {
+          name      = "https-inbound-tcp-to-443"
+          action    = "allow"
+          direction = "inbound"
+          tcp = {
+            port_min = 443
+            port_max = 443
+          }
+          destination = "0.0.0.0/0"
+          source      = "0.0.0.0/0"
+        },
+        {
+          name      = "https-inbound-tcp-from-443"
+          action    = "allow"
+          direction = "inbound"
+          tcp = {
+            source_port_min = 443
+            source_port_max = 443
+          }
+          destination = "0.0.0.0/0"
+          source      = "0.0.0.0/0"
+        },
+        {
+          name      = "https-outbound-tcp-to-443"
+          action    = "allow"
+          direction = "outbound"
+          tcp = {
+            port_min = 443
+            port_max = 443
+          }
+          destination = "0.0.0.0/0"
+          source      = "0.0.0.0/0"
+        },
+        {
+          name      = "https-outbound-tcp-from-443"
+          action    = "allow"
+          direction = "outbound"
+          tcp = {
+            source_port_min = 443
+            source_port_max = 443
+          }
+          destination = "0.0.0.0/0"
+          source      = "0.0.0.0/0"
+        }
+      ]
+    }
+  ]
+}
+
 module "vpc" {
   source            = "terraform-ibm-modules/landing-zone-vpc/ibm"
   version           = "7.18.3"
@@ -21,7 +79,42 @@ module "vpc" {
   region            = var.region
   prefix            = var.prefix
   tags              = var.resource_tags
+  network_acls      = local.acl_rules
   name              = "${var.prefix}-vpc"
+  subnets = {
+    zone-1 = [
+      {
+        name           = "subnet-a"
+        cidr           = "10.10.10.0/24"
+        public_gateway = true
+        acl_name       = "${var.prefix}-acls"
+        no_addr_prefix = false
+      }
+    ],
+    zone-2 = [
+      {
+        name           = "subnet-b"
+        cidr           = "10.20.10.0/24"
+        public_gateway = true
+        acl_name       = "${var.prefix}-acls"
+        no_addr_prefix = false
+      }
+    ],
+    zone-3 = [
+      {
+        name           = "subnet-c"
+        cidr           = "10.30.10.0/24"
+        public_gateway = true
+        acl_name       = "${var.prefix}-acls"
+        no_addr_prefix = false
+      }
+    ]
+  }
+  use_public_gateways = {
+    zone-1 = true
+    zone-2 = true
+    zone-3 = true
+  }
 }
 
 ##############################################################################
