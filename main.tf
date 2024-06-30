@@ -22,7 +22,7 @@ locals {
 
 module "ocp_base" {
   source                              = "terraform-ibm-modules/base-ocp-vpc/ibm"
-  version                             = "3.25.5"
+  version                             = "3.27.1"
   cluster_name                        = var.cluster_name
   ocp_version                         = var.ocp_version
   resource_group_id                   = var.resource_group_id
