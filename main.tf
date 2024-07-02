@@ -45,7 +45,6 @@ module "ocp_base" {
   number_of_lbs                       = var.number_of_lbs
   additional_vpe_security_group_ids   = var.additional_vpe_security_group_ids
   kms_config                          = local.kms_config
-  ibmcloud_api_key                    = var.ibmcloud_api_key
   addons                              = var.addons
   manage_all_addons                   = var.manage_all_addons
   verify_worker_network_readiness     = var.verify_worker_network_readiness

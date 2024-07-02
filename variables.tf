@@ -2,12 +2,6 @@
 # Common Variables
 ##############################################################################
 
-variable "ibmcloud_api_key" {
-  description = "An IBM Cloud API key with permissions to provision resources."
-  type        = string
-  sensitive   = true
-}
-
 variable "resource_group_id" {
   type        = string
   description = "The IBM Cloud resource group ID to provision all resources in."
