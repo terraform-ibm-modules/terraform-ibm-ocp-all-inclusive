@@ -15,59 +15,90 @@ module "resource_group" {
 ##############################################################################
 
 locals {
-  # extending ACL rules to allow outbound and inbound traffic for the openshift ingress healthcheck operator
+  # extending ACL rules to allow outbound and inbound traffic for the OpenShift ingress healthcheck operator and Openshift console access (port 443) and to allow OpenShift console to reach oAuth server (port in nodePort interval)
+
+  # ACL rules to allow inbound and oubound traffic for OpenShift ingress healthcheck operator traffic and inbound traffic to access OpenShift console
+  acl_rules_ingress_healthcheck_operator = [
+    {
+      name      = "https-inbound-tcp-to-443"
+      action    = "allow"
+      direction = "inbound"
+      tcp = {
+        port_min = 443
+        port_max = 443
+      }
+      destination = "0.0.0.0/0"
+      source      = "0.0.0.0/0"
+    },
+    {
+      name      = "https-inbound-tcp-from-443"
+      action    = "allow"
+      direction = "inbound"
+      tcp = {
+        source_port_min = 443
+        source_port_max = 443
+      }
+      destination = "0.0.0.0/0"
+      source      = "0.0.0.0/0"
+    },
+    {
+      name      = "https-outbound-tcp-to-443"
+      action    = "allow"
+      direction = "outbound"
+      tcp = {
+        port_min = 443
+        port_max = 443
+      }
+      destination = "0.0.0.0/0"
+      source      = "0.0.0.0/0"
+    },
+    {
+      name      = "https-outbound-tcp-from-443"
+      action    = "allow"
+      direction = "outbound"
+      tcp = {
+        source_port_min = 443
+        source_port_max = 443
+      }
+      destination = "0.0.0.0/0"
+      source      = "0.0.0.0/0"
+    }
+  ]
+
+  # ACL rules to allow traffic to oAuth server to enable OpenShift console
+  acl_rules_openshift_console_oauth = [
+    {
+      name      = "oauth-allow-inbound-traffic"
+      action    = "allow"
+      direction = "inbound"
+      tcp = {
+        source_port_min = 30000
+        source_port_max = 32767
+      }
+      destination = "0.0.0.0/0"
+      source      = "0.0.0.0/0"
+    },
+    {
+      name      = "oauth-allow-outbound-traffic"
+      action    = "allow"
+      direction = "outbound"
+      tcp = {
+        port_min = 30000
+        port_max = 32767
+      }
+      destination = "0.0.0.0/0"
+      source      = "0.0.0.0/0"
+    }
+  ]
+
+
   acl_rules = [
     {
       name                         = "${var.prefix}-acls"
       add_ibm_cloud_internal_rules = true
       add_vpc_connectivity_rules   = true
       prepend_ibm_rules            = true
-      rules = [
-        {
-          name      = "https-inbound-tcp-to-443"
-          action    = "allow"
-          direction = "inbound"
-          tcp = {
-            port_min = 443
-            port_max = 443
-          }
-          destination = "0.0.0.0/0"
-          source      = "0.0.0.0/0"
-        },
-        {
-          name      = "https-inbound-tcp-from-443"
-          action    = "allow"
-          direction = "inbound"
-          tcp = {
-            source_port_min = 443
-            source_port_max = 443
-          }
-          destination = "0.0.0.0/0"
-          source      = "0.0.0.0/0"
-        },
-        {
-          name      = "https-outbound-tcp-to-443"
-          action    = "allow"
-          direction = "outbound"
-          tcp = {
-            port_min = 443
-            port_max = 443
-          }
-          destination = "0.0.0.0/0"
-          source      = "0.0.0.0/0"
-        },
-        {
-          name      = "https-outbound-tcp-from-443"
-          action    = "allow"
-          direction = "outbound"
-          tcp = {
-            source_port_min = 443
-            source_port_max = 443
-          }
-          destination = "0.0.0.0/0"
-          source      = "0.0.0.0/0"
-        }
-      ]
+      rules                        = var.allow_ingress_console_traffic == true ? setunion(local.acl_rules_ingress_healthcheck_operator, local.acl_rules_openshift_console_oauth) : []
     }
   ]
 }

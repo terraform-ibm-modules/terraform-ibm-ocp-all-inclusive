@@ -69,3 +69,9 @@ variable "disable_public_endpoint" {
   description = "Whether access to the public service endpoint is disabled when the cluster is created. Does not affect existing clusters. To change a public endpoint to private, create another cluster with the variable set to true or see [Switching to the private endpoint](https://cloud.ibm.com/docs/containers?topic=containers-cs_network_cluster#migrate-to-private-se)."
   default     = false
 }
+
+variable "allow_ingress_console_traffic" {
+  type        = bool
+  description = "Set this flag to true to allow the OpenShift Ingress operator healthcheck and OpenShift console oAuth traffic. Set to false to restrict allowed traffic policies, resulting in degraded Ingress status and Openshift console not accessible from the browser."
+  default     = true
+}
