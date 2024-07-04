@@ -98,7 +98,7 @@ locals {
       add_ibm_cloud_internal_rules = true
       add_vpc_connectivity_rules   = true
       prepend_ibm_rules            = true
-      rules                        = var.allow_ingress_console_traffic == true ? setunion(local.acl_rules_ingress_healthcheck_operator, local.acl_rules_openshift_console_oauth) : []
+      rules                        = setunion(local.acl_rules_ingress_healthcheck_operator, local.acl_rules_openshift_console_oauth)
     }
   ]
 }
