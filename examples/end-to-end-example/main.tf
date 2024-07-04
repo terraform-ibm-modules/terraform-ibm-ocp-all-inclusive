@@ -223,7 +223,6 @@ locals {
 
 module "ocp_all_inclusive" {
   source                           = "../.."
-  ibmcloud_api_key                 = var.ibmcloud_api_key
   resource_group_id                = module.resource_group.resource_group_id
   region                           = var.region
   cluster_name                     = "${var.prefix}-cluster"
