@@ -2,12 +2,6 @@
 # Common Variables
 ##############################################################################
 
-variable "ibmcloud_api_key" {
-  description = "An IBM Cloud API key with permissions to provision resources."
-  type        = string
-  sensitive   = true
-}
-
 variable "resource_group_id" {
   type        = string
   description = "The IBM Cloud resource group ID to provision all resources in."
@@ -321,6 +315,12 @@ variable "kms_account_id" {
   type        = string
   description = "Id of the account that owns the KMS instance to encrypt the cluster. It is only required if the KMS instance is in another account."
   default     = null
+}
+
+variable "kms_wait_for_apply" {
+  type        = bool
+  description = "Set true to make terraform wait until KMS is applied to master and it is ready and deployed. Default value is true."
+  default     = true
 }
 
 ##############################################################################

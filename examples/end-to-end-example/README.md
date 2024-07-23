@@ -3,6 +3,9 @@
 An end-to-end example that will:
 - Create a new resource group (if existing one is not passed in).
 - Provision a VPC in the given resource group and region.
+- Define ACLs to allow inbound and outboud traffic:
+  - from/to Ingress Operator to correctly report cluster ingress status
+  - to the cluster's oAuth server port to enable the Openshift cluster console
 - Provision Log Analysis and Cloud Monitoring instances in the given resource group and region.
 - Provision a Key Protect instance in the given resource group and region and create a new key ring and key in the instance
 - Call the ocp-all-inclusive-module to do the following:

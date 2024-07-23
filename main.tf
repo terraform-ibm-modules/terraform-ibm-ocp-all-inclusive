@@ -17,12 +17,13 @@ locals {
     instance_id      = var.existing_kms_instance_guid
     private_endpoint = var.kms_use_private_endpoint
     account_id       = var.kms_account_id
+    wait_for_apply   = var.kms_wait_for_apply
   } : null
 }
 
 module "ocp_base" {
   source                              = "terraform-ibm-modules/base-ocp-vpc/ibm"
-  version                             = "3.25.5"
+  version                             = "3.28.1"
   cluster_name                        = var.cluster_name
   ocp_version                         = var.ocp_version
   resource_group_id                   = var.resource_group_id
@@ -45,7 +46,6 @@ module "ocp_base" {
   number_of_lbs                       = var.number_of_lbs
   additional_vpe_security_group_ids   = var.additional_vpe_security_group_ids
   kms_config                          = local.kms_config
-  ibmcloud_api_key                    = var.ibmcloud_api_key
   addons                              = var.addons
   manage_all_addons                   = var.manage_all_addons
   verify_worker_network_readiness     = var.verify_worker_network_readiness
@@ -62,7 +62,7 @@ module "ocp_base" {
 module "observability_agents" {
   count                                    = var.log_analysis_enabled == true || var.cloud_monitoring_enabled == true ? 1 : 0
   source                                   = "terraform-ibm-modules/observability-agents/ibm"
-  version                                  = "1.26.0"
+  version                                  = "1.28.2"
   cluster_id                               = module.ocp_base.cluster_id
   cluster_resource_group_id                = var.resource_group_id
   cluster_config_endpoint_type             = var.cluster_config_endpoint_type

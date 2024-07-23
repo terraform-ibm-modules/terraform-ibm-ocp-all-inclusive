@@ -14,14 +14,138 @@ module "resource_group" {
 # VPC
 ##############################################################################
 
+locals {
+  # extending ACL rules to allow outbound and inbound traffic for the OpenShift ingress healthcheck operator and Openshift console access (port 443) and to allow OpenShift console to reach oAuth server (port in nodePort interval)
+
+  # ACL rules to allow inbound and oubound traffic for OpenShift ingress healthcheck operator traffic and inbound traffic to access OpenShift console
+  acl_rules_ingress_healthcheck_operator = [
+    {
+      name      = "https-inbound-tcp-to-443"
+      action    = "allow"
+      direction = "inbound"
+      tcp = {
+        port_min = 443
+        port_max = 443
+      }
+      destination = "0.0.0.0/0"
+      source      = "0.0.0.0/0"
+    },
+    {
+      name      = "https-inbound-tcp-from-443"
+      action    = "allow"
+      direction = "inbound"
+      tcp = {
+        source_port_min = 443
+        source_port_max = 443
+      }
+      destination = "0.0.0.0/0"
+      source      = "0.0.0.0/0"
+    },
+    {
+      name      = "https-outbound-tcp-to-443"
+      action    = "allow"
+      direction = "outbound"
+      tcp = {
+        port_min = 443
+        port_max = 443
+      }
+      destination = "0.0.0.0/0"
+      source      = "0.0.0.0/0"
+    },
+    {
+      name      = "https-outbound-tcp-from-443"
+      action    = "allow"
+      direction = "outbound"
+      tcp = {
+        source_port_min = 443
+        source_port_max = 443
+      }
+      destination = "0.0.0.0/0"
+      source      = "0.0.0.0/0"
+    }
+  ]
+
+  # ACL rules to allow traffic to oAuth server to enable OpenShift console
+  acl_rules_openshift_console_oauth = [
+    {
+      name      = "oauth-allow-inbound-traffic"
+      action    = "allow"
+      direction = "inbound"
+      tcp = {
+        source_port_min = 30000
+        source_port_max = 32767
+      }
+      destination = "0.0.0.0/0"
+      source      = "0.0.0.0/0"
+    },
+    {
+      name      = "oauth-allow-outbound-traffic"
+      action    = "allow"
+      direction = "outbound"
+      tcp = {
+        port_min = 30000
+        port_max = 32767
+      }
+      destination = "0.0.0.0/0"
+      source      = "0.0.0.0/0"
+    }
+  ]
+
+
+  acl_rules = [
+    {
+      name                         = "${var.prefix}-acls"
+      add_ibm_cloud_internal_rules = true
+      add_vpc_connectivity_rules   = true
+      prepend_ibm_rules            = true
+      rules                        = setunion(local.acl_rules_ingress_healthcheck_operator, local.acl_rules_openshift_console_oauth)
+    }
+  ]
+}
+
 module "vpc" {
   source            = "terraform-ibm-modules/landing-zone-vpc/ibm"
-  version           = "7.18.3"
+  version           = "7.19.0"
   resource_group_id = module.resource_group.resource_group_id
   region            = var.region
   prefix            = var.prefix
   tags              = var.resource_tags
+  network_acls      = local.acl_rules
   name              = "${var.prefix}-vpc"
+  subnets = {
+    zone-1 = [
+      {
+        name           = "subnet-a"
+        cidr           = "10.10.10.0/24"
+        public_gateway = true
+        acl_name       = "${var.prefix}-acls"
+        no_addr_prefix = false
+      }
+    ],
+    zone-2 = [
+      {
+        name           = "subnet-b"
+        cidr           = "10.20.10.0/24"
+        public_gateway = true
+        acl_name       = "${var.prefix}-acls"
+        no_addr_prefix = false
+      }
+    ],
+    zone-3 = [
+      {
+        name           = "subnet-c"
+        cidr           = "10.30.10.0/24"
+        public_gateway = true
+        acl_name       = "${var.prefix}-acls"
+        no_addr_prefix = false
+      }
+    ]
+  }
+  use_public_gateways = {
+    zone-1 = true
+    zone-2 = true
+    zone-3 = true
+  }
 }
 
 ##############################################################################
@@ -59,7 +183,7 @@ locals {
 
 module "key_protect_all_inclusive" {
   source                    = "terraform-ibm-modules/kms-all-inclusive/ibm"
-  version                   = "4.13.4"
+  version                   = "4.14.2"
   resource_group_id         = module.resource_group.resource_group_id
   region                    = var.region
   key_protect_instance_name = "${var.prefix}-kp"
@@ -99,7 +223,6 @@ locals {
 
 module "ocp_all_inclusive" {
   source                           = "../.."
-  ibmcloud_api_key                 = var.ibmcloud_api_key
   resource_group_id                = module.resource_group.resource_group_id
   region                           = var.region
   cluster_name                     = "${var.prefix}-cluster"
