@@ -52,6 +52,7 @@ module "ocp_base" {
   cluster_config_endpoint_type        = var.cluster_config_endpoint_type
   enable_registry_storage             = var.enable_registry_storage
   disable_outbound_traffic_protection = var.disable_outbound_traffic_protection
+  operating_system                    = var.operating_system
 }
 
 ##############################################################################
