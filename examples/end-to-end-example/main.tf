@@ -154,7 +154,7 @@ module "vpc" {
 
 module "observability_instances" {
   source  = "terraform-ibm-modules/observability-instances/ibm"
-  version = "2.13.2"
+  version = "2.14.0"
   providers = {
     logdna.at = logdna.at
     logdna.ld = logdna.ld
@@ -168,6 +168,7 @@ module "observability_instances" {
   cloud_monitoring_plan          = "graduated-tier"
   enable_platform_logs           = false
   enable_platform_metrics        = false
+  cloud_logs_provision           = false
   log_analysis_tags              = var.resource_tags
   cloud_monitoring_tags          = var.resource_tags
 }
@@ -183,7 +184,7 @@ locals {
 
 module "key_protect_all_inclusive" {
   source                    = "terraform-ibm-modules/kms-all-inclusive/ibm"
-  version                   = "4.15.2"
+  version                   = "4.15.6"
   resource_group_id         = module.resource_group.resource_group_id
   region                    = var.region
   key_protect_instance_name = "${var.prefix}-kp"
