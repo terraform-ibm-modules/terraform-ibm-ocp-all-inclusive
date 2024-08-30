@@ -88,7 +88,6 @@ func TestRunCompleteExample(t *testing.T) {
 	for _, version := range versions {
 		t.Run(version, func(t *testing.T) { testRunComplete(t, version) })
 	}
-
 }
 
 func TestRunUpgradeCompleteExample(t *testing.T) {
