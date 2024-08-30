@@ -5,6 +5,7 @@ import (
 	"os"
 	"testing"
 
+	"github.com/gruntwork-io/terratest/modules/terraform"
 	"github.com/stretchr/testify/assert"
 	"github.com/terraform-ibm-modules/ibmcloud-terratest-wrapper/common"
 	"github.com/terraform-ibm-modules/ibmcloud-terratest-wrapper/testhelper"
@@ -62,9 +63,21 @@ func testRunComplete(t *testing.T, version string) {
 	}
 	options := setupOptions(t, "ocp-all-inc", terraformVars)
 
+	options.PostApplyHook = getClusterIngress
 	output, err := options.RunTestConsistency()
+
 	assert.Nil(t, err, "This should not have errored")
 	assert.NotNil(t, output, "Expected some output")
+}
+
+func getClusterIngress(options *testhelper.TestOptions) error {
+
+	// get ouput of last apply
+	outputs, outputErr := terraform.OutputAllE(options.Testing, options.TerraformOptions)
+	if assert.NoErrorf(options.Testing, outputErr, "error getting last terraform apply outputs: %s", outputErr) {
+		options.CheckClusterIngressHealthyDefaultTimeout(outputs["cluster_id"].(string))
+	}
+	return nil
 }
 
 func TestRunCompleteExample(t *testing.T) {
@@ -75,6 +88,7 @@ func TestRunCompleteExample(t *testing.T) {
 	for _, version := range versions {
 		t.Run(version, func(t *testing.T) { testRunComplete(t, version) })
 	}
+
 }
 
 func TestRunUpgradeCompleteExample(t *testing.T) {
