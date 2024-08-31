@@ -128,7 +128,7 @@ You need the following permissions to run this module.
 | Name | Source | Version |
 |------|--------|---------|
 | <a name="module_observability_agents"></a> [observability\_agents](#module\_observability\_agents) | terraform-ibm-modules/observability-agents/ibm | 1.28.6 |
-| <a name="module_ocp_base"></a> [ocp\_base](#module\_ocp\_base) | terraform-ibm-modules/base-ocp-vpc/ibm | 3.29.1 |
+| <a name="module_ocp_base"></a> [ocp\_base](#module\_ocp\_base) | terraform-ibm-modules/base-ocp-vpc/ibm | 3.29.2 |
 
 ### Resources
 
