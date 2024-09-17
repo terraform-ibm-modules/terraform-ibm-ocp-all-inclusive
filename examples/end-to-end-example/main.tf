@@ -168,7 +168,6 @@ module "observability_instances" {
   cloud_monitoring_plan          = "graduated-tier"
   enable_platform_logs           = false
   enable_platform_metrics        = false
-  cloud_logs_provision           = false
   log_analysis_tags              = var.resource_tags
   cloud_monitoring_tags          = var.resource_tags
 }
