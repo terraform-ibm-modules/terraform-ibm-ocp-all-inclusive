@@ -22,37 +22,39 @@ locals {
 }
 
 module "ocp_base" {
-  source                              = "terraform-ibm-modules/base-ocp-vpc/ibm"
-  version                             = "3.29.3"
-  cluster_name                        = var.cluster_name
-  ocp_version                         = var.ocp_version
-  resource_group_id                   = var.resource_group_id
-  region                              = var.region
-  tags                                = var.cluster_tags
-  access_tags                         = var.access_tags
-  force_delete_storage                = var.force_delete_storage
-  vpc_id                              = var.vpc_id
-  vpc_subnets                         = var.vpc_subnets
-  worker_pools                        = var.worker_pools
-  cluster_ready_when                  = var.cluster_ready_when
-  cos_name                            = var.cos_name
-  existing_cos_id                     = var.existing_cos_id
-  ocp_entitlement                     = var.ocp_entitlement
-  disable_public_endpoint             = var.disable_public_endpoint
-  ignore_worker_pool_size_changes     = var.ignore_worker_pool_size_changes
-  attach_ibm_managed_security_group   = var.attach_ibm_managed_security_group
-  custom_security_group_ids           = var.custom_security_group_ids
-  additional_lb_security_group_ids    = var.additional_lb_security_group_ids
-  number_of_lbs                       = var.number_of_lbs
-  additional_vpe_security_group_ids   = var.additional_vpe_security_group_ids
-  kms_config                          = local.kms_config
-  addons                              = var.addons
-  manage_all_addons                   = var.manage_all_addons
-  verify_worker_network_readiness     = var.verify_worker_network_readiness
-  cluster_config_endpoint_type        = var.cluster_config_endpoint_type
-  enable_registry_storage             = var.enable_registry_storage
-  disable_outbound_traffic_protection = var.disable_outbound_traffic_protection
-  operating_system                    = var.operating_system
+  source                                = "terraform-ibm-modules/base-ocp-vpc/ibm"
+  version                               = "3.30.1"
+  cluster_name                          = var.cluster_name
+  ocp_version                           = var.ocp_version
+  resource_group_id                     = var.resource_group_id
+  region                                = var.region
+  tags                                  = var.cluster_tags
+  access_tags                           = var.access_tags
+  force_delete_storage                  = var.force_delete_storage
+  vpc_id                                = var.vpc_id
+  vpc_subnets                           = var.vpc_subnets
+  worker_pools                          = var.worker_pools
+  cluster_ready_when                    = var.cluster_ready_when
+  cos_name                              = var.cos_name
+  existing_cos_id                       = var.existing_cos_id
+  ocp_entitlement                       = var.ocp_entitlement
+  disable_public_endpoint               = var.disable_public_endpoint
+  ignore_worker_pool_size_changes       = var.ignore_worker_pool_size_changes
+  attach_ibm_managed_security_group     = var.attach_ibm_managed_security_group
+  custom_security_group_ids             = var.custom_security_group_ids
+  additional_lb_security_group_ids      = var.additional_lb_security_group_ids
+  number_of_lbs                         = var.number_of_lbs
+  additional_vpe_security_group_ids     = var.additional_vpe_security_group_ids
+  kms_config                            = local.kms_config
+  addons                                = var.addons
+  manage_all_addons                     = var.manage_all_addons
+  verify_worker_network_readiness       = var.verify_worker_network_readiness
+  cluster_config_endpoint_type          = var.cluster_config_endpoint_type
+  enable_registry_storage               = var.enable_registry_storage
+  disable_outbound_traffic_protection   = var.disable_outbound_traffic_protection
+  operating_system                      = var.operating_system
+  import_default_worker_pool_on_create  = var.import_default_worker_pool_on_create
+  allow_default_worker_pool_replacement = var.allow_default_worker_pool_replacement
 }
 
 ##############################################################################
@@ -62,7 +64,7 @@ module "ocp_base" {
 module "observability_agents" {
   count                                    = var.log_analysis_enabled == true || var.cloud_monitoring_enabled == true ? 1 : 0
   source                                   = "terraform-ibm-modules/observability-agents/ibm"
-  version                                  = "1.28.7"
+  version                                  = "1.29.0"
   cluster_id                               = module.ocp_base.cluster_id
   cluster_resource_group_id                = var.resource_group_id
   cluster_config_endpoint_type             = var.cluster_config_endpoint_type
