@@ -105,7 +105,7 @@ func TestRunUpgradeCompleteExample(t *testing.T) {
 
 	output, err := options.RunTestUpgrade()
 	if !options.UpgradeTestSkipped {
-		assert.Nil(t, err, "This should not have errored")
+		assert.Nil(t, err, "This should not have errored.")
 		assert.NotNil(t, output, "Expected some output")
 	}
 }
