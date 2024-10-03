@@ -58,6 +58,7 @@ variable "ocp_version" {
       var.ocp_version == "4.13",
       var.ocp_version == "4.14",
       var.ocp_version == "4.15",
+      var.ocp_version == "4.16",
     ])
     error_message = "The specified ocp_version is not one of the validated versions."
   }
