@@ -236,5 +236,4 @@ module "ocp_all_inclusive" {
   addons                               = local.addons
   disable_public_endpoint              = var.disable_public_endpoint
   cloud_monitoring_agent_tags          = var.resource_tags
-  import_default_worker_pool_on_create = false
 }
