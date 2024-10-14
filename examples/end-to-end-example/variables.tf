@@ -45,6 +45,7 @@ variable "worker_pools" {
     subnet_prefix     = string
     pool_name         = string
     machine_type      = string
+    operating_system  = string
     workers_per_zone  = number
     resource_group_id = optional(string)
     labels            = optional(map(string))
@@ -54,6 +55,7 @@ variable "worker_pools" {
       subnet_prefix     = "zone-1"
       pool_name         = "default" # ibm_container_vpc_cluster automatically names default pool "default" (See https://github.com/IBM-Cloud/terraform-provider-ibm/issues/2849)
       machine_type      = "bx2.4x16"
+      operating_system  = "REDHAT_8_64"
       workers_per_zone  = 3
       minSize           = 1
       maxSize           = 5
