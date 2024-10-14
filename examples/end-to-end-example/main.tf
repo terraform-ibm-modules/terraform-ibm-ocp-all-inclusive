@@ -149,26 +149,20 @@ module "vpc" {
 }
 
 ##############################################################################
-# Observability Instances (Log Analysis + Cloud Monitoring)
+# Observability Instances (Cloud Logs + Cloud Monitoring)
 ##############################################################################
 
 module "observability_instances" {
-  source  = "terraform-ibm-modules/observability-instances/ibm"
-  version = "2.18.1"
-  providers = {
-    logdna.at = logdna.at
-    logdna.ld = logdna.ld
-  }
+  source                         = "terraform-ibm-modules/observability-instances/ibm"
+  version                        = "3.0.1"
   region                         = var.region
   resource_group_id              = module.resource_group.resource_group_id
-  activity_tracker_provision     = false
-  log_analysis_instance_name     = "${var.prefix}-logdna"
+  cloud_logs_instance_name       = "${var.prefix}-icl"
   cloud_monitoring_instance_name = "${var.prefix}-sysdig"
-  log_analysis_plan              = "7-day"
   cloud_monitoring_plan          = "graduated-tier"
   enable_platform_logs           = false
   enable_platform_metrics        = false
-  log_analysis_tags              = var.resource_tags
+  cloud_logs_tags                = var.resource_tags
   cloud_monitoring_tags          = var.resource_tags
 }
 
@@ -222,25 +216,25 @@ locals {
 }
 
 module "ocp_all_inclusive" {
-  source                           = "../.."
-  resource_group_id                = module.resource_group.resource_group_id
-  region                           = var.region
-  cluster_name                     = "${var.prefix}-cluster"
-  cos_name                         = "${var.prefix}-cos"
-  vpc_id                           = module.vpc.vpc_id
-  vpc_subnets                      = local.cluster_vpc_subnets
-  worker_pools                     = var.worker_pools
-  ocp_version                      = var.ocp_version
-  cluster_tags                     = var.resource_tags
-  access_tags                      = var.access_tags
-  existing_kms_instance_guid       = module.key_protect_all_inclusive.kms_guid
-  existing_kms_root_key_id         = module.key_protect_all_inclusive.keys["${local.key_ring_name}.${local.key_name}"].key_id
-  log_analysis_instance_region     = module.observability_instances.region
-  log_analysis_ingestion_key       = module.observability_instances.log_analysis_ingestion_key
-  cloud_monitoring_access_key      = module.observability_instances.cloud_monitoring_access_key
-  cloud_monitoring_instance_region = module.observability_instances.region
-  addons                           = local.addons
-  disable_public_endpoint          = var.disable_public_endpoint
-  log_analysis_agent_tags          = var.resource_tags
-  cloud_monitoring_agent_tags      = var.resource_tags
+  source                               = "../.."
+  resource_group_id                    = module.resource_group.resource_group_id
+  region                               = var.region
+  cluster_name                         = "${var.prefix}-cluster"
+  cos_name                             = "${var.prefix}-cos"
+  vpc_id                               = module.vpc.vpc_id
+  vpc_subnets                          = local.cluster_vpc_subnets
+  worker_pools                         = var.worker_pools
+  ocp_version                          = var.ocp_version
+  cluster_tags                         = var.resource_tags
+  access_tags                          = var.access_tags
+  existing_kms_instance_guid           = module.key_protect_all_inclusive.kms_guid
+  existing_kms_root_key_id             = module.key_protect_all_inclusive.keys["${local.key_ring_name}.${local.key_name}"].key_id
+  cloud_logs_ingress_endpoint          = module.observability_instances.cloud_logs_ingress_private_endpoint
+  cloud_logs_ingress_port              = 3443
+  cloud_monitoring_access_key          = module.observability_instances.cloud_monitoring_access_key
+  cloud_monitoring_instance_region     = module.observability_instances.region
+  addons                               = local.addons
+  disable_public_endpoint              = var.disable_public_endpoint
+  cloud_monitoring_agent_tags          = var.resource_tags
+  import_default_worker_pool_on_create = false
 }

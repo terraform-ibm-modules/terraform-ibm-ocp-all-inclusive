@@ -11,7 +11,7 @@
 
 This module is a wrapper module that groups the following modules:
 - [base-ocp-vpc-module](https://github.com/terraform-ibm-modules/terraform-ibm-base-ocp-vpc) - Provisions a base (bare) Red Hat OpenShift Container Platform cluster on VPC Gen2 (supports passing Key Protect details to encrypt cluster).
-- [observability-agents-module](https://github.com/terraform-ibm-modules/terraform-ibm-observability-agents) - Deploys Log Analysis and Cloud Monitoring agents to a cluster.
+- [observability-agents-module](https://github.com/terraform-ibm-modules/terraform-ibm-observability-agents) - Deploys Logs Agent and Cloud Monitoring agents to a cluster.
 
 :exclamation: **Important:** You can't update Red Hat OpenShift cluster nodes by using this module. The Terraform logic ignores updates to prevent possible destructive changes.
 
@@ -89,6 +89,12 @@ provider "helm" {
     host                   = data.ibm_container_cluster_config.cluster_config.host
     token                  = data.ibm_container_cluster_config.cluster_config.token
   }
+  # IBM Cloud credentials are required to authenticate to the helm repo
+  registry {
+    url = "oci://icr.io/ibm/observe/logs-agent-helm"
+    username = "iamapikey"
+    password = "XXXXXXXXXXXXXXXXX" # replace with an IBM cloud apikey # pragma: allowlist secret
+  }
 }
 
 provider "kubernetes" {
@@ -119,8 +125,8 @@ module "ocp_all_inclusive" {
       }
     ]
   }
-  log_analysis_instance_name          = "my-logdna"
-  log_analysis_ingestion_key          = "xxXXxxXXxXxXXXXxxXxxxXXXXxXXXXX"
+  cloud_logs_ingress_endpoint             = "<cloud-logs-instance-guid>.ingress.us-south.logs.cloud.ibm.com"
+  cloud_logs_ingress_port                 = 443
   cloud_monitoring_instance_name          = "my-sysdig"
   cloud_monitoring_access_key             = "xxXXxxXXxXxXXXXxxXxxxXXXXxXXXXX"
 }
@@ -164,8 +170,9 @@ You need the following permissions to run this module.
 
 | Name | Source | Version |
 |------|--------|---------|
-| <a name="module_observability_agents"></a> [observability\_agents](#module\_observability\_agents) | terraform-ibm-modules/observability-agents/ibm | 1.29.1 |
+| <a name="module_observability_agents"></a> [observability\_agents](#module\_observability\_agents) | terraform-ibm-modules/observability-agents/ibm | 1.30.2 |
 | <a name="module_ocp_base"></a> [ocp\_base](#module\_ocp\_base) | terraform-ibm-modules/base-ocp-vpc/ibm | 3.32.0 |
+| <a name="module_trusted_profile"></a> [trusted\_profile](#module\_trusted\_profile) | terraform-ibm-modules/trusted-profile/ibm | 1.0.4 |
 
 ### Resources
 
@@ -181,6 +188,8 @@ No resources.
 | <a name="input_addons"></a> [addons](#input\_addons) | List of all addons supported by the ocp cluster. | <pre>object({<br/>    debug-tool                = optional(string)<br/>    image-key-synchronizer    = optional(string)<br/>    openshift-data-foundation = optional(string)<br/>    vpc-file-csi-driver       = optional(string)<br/>    static-route              = optional(string)<br/>    cluster-autoscaler        = optional(string)<br/>    vpc-block-csi-driver      = optional(string)<br/>  })</pre> | `null` | no |
 | <a name="input_allow_default_worker_pool_replacement"></a> [allow\_default\_worker\_pool\_replacement](#input\_allow\_default\_worker\_pool\_replacement) | (Advanced users) Set to true to allow the module to recreate a default worker pool. Only use in the case where you are getting an error indicating that the default worker pool cannot be replaced on apply. Once the default worker pool is handled as a stand-alone ibm\_container\_vpc\_worker\_pool, if you wish to make any change to the default worker pool which requires the re-creation of the default pool set this variable to true. | `bool` | `false` | no |
 | <a name="input_attach_ibm_managed_security_group"></a> [attach\_ibm\_managed\_security\_group](#input\_attach\_ibm\_managed\_security\_group) | Whether to attach the IBM-defined default security group (named `kube-<clusterid>`) to all worker nodes. Applies only if `custom_security_group_ids` is set. | `bool` | `true` | no |
+| <a name="input_cloud_logs_ingress_endpoint"></a> [cloud\_logs\_ingress\_endpoint](#input\_cloud\_logs\_ingress\_endpoint) | The host for IBM Cloud Logs ingestion. Ensure you use the ingress endpoint. See https://cloud.ibm.com/docs/cloud-logs?topic=cloud-logs-endpoints_ingress. | `string` | `null` | no |
+| <a name="input_cloud_logs_ingress_port"></a> [cloud\_logs\_ingress\_port](#input\_cloud\_logs\_ingress\_port) | The target port for the IBM Cloud Logs ingestion endpoint. The port must be 443 if you connect by using a VPE gateway, or port 3443 when you connect by using CSEs. | `number` | `3443` | no |
 | <a name="input_cloud_monitoring_access_key"></a> [cloud\_monitoring\_access\_key](#input\_cloud\_monitoring\_access\_key) | Access key for the Cloud Monitoring agent to communicate with the instance. | `string` | `null` | no |
 | <a name="input_cloud_monitoring_add_cluster_name"></a> [cloud\_monitoring\_add\_cluster\_name](#input\_cloud\_monitoring\_add\_cluster\_name) | If true, configure the cloud monitoring agent to attach a tag containing the cluster name to all metric data. | `bool` | `true` | no |
 | <a name="input_cloud_monitoring_agent_name"></a> [cloud\_monitoring\_agent\_name](#input\_cloud\_monitoring\_agent\_name) | Cloud Monitoring agent name. Used for naming all kubernetes and helm resources on the cluster. | `string` | `"sysdig-agent"` | no |
@@ -210,18 +219,18 @@ No resources.
 | <a name="input_kms_account_id"></a> [kms\_account\_id](#input\_kms\_account\_id) | Id of the account that owns the KMS instance to encrypt the cluster. It is only required if the KMS instance is in another account. | `string` | `null` | no |
 | <a name="input_kms_use_private_endpoint"></a> [kms\_use\_private\_endpoint](#input\_kms\_use\_private\_endpoint) | Set as true to use the Private endpoint when communicating between cluster and KMS instance. | `bool` | `true` | no |
 | <a name="input_kms_wait_for_apply"></a> [kms\_wait\_for\_apply](#input\_kms\_wait\_for\_apply) | Set true to make terraform wait until KMS is applied to master and it is ready and deployed. Default value is true. | `bool` | `true` | no |
-| <a name="input_log_analysis_add_cluster_name"></a> [log\_analysis\_add\_cluster\_name](#input\_log\_analysis\_add\_cluster\_name) | If true, configure the log analysis agent to attach a tag containing the cluster name to all log messages. | `bool` | `true` | no |
-| <a name="input_log_analysis_agent_custom_line_exclusion"></a> [log\_analysis\_agent\_custom\_line\_exclusion](#input\_log\_analysis\_agent\_custom\_line\_exclusion) | Log Analysis agent custom configuration for line exclusion setting LOGDNA\_K8S\_METADATA\_LINE\_EXCLUSION. See https://github.com/logdna/logdna-agent-v2/blob/master/docs/KUBERNETES.md#configuration-for-kubernetes-metadata-filtering for more info. | `string` | `null` | no |
-| <a name="input_log_analysis_agent_custom_line_inclusion"></a> [log\_analysis\_agent\_custom\_line\_inclusion](#input\_log\_analysis\_agent\_custom\_line\_inclusion) | Log Analysis agent custom configuration for line inclusion setting LOGDNA\_K8S\_METADATA\_LINE\_INCLUSION. See https://github.com/logdna/logdna-agent-v2/blob/master/docs/KUBERNETES.md#configuration-for-kubernetes-metadata-filtering for more info. | `string` | `null` | no |
-| <a name="input_log_analysis_agent_name"></a> [log\_analysis\_agent\_name](#input\_log\_analysis\_agent\_name) | Log Analysis agent name. Used for naming all kubernetes and helm resources on the cluster. | `string` | `"logdna-agent"` | no |
-| <a name="input_log_analysis_agent_namespace"></a> [log\_analysis\_agent\_namespace](#input\_log\_analysis\_agent\_namespace) | Namespace where to deploy the Log Analysis agent. Default value is 'ibm-observe' | `string` | `"ibm-observe"` | no |
-| <a name="input_log_analysis_agent_tags"></a> [log\_analysis\_agent\_tags](#input\_log\_analysis\_agent\_tags) | List of tags to associate with the log analysis agents | `list(string)` | `[]` | no |
-| <a name="input_log_analysis_agent_tolerations"></a> [log\_analysis\_agent\_tolerations](#input\_log\_analysis\_agent\_tolerations) | List of tolerations to apply to Log Analysis agent. | <pre>list(object({<br/>    key               = optional(string)<br/>    operator          = optional(string)<br/>    value             = optional(string)<br/>    effect            = optional(string)<br/>    tolerationSeconds = optional(number)<br/>  }))</pre> | <pre>[<br/>  {<br/>    "operator": "Exists"<br/>  }<br/>]</pre> | no |
-| <a name="input_log_analysis_enabled"></a> [log\_analysis\_enabled](#input\_log\_analysis\_enabled) | Deploy IBM Cloud Logging agent | `bool` | `true` | no |
-| <a name="input_log_analysis_endpoint_type"></a> [log\_analysis\_endpoint\_type](#input\_log\_analysis\_endpoint\_type) | Specify the IBM Log Analysis instance endpoint type (public or private) to use. Used to construct the ingestion endpoint. | `string` | `"private"` | no |
-| <a name="input_log_analysis_ingestion_key"></a> [log\_analysis\_ingestion\_key](#input\_log\_analysis\_ingestion\_key) | Ingestion key for the Log Analysis agent to communicate with the instance. | `string` | `null` | no |
-| <a name="input_log_analysis_instance_region"></a> [log\_analysis\_instance\_region](#input\_log\_analysis\_instance\_region) | The IBM Log Analysis instance region. Used to construct the ingestion endpoint. | `string` | `null` | no |
-| <a name="input_log_analysis_secret_name"></a> [log\_analysis\_secret\_name](#input\_log\_analysis\_secret\_name) | The name of the secret which will store the ingestion key. | `string` | `"logdna-agent"` | no |
+| <a name="input_logs_agent_additional_log_source_paths"></a> [logs\_agent\_additional\_log\_source\_paths](#input\_logs\_agent\_additional\_log\_source\_paths) | The list of additional log sources. By default, the Logs agent collects logs from a single source at `/var/log/containers/*.log`. | `list(string)` | `[]` | no |
+| <a name="input_logs_agent_additional_metadata"></a> [logs\_agent\_additional\_metadata](#input\_logs\_agent\_additional\_metadata) | The list of additional metadata fields to add to the routed logs. | <pre>list(object({<br/>    key   = optional(string)<br/>    value = optional(string)<br/>  }))</pre> | `[]` | no |
+| <a name="input_logs_agent_enabled"></a> [logs\_agent\_enabled](#input\_logs\_agent\_enabled) | Whether to deploy the Logs agent. | `bool` | `true` | no |
+| <a name="input_logs_agent_exclude_log_source_paths"></a> [logs\_agent\_exclude\_log\_source\_paths](#input\_logs\_agent\_exclude\_log\_source\_paths) | The list of log sources to exclude. Specify the paths that the Logs agent ignores. | `list(string)` | `[]` | no |
+| <a name="input_logs_agent_iam_api_key"></a> [logs\_agent\_iam\_api\_key](#input\_logs\_agent\_iam\_api\_key) | The IBM Cloud API key for the Logs agent to authenticate and communicate with the IBM Cloud Logs. It is required if `logs_agent_iam_mode` is set to `IAMAPIKey`. | `string` | `null` | no |
+| <a name="input_logs_agent_iam_environment"></a> [logs\_agent\_iam\_environment](#input\_logs\_agent\_iam\_environment) | IAM authentication Environment: `Production` or `PrivateProduction` or `Staging` or `PrivateStaging`. `Production` specifies the public endpoint & `PrivateProduction` specifies the private endpoint. | `string` | `"PrivateProduction"` | no |
+| <a name="input_logs_agent_iam_mode"></a> [logs\_agent\_iam\_mode](#input\_logs\_agent\_iam\_mode) | IAM authentication mode: `TrustedProfile` or `IAMAPIKey`. | `string` | `"TrustedProfile"` | no |
+| <a name="input_logs_agent_log_source_namespaces"></a> [logs\_agent\_log\_source\_namespaces](#input\_logs\_agent\_log\_source\_namespaces) | The list of namespaces from which logs should be forwarded by agent. If namespaces are not listed, logs from all namespaces will be sent. | `list(string)` | `[]` | no |
+| <a name="input_logs_agent_name"></a> [logs\_agent\_name](#input\_logs\_agent\_name) | The name of the Logs agent. The name is used in all Kubernetes and Helm resources in the cluster. | `string` | `"logs-agent"` | no |
+| <a name="input_logs_agent_namespace"></a> [logs\_agent\_namespace](#input\_logs\_agent\_namespace) | The namespace where the Logs agent is deployed. The default value is `ibm-observe`. | `string` | `"ibm-observe"` | no |
+| <a name="input_logs_agent_selected_log_source_paths"></a> [logs\_agent\_selected\_log\_source\_paths](#input\_logs\_agent\_selected\_log\_source\_paths) | The list of specific log sources paths. Logs will only be collected from the specified log source paths. If no paths are specified, it will send logs from `/var/log/containers`. | `list(string)` | `[]` | no |
+| <a name="input_logs_agent_tolerations"></a> [logs\_agent\_tolerations](#input\_logs\_agent\_tolerations) | List of tolerations to apply to Logs agent. The default value means a pod will run on every node. | <pre>list(object({<br/>    key               = optional(string)<br/>    operator          = optional(string)<br/>    value             = optional(string)<br/>    effect            = optional(string)<br/>    tolerationSeconds = optional(number)<br/>  }))</pre> | <pre>[<br/>  {<br/>    "operator": "Exists"<br/>  }<br/>]</pre> | no |
 | <a name="input_manage_all_addons"></a> [manage\_all\_addons](#input\_manage\_all\_addons) | Whether Terraform manages all cluster add-ons, even add-ons installed outside of the module. If set to 'true', this module destroys the add-ons installed by other sources. | `bool` | `false` | no |
 | <a name="input_number_of_lbs"></a> [number\_of\_lbs](#input\_number\_of\_lbs) | The number of load balancer to associate with the `additional_lb_security_group_names` security group. Must match the number of load balancers that are associated with the cluster | `number` | `1` | no |
 | <a name="input_ocp_entitlement"></a> [ocp\_entitlement](#input\_ocp\_entitlement) | Value that is applied to the entitlements for OCP cluster provisioning | `string` | `"cloud_pak"` | no |
