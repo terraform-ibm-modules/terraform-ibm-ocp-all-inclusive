@@ -39,7 +39,7 @@ func setupOptions(t *testing.T, prefix string, terraformVars map[string]interfac
 			List: []string{
 				"module.ocp_all_inclusive.module.observability_agents[0].helm_release.logdna_agent[0]",
 				"module.ocp_all_inclusive.module.observability_agents[0].helm_release.sysdig_agent[0]",
-				"module.ocp_all_inclusive.module.observability_agents[0].helm_release.log_analysis_agent[0]",
+				"module.ocp_all_inclusive.module.observability_agents[0].module.logs_agent[0].helm_release.logs_agent",
 				"module.ocp_all_inclusive.module.observability_agents[0].helm_release.cloud_monitoring_agent[0]",
 			},
 		},

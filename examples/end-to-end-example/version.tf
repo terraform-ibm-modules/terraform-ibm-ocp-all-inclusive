@@ -13,9 +13,5 @@ terraform {
       source  = "hashicorp/kubernetes"
       version = ">= 2.16.1"
     }
-    logdna = {
-      source  = "logdna/logdna"
-      version = ">= 1.14.2"
-    }
   }
 }
