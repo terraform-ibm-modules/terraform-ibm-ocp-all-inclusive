@@ -17,26 +17,16 @@ provider "helm" {
     host  = data.ibm_container_cluster_config.cluster_config.host
     token = data.ibm_container_cluster_config.cluster_config.token
   }
+  # IBM Cloud credentials are required to authenticate to the helm repo
+  registry {
+    url      = "oci://icr.io/ibm/observe/logs-agent-helm"
+    username = "iamapikey"
+    password = var.ibmcloud_api_key
+  }
 }
 
 # Kubernetes provider used to create kube namespace(s)
 provider "kubernetes" {
   host  = data.ibm_container_cluster_config.cluster_config.host
   token = data.ibm_container_cluster_config.cluster_config.token
-}
-
-locals {
-  at_endpoint = "https://api.${var.region}.logging.cloud.ibm.com"
-}
-
-provider "logdna" {
-  alias      = "at"
-  servicekey = module.observability_instances.activity_tracker_resource_key != null ? module.observability_instances.activity_tracker_resource_key : ""
-  url        = local.at_endpoint
-}
-
-provider "logdna" {
-  alias      = "ld"
-  servicekey = module.observability_instances.log_analysis_resource_key != null ? module.observability_instances.log_analysis_resource_key : ""
-  url        = local.at_endpoint
 }

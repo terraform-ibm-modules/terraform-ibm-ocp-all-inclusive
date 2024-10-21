@@ -369,85 +369,38 @@ variable "custom_security_group_ids" {
 }
 
 ##############################################################################
-# Log Analysis Agent Variables
+# Logs Agents variables
 ##############################################################################
 
-variable "log_analysis_enabled" {
+variable "logs_agent_enabled" {
   type        = bool
-  description = "Deploy IBM Cloud Logging agent"
+  description = "Whether to deploy the Logs agent."
   default     = true
 }
 
-variable "log_analysis_add_cluster_name" {
-  type        = bool
-  description = "If true, configure the log analysis agent to attach a tag containing the cluster name to all log messages."
-  default     = true
-}
-
-variable "log_analysis_secret_name" {
+variable "logs_agent_name" {
+  description = "The name of the Logs agent. The name is used in all Kubernetes and Helm resources in the cluster."
   type        = string
-  description = "The name of the secret which will store the ingestion key."
-  default     = "logdna-agent"
+  default     = "logs-agent"
   nullable    = false
 }
 
-variable "log_analysis_instance_region" {
+variable "logs_agent_namespace" {
   type        = string
-  description = "The IBM Log Analysis instance region. Used to construct the ingestion endpoint."
-  default     = null
-}
-
-variable "log_analysis_ingestion_key" {
-  type        = string
-  description = "Ingestion key for the Log Analysis agent to communicate with the instance."
-  sensitive   = true
-  default     = null
-}
-
-variable "log_analysis_endpoint_type" {
-  type        = string
-  description = "Specify the IBM Log Analysis instance endpoint type (public or private) to use. Used to construct the ingestion endpoint."
-  default     = "private"
-  validation {
-    error_message = "The specified endpoint_type can be private or public only."
-    condition     = contains(["private", "public"], var.log_analysis_endpoint_type)
-  }
-}
-
-variable "log_analysis_agent_tags" {
-  type        = list(string)
-  description = "List of tags to associate with the log analysis agents"
-  default     = []
-}
-
-variable "log_analysis_agent_custom_line_inclusion" {
-  description = "Log Analysis agent custom configuration for line inclusion setting LOGDNA_K8S_METADATA_LINE_INCLUSION. See https://github.com/logdna/logdna-agent-v2/blob/master/docs/KUBERNETES.md#configuration-for-kubernetes-metadata-filtering for more info."
-  type        = string
-  default     = null
-}
-
-variable "log_analysis_agent_custom_line_exclusion" {
-  description = "Log Analysis agent custom configuration for line exclusion setting LOGDNA_K8S_METADATA_LINE_EXCLUSION. See https://github.com/logdna/logdna-agent-v2/blob/master/docs/KUBERNETES.md#configuration-for-kubernetes-metadata-filtering for more info."
-  type        = string
-  default     = null
-}
-
-variable "log_analysis_agent_name" {
-  description = "Log Analysis agent name. Used for naming all kubernetes and helm resources on the cluster."
-  type        = string
-  default     = "logdna-agent"
-  nullable    = false
-}
-
-variable "log_analysis_agent_namespace" {
-  type        = string
-  description = "Namespace where to deploy the Log Analysis agent. Default value is 'ibm-observe'"
+  description = "The namespace where the Logs agent is deployed. The default value is `ibm-observe`."
   default     = "ibm-observe"
   nullable    = false
 }
 
-variable "log_analysis_agent_tolerations" {
-  description = "List of tolerations to apply to Log Analysis agent."
+variable "logs_agent_iam_api_key" {
+  type        = string
+  description = "The IBM Cloud API key for the Logs agent to authenticate and communicate with the IBM Cloud Logs. It is required if `logs_agent_enabled` is true and `logs_agent_iam_mode` is set to `IAMAPIKey`."
+  sensitive   = true
+  default     = null
+}
+
+variable "logs_agent_tolerations" {
+  description = "List of tolerations to apply to Logs agent. The default value means a pod will run on every node."
   type = list(object({
     key               = optional(string)
     operator          = optional(string)
@@ -458,6 +411,67 @@ variable "log_analysis_agent_tolerations" {
   default = [{
     operator = "Exists"
   }]
+}
+
+variable "logs_agent_additional_log_source_paths" {
+  type        = list(string)
+  description = "The list of additional log sources. By default, the Logs agent collects logs from a single source at `/var/log/containers/*.log`."
+  default     = []
+  nullable    = false
+}
+
+variable "logs_agent_exclude_log_source_paths" {
+  type        = list(string)
+  description = "The list of log sources to exclude. Specify the paths that the Logs agent ignores."
+  default     = []
+  nullable    = false
+}
+
+variable "logs_agent_selected_log_source_paths" {
+  type        = list(string)
+  description = "The list of specific log sources paths. Logs will only be collected from the specified log source paths. If no paths are specified, it will send logs from `/var/log/containers`."
+  default     = []
+  nullable    = false
+}
+
+variable "logs_agent_log_source_namespaces" {
+  type        = list(string)
+  description = "The list of namespaces from which logs should be forwarded by agent. If namespaces are not listed, logs from all namespaces will be sent."
+  default     = []
+  nullable    = false
+}
+
+variable "logs_agent_iam_mode" {
+  type        = string
+  default     = "TrustedProfile"
+  description = "IAM authentication mode: `TrustedProfile` or `IAMAPIKey`. If `TrustedProfile` is selected, the module will create one."
+}
+
+variable "logs_agent_iam_environment" {
+  type        = string
+  default     = "PrivateProduction"
+  description = "IAM authentication Environment: `Production` or `PrivateProduction` or `Staging` or `PrivateStaging`. `Production` specifies the public endpoint & `PrivateProduction` specifies the private endpoint."
+}
+
+variable "logs_agent_additional_metadata" {
+  description = "The list of additional metadata fields to add to the routed logs."
+  type = list(object({
+    key   = optional(string)
+    value = optional(string)
+  }))
+  default = []
+}
+
+variable "cloud_logs_ingress_endpoint" {
+  description = "The host for IBM Cloud Logs ingestion. It is required if `logs_agent_enabled` is set to `true`. Ensure you use the ingress endpoint. See https://cloud.ibm.com/docs/cloud-logs?topic=cloud-logs-endpoints_ingress."
+  type        = string
+  default     = null
+}
+
+variable "cloud_logs_ingress_port" {
+  type        = number
+  default     = 3443
+  description = "The target port for the IBM Cloud Logs ingestion endpoint. The port must be 443 if you connect by using a VPE gateway, or port 3443 when you connect by using CSEs."
 }
 
 ##############################################################################
