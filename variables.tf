@@ -394,7 +394,7 @@ variable "logs_agent_namespace" {
 
 variable "logs_agent_iam_api_key" {
   type        = string
-  description = "The IBM Cloud API key for the Logs agent to authenticate and communicate with the IBM Cloud Logs. It is required if `logs_agent_iam_mode` is set to `IAMAPIKey`."
+  description = "The IBM Cloud API key for the Logs agent to authenticate and communicate with the IBM Cloud Logs. It is required if `logs_agent_enabled` is true and `logs_agent_iam_mode` is set to `IAMAPIKey`."
   sensitive   = true
   default     = null
 }
@@ -444,7 +444,7 @@ variable "logs_agent_log_source_namespaces" {
 variable "logs_agent_iam_mode" {
   type        = string
   default     = "TrustedProfile"
-  description = "IAM authentication mode: `TrustedProfile` or `IAMAPIKey`."
+  description = "IAM authentication mode: `TrustedProfile` or `IAMAPIKey`. If `TrustedProfile` is selected, the module will create one."
 }
 
 variable "logs_agent_iam_environment" {
@@ -463,7 +463,7 @@ variable "logs_agent_additional_metadata" {
 }
 
 variable "cloud_logs_ingress_endpoint" {
-  description = "The host for IBM Cloud Logs ingestion. Ensure you use the ingress endpoint. See https://cloud.ibm.com/docs/cloud-logs?topic=cloud-logs-endpoints_ingress."
+  description = "The host for IBM Cloud Logs ingestion. It is required if `logs_agent_enabled` is set to `true`. Ensure you use the ingress endpoint. See https://cloud.ibm.com/docs/cloud-logs?topic=cloud-logs-endpoints_ingress."
   type        = string
   default     = null
 }
