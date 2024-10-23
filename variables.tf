@@ -284,16 +284,6 @@ variable "disable_outbound_traffic_protection" {
   default     = false
 }
 
-variable "operating_system" {
-  type        = string
-  description = "The operating system of the workers in the default worker pool. If no value is specified, the current default version OS will be used. See https://cloud.ibm.com/docs/openshift?topic=openshift-openshift_versions#openshift_versions_available ."
-  default     = null
-  validation {
-    error_message = "RHEL 8 (REDHAT_8_64) or Red Hat Enterprise Linux CoreOS (RHCOS) are the allowed OS values. RHCOS requires VPC clusters created from 4.15 onwards. Upgraded clusters from 4.14 cannot use RHCOS."
-    condition     = var.operating_system == null || var.operating_system == "REDHAT_8_64" || var.operating_system == "RHCOS"
-  }
-}
-
 variable "import_default_worker_pool_on_create" {
   type        = bool
   description = "(Advanced users) Whether to handle the default worker pool as a stand-alone ibm_container_vpc_worker_pool resource on cluster creation. Only set to false if you understand the implications of managing the default worker pool as part of the cluster resource. Set to true to import the default worker pool as a separate resource. Set to false to manage the default worker pool as part of the cluster resource."

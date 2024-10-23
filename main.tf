@@ -23,7 +23,7 @@ locals {
 
 module "ocp_base" {
   source                                = "terraform-ibm-modules/base-ocp-vpc/ibm"
-  version                               = "3.33.0"
+  version                               = "3.34.0"
   cluster_name                          = var.cluster_name
   ocp_version                           = var.ocp_version
   resource_group_id                     = var.resource_group_id
@@ -52,7 +52,6 @@ module "ocp_base" {
   cluster_config_endpoint_type          = var.cluster_config_endpoint_type
   enable_registry_storage               = var.enable_registry_storage
   disable_outbound_traffic_protection   = var.disable_outbound_traffic_protection
-  operating_system                      = var.operating_system
   import_default_worker_pool_on_create  = var.import_default_worker_pool_on_create
   allow_default_worker_pool_replacement = var.allow_default_worker_pool_replacement
 }
@@ -100,7 +99,7 @@ module "trusted_profile" {
 module "observability_agents" {
   count                        = var.logs_agent_enabled == true || var.cloud_monitoring_enabled == true ? 1 : 0
   source                       = "terraform-ibm-modules/observability-agents/ibm"
-  version                      = "1.30.2"
+  version                      = "2.0.0"
   cluster_id                   = module.ocp_base.cluster_id
   cluster_resource_group_id    = var.resource_group_id
   cluster_config_endpoint_type = var.cluster_config_endpoint_type
