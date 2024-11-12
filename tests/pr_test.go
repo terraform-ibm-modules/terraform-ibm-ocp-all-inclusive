@@ -5,13 +5,14 @@ import (
 	"os"
 	"testing"
 
-	"github.com/gruntwork-io/terratest/modules/terraform"
+	//"github.com/gruntwork-io/terratest/modules/terraform"
 	"github.com/stretchr/testify/assert"
 	"github.com/terraform-ibm-modules/ibmcloud-terratest-wrapper/common"
 	"github.com/terraform-ibm-modules/ibmcloud-terratest-wrapper/testhelper"
+	"github.com/terraform-ibm-modules/ibmcloud-terratest-wrapper/testschematic"
 )
 
-const basicExampleTerraformDir = "examples/end-to-end-example"
+const CompleteExampleTerraformDir = "examples/end-to-end-example"
 const resourceGroup = "geretain-test-ocp-all-inclusive"
 
 const yamlLocation = "../common-dev-assets/common-go-assets/common-permanent-resources.yaml"
@@ -32,7 +33,7 @@ func TestMain(m *testing.M) {
 func setupOptions(t *testing.T, prefix string, terraformVars map[string]interface{}) *testhelper.TestOptions {
 	options := testhelper.TestOptionsDefaultWithVars(&testhelper.TestOptions{
 		Testing:       t,
-		TerraformDir:  basicExampleTerraformDir,
+		TerraformDir:  CompleteExampleTerraformDir,
 		Prefix:        prefix,
 		ResourceGroup: resourceGroup,
 		IgnoreUpdates: testhelper.Exemptions{ // Ignore for consistency check
@@ -58,40 +59,44 @@ func setupOptions(t *testing.T, prefix string, terraformVars map[string]interfac
 	return options
 }
 
-func testRunComplete(t *testing.T, version string) {
+// func getClusterIngress(options *testhelper.TestOptions) error {
+
+// 	// get ouput of last apply
+// 	outputs, outputErr := terraform.OutputAllE(options.Testing, options.TerraformOptions)
+// 	if assert.NoErrorf(options.Testing, outputErr, "error getting last terraform apply outputs: %s", outputErr) {
+// 		options.CheckClusterIngressHealthyDefaultTimeout(outputs["cluster_id"].(string))
+// 	}
+// 	return nil
+// }
+
+func TestBasicExampleInSchematics(t *testing.T) {
 	t.Parallel()
 
-	terraformVars := map[string]interface{}{
-		"ocp_version": version,
-		"access_tags": permanentResources["accessTags"],
+	options := testschematic.TestSchematicOptionsDefault(&testschematic.TestSchematicOptions{
+		Testing: t,
+		Prefix:  "ocp-all-inc",
+		TarIncludePatterns: []string{
+			"*.tf",
+			CompleteExampleTerraformDir + "/*.tf",
+		},
+		ResourceGroup:          resourceGroup,
+		TemplateFolder:         CompleteExampleTerraformDir,
+		Tags:                   []string{"test-schematic"},
+		DeleteWorkspaceOnFail:  false,
+		WaitJobCompleteMinutes: 60,
+	})
+
+	// Setting up variables for the Schematics test
+	options.TerraformVars = []testschematic.TestSchematicTerraformVar{
+		{Name: "ibmcloud_api_key", Value: options.RequiredEnvironmentVars["TF_VAR_ibmcloud_api_key"], DataType: "string", Secure: true},
+		{Name: "prefix", Value: options.Prefix, DataType: "string"},
+		{Name: "ocp_version", Value: "4.16", DataType: "string"},
+		{Name: "access_tags", Value: permanentResources["accessTags"], DataType: "list(string)"},
 	}
-	options := setupOptions(t, "ocp-all-inc", terraformVars)
 
-	options.PostApplyHook = getClusterIngress
-	output, err := options.RunTestConsistency()
-
+	// Run the Schematics test
+	err := options.RunSchematicTest()
 	assert.Nil(t, err, "This should not have errored")
-	assert.NotNil(t, output, "Expected some output")
-}
-
-func getClusterIngress(options *testhelper.TestOptions) error {
-
-	// get ouput of last apply
-	outputs, outputErr := terraform.OutputAllE(options.Testing, options.TerraformOptions)
-	if assert.NoErrorf(options.Testing, outputErr, "error getting last terraform apply outputs: %s", outputErr) {
-		options.CheckClusterIngressHealthyDefaultTimeout(outputs["cluster_id"].(string))
-	}
-	return nil
-}
-
-func TestRunCompleteExample(t *testing.T) {
-	t.Parallel()
-
-	// This test should always test the latest and the earliest supported OCP versions.
-	versions := []string{"4.16"}
-	for _, version := range versions {
-		t.Run(version, func(t *testing.T) { testRunComplete(t, version) })
-	}
 }
 
 func TestRunUpgradeCompleteExample(t *testing.T) {
