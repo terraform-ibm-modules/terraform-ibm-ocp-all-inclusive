@@ -79,6 +79,7 @@ variable "worker_pools" {
     operating_system  = string
     labels            = optional(map(string))
     minSize           = optional(number)
+    secondary_storage = optional(string)
     maxSize           = optional(number)
     enableAutoscaling = optional(bool)
     boot_volume_encryption_kms_config = optional(object({
@@ -86,6 +87,7 @@ variable "worker_pools" {
       kms_instance_id = string
       kms_account_id  = optional(string)
     }))
+    additional_security_group_ids = optional(list(string))
   }))
   default = [
     {
