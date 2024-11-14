@@ -519,6 +519,16 @@ variable "cloud_monitoring_metrics_filter" {
   }
 }
 
+variable "cloud_monitoring_container_filter" {
+  type = list(object({
+    type      = string
+    parameter = string
+    name      = string
+  }))
+  description = "To filter custom containers, specify the Cloud Monitoring containers to include or to exclude. See https://cloud.ibm.com/docs/monitoring?topic=monitoring-change_kube_agent#change_kube_agent_filter_data."
+  default     = []
+}
+
 variable "cloud_monitoring_agent_tags" {
   type        = list(string)
   description = "List of tags to associate with the cloud monitoring agents"
