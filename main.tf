@@ -128,6 +128,7 @@ module "observability_agents" {
   cloud_monitoring_instance_region   = var.cloud_monitoring_instance_region
   cloud_monitoring_endpoint_type     = var.cloud_monitoring_endpoint_type
   cloud_monitoring_metrics_filter    = var.cloud_monitoring_metrics_filter
+  cloud_monitoring_container_filter  = var.cloud_monitoring_container_filter
   cloud_monitoring_add_cluster_name  = var.cloud_monitoring_add_cluster_name
   cloud_monitoring_agent_name        = var.cloud_monitoring_agent_name
   cloud_monitoring_agent_namespace   = var.cloud_monitoring_agent_namespace
