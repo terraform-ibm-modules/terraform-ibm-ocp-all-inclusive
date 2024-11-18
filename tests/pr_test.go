@@ -68,6 +68,7 @@ func TestCompleteExampleInSchematics(t *testing.T) {
 		TarIncludePatterns: []string{
 			"*.tf",
 			CompleteExampleTerraformDir + "/*.tf",
+			CompleteExampleTerraformDir + "/kubeconfig",
 		},
 		ResourceGroup:          resourceGroup,
 		TemplateFolder:         CompleteExampleTerraformDir,
