@@ -59,17 +59,7 @@ func setupOptions(t *testing.T, prefix string, terraformVars map[string]interfac
 	return options
 }
 
-// func getClusterIngress(options *testhelper.TestOptions) error {
-
-// 	// get ouput of last apply
-// 	outputs, outputErr := terraform.OutputAllE(options.Testing, options.TerraformOptions)
-// 	if assert.NoErrorf(options.Testing, outputErr, "error getting last terraform apply outputs: %s", outputErr) {
-// 		options.CheckClusterIngressHealthyDefaultTimeout(outputs["cluster_id"].(string))
-// 	}
-// 	return nil
-// }
-
-func TestBasicExampleInSchematics(t *testing.T) {
+func TestCompleteExampleInSchematics(t *testing.T) {
 	t.Parallel()
 
 	options := testschematic.TestSchematicOptionsDefault(&testschematic.TestSchematicOptions{
