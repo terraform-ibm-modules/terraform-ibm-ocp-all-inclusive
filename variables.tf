@@ -79,6 +79,7 @@ variable "worker_pools" {
     operating_system  = string
     labels            = optional(map(string))
     minSize           = optional(number)
+    secondary_storage = optional(string)
     maxSize           = optional(number)
     enableAutoscaling = optional(bool)
     boot_volume_encryption_kms_config = optional(object({
@@ -86,6 +87,7 @@ variable "worker_pools" {
       kms_instance_id = string
       kms_account_id  = optional(string)
     }))
+    additional_security_group_ids = optional(list(string))
   }))
   default = [
     {
@@ -515,6 +517,16 @@ variable "cloud_monitoring_metrics_filter" {
     condition     = length(var.cloud_monitoring_metrics_filter) == 0 || can(regex("^(include|exclude)$", var.cloud_monitoring_metrics_filter[0].type))
     error_message = "Invalid input for `cloud_monitoring_metrics_filter`. Valid options for 'type' are: `include` and `exclude`. If empty, no metrics are included or excluded."
   }
+}
+
+variable "cloud_monitoring_container_filter" {
+  type = list(object({
+    type      = string
+    parameter = string
+    name      = string
+  }))
+  description = "To filter custom containers, specify the Cloud Monitoring containers to include or to exclude. See https://cloud.ibm.com/docs/monitoring?topic=monitoring-change_kube_agent#change_kube_agent_filter_data."
+  default     = []
 }
 
 variable "cloud_monitoring_agent_tags" {
