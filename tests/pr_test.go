@@ -82,6 +82,7 @@ func TestCompleteExampleInSchematics(t *testing.T) {
 		{Name: "prefix", Value: options.Prefix, DataType: "string"},
 		{Name: "ocp_version", Value: "4.16", DataType: "string"},
 		{Name: "access_tags", Value: permanentResources["accessTags"], DataType: "list(string)"},
+		{Name: "visibility", Value: "private", DataType: "string"},
 	}
 
 	// Run the Schematics test
