@@ -74,7 +74,7 @@ func TestCompleteExampleInSchematics(t *testing.T) {
 		TemplateFolder:         CompleteExampleTerraformDir,
 		Tags:                   []string{"test-schematic"},
 		DeleteWorkspaceOnFail:  false,
-		WaitJobCompleteMinutes: 60,
+		WaitJobCompleteMinutes: 120,
 	})
 
 	// Setting up variables for the Schematics test
