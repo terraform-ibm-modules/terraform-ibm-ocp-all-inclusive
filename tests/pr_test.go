@@ -67,8 +67,8 @@ func TestCompleteExampleInSchematics(t *testing.T) {
 		Prefix:  "ocp-all-inc",
 		TarIncludePatterns: []string{
 			"*.tf",
-			CompleteExampleTerraformDir + "/*.tf",
-			CompleteExampleTerraformDir + "kubeconfig/README.md",
+			"examples/end-to-end-example/*.tf",
+			"examples/end-to-end-example/kubeconfig/README.md",
 		},
 		ResourceGroup:          resourceGroup,
 		TemplateFolder:         CompleteExampleTerraformDir,
