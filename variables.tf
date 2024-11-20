@@ -334,6 +334,12 @@ variable "kms_wait_for_apply" {
   default     = true
 }
 
+variable "use_private_endpoint" {
+  type        = bool
+  description = "Set this to true to force all api calls to use the IBM Cloud private endpoints."
+  default     = false
+}
+
 ##############################################################################
 # OCP Worker Variables
 ##############################################################################
