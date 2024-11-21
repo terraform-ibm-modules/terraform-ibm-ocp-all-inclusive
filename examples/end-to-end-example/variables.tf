@@ -77,3 +77,10 @@ variable "visibility" {
   description = "Setting the visibility"
   default     = "public"
 }
+
+variable "import_default_worker_pool_on_create" {
+  type        = bool
+  description = "(Advanced users) Whether to handle the default worker pool as a stand-alone ibm_container_vpc_worker_pool resource on cluster creation. Only set to false if you understand the implications of managing the default worker pool as part of the cluster resource. Set to true to import the default worker pool as a separate resource. Set to false to manage the default worker pool as part of the cluster resource."
+  default     = true
+  nullable    = false
+}
