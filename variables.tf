@@ -576,4 +576,4 @@ variable "create_log_agent_trusted_profile" {
   description = "Set to false to opt out of creating a trusted profile."
   type        = bool
   default     = true
- }
+}
