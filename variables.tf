@@ -572,3 +572,8 @@ variable "cloud_monitoring_agent_tolerations" {
       key : "node-role.kubernetes.io/master"
   }]
 }
+variable "create_log_agent_trusted_profile" {
+  description = "Set to false to opt out of creating a trusted profile."
+  type        = bool
+  default     = true
+ }

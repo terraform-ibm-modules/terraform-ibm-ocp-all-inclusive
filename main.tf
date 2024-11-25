@@ -67,7 +67,7 @@ locals {
 
 
 module "trusted_profile" {
-  count                       = (var.logs_agent_enabled && var.logs_agent_iam_mode == "TrustedProfile") ? 1 : 0
+  count                       = (var.create_log_agent_trusted_profile && var.logs_agent_enabled && var.logs_agent_iam_mode == "TrustedProfile") ? 1 : 0
   source                      = "terraform-ibm-modules/trusted-profile/ibm"
   version                     = "1.0.4"
   trusted_profile_name        = "${var.cluster_name}-trusted-profile"
