@@ -277,7 +277,7 @@ module "ocp_all_inclusive" {
   use_private_endpoint                 = true
   cbr_rules = [
     {
-      description      = "${var.prefix}-OCP-base access only from vpc"
+      description      = "${var.prefix}-OCP-base access only from vpc and schematics"
       enforcement_mode = "enabled"
       account_id       = data.ibm_iam_account_settings.iam_account_settings.account_id
       rule_contexts = [{
