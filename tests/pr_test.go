@@ -74,6 +74,12 @@ func TestCompleteExampleInSchematics(t *testing.T) {
 		Tags:                   []string{"test-schematic"},
 		DeleteWorkspaceOnFail:  false,
 		WaitJobCompleteMinutes: 120,
+		IgnoreUpdates: testhelper.Exemptions{
+			List: []string{
+				// skip this due to the dummy value being set to always force update the logs-agent helm release
+				"module.ocp_all_inclusive.module.observability_agents[0].module.logs_agent[0].helm_release.logs_agent",
+			},
+		},
 	})
 
 	// Setting up variables for the Schematics test
