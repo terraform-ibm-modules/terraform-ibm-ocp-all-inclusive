@@ -149,6 +149,43 @@ module "vpc" {
 }
 
 ##############################################################################
+# Get Cloud Account ID
+##############################################################################
+
+data "ibm_iam_account_settings" "iam_account_settings" {
+}
+
+##############################################################################
+# Create CBR Zone
+##############################################################################
+module "cbr_vpc_zone" {
+  source           = "terraform-ibm-modules/cbr/ibm//modules/cbr-zone-module"
+  version          = "1.28.0"
+  name             = "${var.prefix}-VPC-network-zone"
+  zone_description = "CBR Network zone representing VPC"
+  account_id       = data.ibm_iam_account_settings.iam_account_settings.account_id
+  addresses = [{
+    type  = "vpc", # to bind a specific vpc to the zone
+    value = module.vpc.vpc_crn,
+  }]
+}
+
+module "cbr_zone_schematics" {
+  source           = "terraform-ibm-modules/cbr/ibm//modules/cbr-zone-module"
+  version          = "1.27.0"
+  name             = "${var.prefix}-schematics-zone"
+  zone_description = "CBR Network zone containing Schematics"
+  account_id       = data.ibm_iam_account_settings.iam_account_settings.account_id
+  addresses = [{
+    type = "serviceRef",
+    ref = {
+      account_id   = data.ibm_iam_account_settings.iam_account_settings.account_id
+      service_name = "schematics"
+    }
+  }]
+}
+
+##############################################################################
 # Observability Instances (Cloud Logs + Cloud Monitoring)
 ##############################################################################
 
@@ -176,12 +213,15 @@ locals {
 }
 
 module "key_protect_all_inclusive" {
-  source                    = "terraform-ibm-modules/kms-all-inclusive/ibm"
-  version                   = "4.17.1"
-  resource_group_id         = module.resource_group.resource_group_id
-  region                    = var.region
-  key_protect_instance_name = "${var.prefix}-kp"
-  resource_tags             = var.resource_tags
+  source                      = "terraform-ibm-modules/kms-all-inclusive/ibm"
+  version                     = "4.17.1"
+  resource_group_id           = module.resource_group.resource_group_id
+  region                      = var.region
+  key_protect_instance_name   = "${var.prefix}-kp"
+  resource_tags               = var.resource_tags
+  key_protect_allowed_network = "private-only"
+  key_ring_endpoint_type      = "private"
+  key_endpoint_type           = "private"
   keys = [
     {
       key_ring_name = (local.key_ring_name)
@@ -216,24 +256,62 @@ locals {
 }
 
 module "ocp_all_inclusive" {
-  source                           = "../.."
-  resource_group_id                = module.resource_group.resource_group_id
-  region                           = var.region
-  cluster_name                     = "${var.prefix}-cluster"
-  cos_name                         = "${var.prefix}-cos"
-  vpc_id                           = module.vpc.vpc_id
-  vpc_subnets                      = local.cluster_vpc_subnets
-  worker_pools                     = var.worker_pools
-  ocp_version                      = var.ocp_version
-  cluster_tags                     = var.resource_tags
-  access_tags                      = var.access_tags
-  existing_kms_instance_guid       = module.key_protect_all_inclusive.kms_guid
-  existing_kms_root_key_id         = module.key_protect_all_inclusive.keys["${local.key_ring_name}.${local.key_name}"].key_id
-  cloud_logs_ingress_endpoint      = module.observability_instances.cloud_logs_ingress_private_endpoint
-  cloud_logs_ingress_port          = 3443
-  cloud_monitoring_access_key      = module.observability_instances.cloud_monitoring_access_key
-  cloud_monitoring_instance_region = module.observability_instances.region
-  addons                           = local.addons
-  disable_public_endpoint          = var.disable_public_endpoint
-  cloud_monitoring_agent_tags      = var.resource_tags
+  source                               = "../.."
+  resource_group_id                    = module.resource_group.resource_group_id
+  region                               = var.region
+  cluster_name                         = "${var.prefix}-cluster"
+  cos_name                             = "${var.prefix}-cos"
+  vpc_id                               = module.vpc.vpc_id
+  vpc_subnets                          = local.cluster_vpc_subnets
+  worker_pools                         = var.worker_pools
+  ocp_version                          = var.ocp_version
+  cluster_tags                         = var.resource_tags
+  access_tags                          = var.access_tags
+  existing_kms_instance_guid           = module.key_protect_all_inclusive.kms_guid
+  existing_kms_root_key_id             = module.key_protect_all_inclusive.keys["${local.key_ring_name}.${local.key_name}"].key_id
+  cloud_logs_ingress_endpoint          = module.observability_instances.cloud_logs_ingress_private_endpoint
+  cloud_logs_ingress_port              = 3443
+  cloud_monitoring_access_key          = module.observability_instances.cloud_monitoring_access_key
+  cloud_monitoring_instance_region     = module.observability_instances.region
+  addons                               = local.addons
+  disable_public_endpoint              = var.disable_public_endpoint
+  cloud_monitoring_agent_tags          = var.resource_tags
+  import_default_worker_pool_on_create = var.import_default_worker_pool_on_create
+  use_private_endpoint                 = true
+  cbr_rules = [
+    {
+      description      = "${var.prefix}-OCP-base access only from vpc and schematics"
+      enforcement_mode = "enabled"
+      account_id       = data.ibm_iam_account_settings.iam_account_settings.account_id
+      rule_contexts = [{
+        attributes = [
+          {
+            "name" : "endpointType",
+            "value" : "private"
+          },
+          {
+            name  = "networkZoneId"
+            value = module.cbr_vpc_zone.zone_id
+        }]
+        }, {
+        attributes = [
+          {
+            "name" : "endpointType",
+            "value" : "private"
+          },
+          {
+            name  = "networkZoneId"
+            value = module.cbr_zone_schematics.zone_id
+        }]
+      }]
+      operations = [{
+        api_types = [
+          {
+            "api_type_id" : "crn:v1:bluemix:public:containers-kubernetes::::api-type:management"
+          }
+        ]
+      }]
+    }
+  ]
+
 }

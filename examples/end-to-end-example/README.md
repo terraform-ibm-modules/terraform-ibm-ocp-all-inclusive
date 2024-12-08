@@ -13,3 +13,4 @@ An end-to-end example that will:
   - deploy Logs Agent and Cloud Monitoring agents to the cluster
   - deploy service mesh on the cluster
   - install autoscaler addon and configure certain nodepools to have autoscaling enabled.
+- CBR rules that allow only the VPC and schematics to access the OCP cluster over the private endpoint.
