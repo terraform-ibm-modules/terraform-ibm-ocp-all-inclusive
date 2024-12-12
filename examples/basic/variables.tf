@@ -69,14 +69,9 @@ variable "worker_pools" {
 variable "disable_public_endpoint" {
   type        = bool
   description = "Whether access to the public service endpoint is disabled when the cluster is created. Does not affect existing clusters. To change a public endpoint to private, create another cluster with the variable set to true or see [Switching to the private endpoint](https://cloud.ibm.com/docs/containers?topic=containers-cs_network_cluster#migrate-to-private-se)."
-  default     = true
+  default     = false
 }
 
-variable "visibility" {
-  type        = string
-  description = "Setting the visibility"
-  default     = "private"
-}
 
 variable "import_default_worker_pool_on_create" {
   type        = bool
