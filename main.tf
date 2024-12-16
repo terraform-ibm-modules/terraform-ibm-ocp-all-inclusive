@@ -67,7 +67,7 @@ locals {
 
 
 module "trusted_profile" {
-  count                       = (var.logs_agent_enabled && var.logs_agent_iam_mode == "TrustedProfile") ? 1 : 0
+  count                       = (var.logs_agent_enabled && var.logs_agent_iam_mode == "TrustedProfile" && var.existing_trusted_profile_id == null) ? 1 : 0
   source                      = "terraform-ibm-modules/trusted-profile/ibm"
   version                     = "1.0.4"
   trusted_profile_name        = "${var.cluster_name}-trusted-profile"
@@ -107,7 +107,7 @@ module "observability_agents" {
   logs_agent_enabled                     = var.logs_agent_enabled
   logs_agent_name                        = var.logs_agent_name
   logs_agent_namespace                   = var.logs_agent_namespace
-  logs_agent_trusted_profile             = var.logs_agent_iam_mode == "TrustedProfile" ? module.trusted_profile[0].trusted_profile.id : null
+  logs_agent_trusted_profile             = (var.logs_agent_enabled && var.logs_agent_iam_mode == "TrustedProfile") ? (var.existing_trusted_profile_id != null ? var.existing_trusted_profile_id : module.trusted_profile[0].trusted_profile.id) : null
   logs_agent_iam_api_key                 = var.logs_agent_iam_api_key
   logs_agent_tolerations                 = var.logs_agent_tolerations
   logs_agent_additional_log_source_paths = var.logs_agent_additional_log_source_paths
