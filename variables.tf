@@ -606,3 +606,9 @@ variable "cbr_rules" {
   description = "The list of context-based restriction rules to create."
   default     = []
 }
+
+variable "existing_trusted_profile_id" {
+  description = "The ID of an existing trusted profile which will be used by the Logs agent. Ensure it has the required permissions to send logs to the Cloud Logs instance. This will only be used if logs_agent_iam_mode is set to TrustedProfile. If no value is passed, a new trusted profile will be created and used."
+  type        = string
+  default     = null
+}
