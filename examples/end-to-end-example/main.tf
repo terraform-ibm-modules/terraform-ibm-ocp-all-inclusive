@@ -313,5 +313,4 @@ module "ocp_all_inclusive" {
       }]
     }
   ]
-
 }

@@ -75,7 +75,7 @@ variable "disable_public_endpoint" {
 variable "visibility" {
   type        = string
   description = "Setting the visibility"
-  default     = "private"
+  default     = "public"
 }
 
 variable "import_default_worker_pool_on_create" {
