@@ -237,5 +237,5 @@ module "ocp_all_inclusive" {
   disable_public_endpoint              = var.disable_public_endpoint
   cloud_monitoring_agent_tags          = var.resource_tags
   import_default_worker_pool_on_create = var.import_default_worker_pool_on_create
-  use_private_endpoint                 = true
+  use_private_endpoint                 = false
 }
