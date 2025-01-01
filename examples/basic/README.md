@@ -1,6 +1,6 @@
-# Complete Example
+# Basic Example
 
-An end-to-end example that will:
+A Basic example that will:
 - Create a new resource group (if existing one is not passed in).
 - Provision a VPC in the given resource group and region.
 - Define ACLs to allow inbound and outboud traffic:
@@ -13,4 +13,3 @@ An end-to-end example that will:
   - deploy Logs Agent and Cloud Monitoring agents to the cluster
   - deploy service mesh on the cluster
   - install autoscaler addon and configure certain nodepools to have autoscaling enabled.
-- CBR rules that allow only the VPC and schematics to access the OCP cluster over the private endpoint.
