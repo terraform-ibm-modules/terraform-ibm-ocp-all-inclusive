@@ -134,3 +134,42 @@ module "observability_agents" {
   cloud_monitoring_agent_namespace   = var.cloud_monitoring_agent_namespace
   cloud_monitoring_agent_tolerations = var.cloud_monitoring_agent_tolerations
 }
+## Prateek - Test
+
+# data "ibm_container_cluster_config" "cluster_config" {
+#   cluster_name_id = module.ocp_base.cluster_id
+#   config_dir      = "${path.module}/kubeconfig" # See https://github.ibm.com/GoldenEye/issues/issues/552
+#   # if unspecified and public is disabled, defaut to 'private'
+#   endpoint_type = var.cluster_config_endpoint_type != "default" ? var.cluster_config_endpoint_type : null # null represents default
+# }
+
+# resource "null_resource" "patch_ocp_version" {
+
+#   depends_on = [
+#     module.ocp_base,
+#     data.ibm_container_cluster_config.cluster_config
+#   ]
+#   provisioner "local-exec" {
+#     command     = <<EOT
+#       set -e
+#       max_retries=5
+#       retry_interval=10
+#       cmd="oc -n openshift-config patch cm admin-acks --patch '{\"data\":{\"ack-4.13-kube-1.27-api-removals-in-4.14\":\"true\"}}' --type=merge"
+#       for ((i=1; i<=max_retries; i++)); do
+#         if eval $cmd; then
+#           echo "Patch applied successfully."
+#           exit 0
+#         else
+#           echo "Attempt $i failed. Retrying in $retry_interval seconds..."
+#           sleep $retry_interval
+#         fi
+#       done
+#       echo "Patch failed after $max_retries attempts."
+#       exit 1
+#     EOT
+#     interpreter = ["/bin/bash", "-c"]
+#     environment = {
+#       KUBECONFIG = data.ibm_container_cluster_config.cluster_config.config_file_path
+#     }
+#   }
+# }
