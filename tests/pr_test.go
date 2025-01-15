@@ -12,6 +12,7 @@ import (
 )
 
 const CompleteExampleTerraformDir = "examples/end-to-end-example"
+const basicExampleDir = "examples/basic"
 const resourceGroup = "geretain-test-ocp-all-inclusive"
 
 const yamlLocation = "../common-dev-assets/common-go-assets/common-permanent-resources.yaml"
@@ -27,6 +28,34 @@ func TestMain(m *testing.M) {
 	}
 
 	os.Exit(m.Run())
+}
+
+func setupOptionsBasic(t *testing.T, prefix string, dir string) *testhelper.TestOptions {
+	options := testhelper.TestOptionsDefaultWithVars(&testhelper.TestOptions{
+		Testing:       t,
+		TerraformDir:  dir,
+		Prefix:        prefix,
+		ResourceGroup: resourceGroup,
+		IgnoreUpdates: testhelper.Exemptions{ // Ignore for consistency check
+			List: []string{
+				"module.ocp_all_inclusive.module.observability_agents[0].helm_release.logdna_agent[0]",
+				"module.ocp_all_inclusive.module.observability_agents[0].helm_release.sysdig_agent[0]",
+				"module.ocp_all_inclusive.module.observability_agents[0].module.logs_agent[0].helm_release.logs_agent",
+				"module.ocp_all_inclusive.module.observability_agents[0].helm_release.cloud_monitoring_agent[0]",
+			},
+		},
+	})
+	return options
+}
+
+func TestRunBasicExample(t *testing.T) {
+	t.Parallel()
+
+	options := setupOptionsBasic(t, "basic-ocp", basicExampleDir)
+
+	output, err := options.RunTestConsistency()
+	assert.Nil(t, err, "This should not have errored")
+	assert.NotNil(t, output, "Expected some output")
 }
 
 func setupOptions(t *testing.T, prefix string, terraformVars map[string]interface{}) *testhelper.TestOptions {

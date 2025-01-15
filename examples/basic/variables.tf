@@ -71,11 +71,3 @@ variable "disable_public_endpoint" {
   description = "Whether access to the public service endpoint is disabled when the cluster is created. Does not affect existing clusters. To change a public endpoint to private, create another cluster with the variable set to true or see [Switching to the private endpoint](https://cloud.ibm.com/docs/containers?topic=containers-cs_network_cluster#migrate-to-private-se)."
   default     = false
 }
-
-
-variable "import_default_worker_pool_on_create" {
-  type        = bool
-  description = "(Advanced users) Whether to handle the default worker pool as a stand-alone ibm_container_vpc_worker_pool resource on cluster creation. Only set to false if you understand the implications of managing the default worker pool as part of the cluster resource. Set to true to import the default worker pool as a separate resource. Set to false to manage the default worker pool as part of the cluster resource."
-  default     = true
-  nullable    = false
-}
