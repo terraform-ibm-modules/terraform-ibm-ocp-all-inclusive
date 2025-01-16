@@ -54,6 +54,8 @@ module "ocp_base" {
   disable_outbound_traffic_protection   = var.disable_outbound_traffic_protection
   import_default_worker_pool_on_create  = var.import_default_worker_pool_on_create
   allow_default_worker_pool_replacement = var.allow_default_worker_pool_replacement
+  cbr_rules                             = var.cbr_rules
+  use_private_endpoint                  = var.use_private_endpoint
 }
 
 ##############################################################################

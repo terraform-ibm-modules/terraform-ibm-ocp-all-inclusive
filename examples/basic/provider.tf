@@ -2,7 +2,6 @@
 provider "ibm" {
   ibmcloud_api_key = var.ibmcloud_api_key
   region           = var.region
-  visibility       = var.visibility
 }
 
 # Init cluster config for helm and kubernetes providers
