@@ -56,6 +56,7 @@ module "ocp_base" {
   allow_default_worker_pool_replacement = var.allow_default_worker_pool_replacement
   cbr_rules                             = var.cbr_rules
   use_private_endpoint                  = var.use_private_endpoint
+  enable_ocp_console                    = var.enable_ocp_console
 }
 
 ##############################################################################
