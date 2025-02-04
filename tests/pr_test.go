@@ -153,7 +153,7 @@ func TestRunUpgradeCompleteExampleInSchematics(t *testing.T) {
 	options.TerraformVars = []testschematic.TestSchematicTerraformVar{
 		{Name: "ibmcloud_api_key", Value: options.RequiredEnvironmentVars["TF_VAR_ibmcloud_api_key"], DataType: "string", Secure: true},
 		{Name: "prefix", Value: options.Prefix, DataType: "string"},
-		{Name: "ocp_version", Value: "4.15", DataType: "string"},
+		{Name: "ocp_version", Value: "4.16", DataType: "string"},
 		{Name: "access_tags", Value: permanentResources["accessTags"], DataType: "list(string)"},
 		{Name: "visibility", Value: "private", DataType: "string"},
 		{Name: "import_default_worker_pool_on_create", Value: false, DataType: "bool"},
