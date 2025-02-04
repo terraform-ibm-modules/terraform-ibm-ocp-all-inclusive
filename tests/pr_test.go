@@ -125,18 +125,40 @@ func TestCompleteExampleInSchematics(t *testing.T) {
 	assert.Nil(t, err, "This should not have errored")
 }
 
-func TestRunUpgradeCompleteExample(t *testing.T) {
+func TestRunUpgradeCompleteExampleInSchematics(t *testing.T) {
 	t.Parallel()
 
-	terraformVars := map[string]interface{}{
-		// This test should always test the OCP version not tested in the "TestRunCompleteExample" test.
-		"ocp_version": "4.15",
-	}
-	options := setupOptions(t, "ocp-all-upg", terraformVars)
+	options := testschematic.TestSchematicOptionsDefault(&testschematic.TestSchematicOptions{
+		Testing: t,
+		Prefix:  "ocp-all-inc",
+		TarIncludePatterns: []string{
+			"*.tf",
+			"examples/end-to-end-example/*.tf",
+			"examples/end-to-end-example/kubeconfig/README.md",
+		},
+		ResourceGroup:          resourceGroup,
+		TemplateFolder:         CompleteExampleTerraformDir,
+		Tags:                   []string{"test-schematic"},
+		DeleteWorkspaceOnFail:  false,
+		WaitJobCompleteMinutes: 120,
+		IgnoreUpdates: testhelper.Exemptions{
+			List: []string{
+				// skip this due to the dummy value being set to always force update the logs-agent helm release
+				"module.ocp_all_inclusive.module.observability_agents[0].module.logs_agent[0].helm_release.logs_agent",
+			},
+		},
+	})
 
-	output, err := options.RunTestUpgrade()
-	if !options.UpgradeTestSkipped {
-		assert.Nil(t, err, "This should not have errored")
-		assert.NotNil(t, output, "Expected some output")
+	// Setting up variables for the Schematics test
+	options.TerraformVars = []testschematic.TestSchematicTerraformVar{
+		{Name: "ibmcloud_api_key", Value: options.RequiredEnvironmentVars["TF_VAR_ibmcloud_api_key"], DataType: "string", Secure: true},
+		{Name: "prefix", Value: options.Prefix, DataType: "string"},
+		{Name: "ocp_version", Value: "4.15", DataType: "string"},
+		{Name: "access_tags", Value: permanentResources["accessTags"], DataType: "list(string)"},
+		{Name: "visibility", Value: "private", DataType: "string"},
+		{Name: "import_default_worker_pool_on_create", Value: false, DataType: "bool"},
 	}
+	// Run the Schematics test
+	err := options.RunSchematicUpgradeTest()
+	assert.Nil(t, err, "This should not have errored")
 }
