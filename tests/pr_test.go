@@ -11,7 +11,7 @@ import (
 	"github.com/terraform-ibm-modules/ibmcloud-terratest-wrapper/testschematic"
 )
 
-const CompleteExampleTerraformDir = "examples/end-to-end-example"
+const PrivateOnlyExampleTerraformDir = "examples/private-only-example"
 const basicExampleDir = "examples/basic"
 const resourceGroup = "geretain-test-ocp-all-inclusive"
 
@@ -58,36 +58,7 @@ func TestRunBasicExample(t *testing.T) {
 	assert.NotNil(t, output, "Expected some output")
 }
 
-func setupOptions(t *testing.T, prefix string, terraformVars map[string]interface{}) *testhelper.TestOptions {
-	options := testhelper.TestOptionsDefaultWithVars(&testhelper.TestOptions{
-		Testing:       t,
-		TerraformDir:  CompleteExampleTerraformDir,
-		Prefix:        prefix,
-		ResourceGroup: resourceGroup,
-		IgnoreUpdates: testhelper.Exemptions{ // Ignore for consistency check
-			List: []string{
-				"module.ocp_all_inclusive.module.observability_agents[0].helm_release.logdna_agent[0]",
-				"module.ocp_all_inclusive.module.observability_agents[0].helm_release.sysdig_agent[0]",
-				"module.ocp_all_inclusive.module.observability_agents[0].module.logs_agent[0].helm_release.logs_agent",
-				"module.ocp_all_inclusive.module.observability_agents[0].helm_release.cloud_monitoring_agent[0]",
-			},
-		},
-		ImplicitDestroy: []string{ // Ignore full destroy to speed up tests
-			"module.ocp_all_inclusive.module.observability_agents",
-			"module.ocp_all_inclusive.module.ocp_base.null_resource.confirm_network_healthy",
-			// workaround for the issue https://github.ibm.com/GoldenEye/issues/issues/10743
-			// when the issue is fixed on IKS, so the destruction of default workers pool is correctly managed on provider/clusters service the next two entries should be removed
-			"'module.ocp_all_inclusive.module.ocp_base.ibm_container_vpc_worker_pool.autoscaling_pool[\"default\"]'",
-			"'module.ocp_all_inclusive.module.ocp_base.ibm_container_vpc_worker_pool.pool[\"default\"]'",
-		},
-		ImplicitRequired: false,
-		TerraformVars:    terraformVars,
-	})
-
-	return options
-}
-
-func TestCompleteExampleInSchematics(t *testing.T) {
+func TestPrivateOnlyExampleInSchematics(t *testing.T) {
 	t.Parallel()
 
 	options := testschematic.TestSchematicOptionsDefault(&testschematic.TestSchematicOptions{
@@ -95,11 +66,11 @@ func TestCompleteExampleInSchematics(t *testing.T) {
 		Prefix:  "ocp-all-inc",
 		TarIncludePatterns: []string{
 			"*.tf",
-			"examples/end-to-end-example/*.tf",
-			"examples/end-to-end-example/kubeconfig/README.md",
+			"examples/private-only-example/*.tf",
+			"examples/private-only-example/kubeconfig/README.md",
 		},
 		ResourceGroup:          resourceGroup,
-		TemplateFolder:         CompleteExampleTerraformDir,
+		TemplateFolder:         PrivateOnlyExampleTerraformDir,
 		Tags:                   []string{"test-schematic"},
 		DeleteWorkspaceOnFail:  false,
 		WaitJobCompleteMinutes: 120,
@@ -125,14 +96,10 @@ func TestCompleteExampleInSchematics(t *testing.T) {
 	assert.Nil(t, err, "This should not have errored")
 }
 
-func TestRunUpgradeCompleteExample(t *testing.T) {
+func TestRunUpgradeBasicExample(t *testing.T) {
 	t.Parallel()
 
-	terraformVars := map[string]interface{}{
-		// This test should always test the OCP version not tested in the "TestRunCompleteExample" test.
-		"ocp_version": "4.15",
-	}
-	options := setupOptions(t, "ocp-all-upg", terraformVars)
+	options := setupOptionsBasic(t, "basic-ocp", basicExampleDir)
 
 	output, err := options.RunTestUpgrade()
 	if !options.UpgradeTestSkipped {

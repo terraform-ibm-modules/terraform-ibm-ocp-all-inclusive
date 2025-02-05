@@ -1,6 +1,6 @@
-# Complete Example
+# Private-only Example
 
-An end-to-end example that will:
+An private-only example that will:
 - Create a new resource group (if existing one is not passed in).
 - Provision a VPC in the given resource group and region.
 - Define ACLs to allow inbound and outboud traffic:
