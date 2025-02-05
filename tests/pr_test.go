@@ -11,7 +11,7 @@ import (
 	"github.com/terraform-ibm-modules/ibmcloud-terratest-wrapper/testschematic"
 )
 
-const CompleteExampleTerraformDir = "examples/end-to-end-example"
+const PrivateOnlyExampleTerraformDir = "examples/private-only-example"
 const basicExampleDir = "examples/basic"
 const resourceGroup = "geretain-test-ocp-all-inclusive"
 
@@ -58,7 +58,7 @@ func TestRunBasicExample(t *testing.T) {
 	assert.NotNil(t, output, "Expected some output")
 }
 
-func TestCompleteExampleInSchematics(t *testing.T) {
+func TestPrivateOnlyExampleInSchematics(t *testing.T) {
 	t.Parallel()
 
 	options := testschematic.TestSchematicOptionsDefault(&testschematic.TestSchematicOptions{
@@ -66,11 +66,11 @@ func TestCompleteExampleInSchematics(t *testing.T) {
 		Prefix:  "ocp-all-inc",
 		TarIncludePatterns: []string{
 			"*.tf",
-			"examples/end-to-end-example/*.tf",
-			"examples/end-to-end-example/kubeconfig/README.md",
+			"examples/private-only-example/*.tf",
+			"examples/private-only-example/kubeconfig/README.md",
 		},
 		ResourceGroup:          resourceGroup,
-		TemplateFolder:         CompleteExampleTerraformDir,
+		TemplateFolder:         PrivateOnlyExampleTerraformDir,
 		Tags:                   []string{"test-schematic"},
 		DeleteWorkspaceOnFail:  false,
 		WaitJobCompleteMinutes: 120,
@@ -96,40 +96,14 @@ func TestCompleteExampleInSchematics(t *testing.T) {
 	assert.Nil(t, err, "This should not have errored")
 }
 
-func TestRunUpgradeCompleteExampleInSchematics(t *testing.T) {
+func TestRunUpgradeBasicExample(t *testing.T) {
 	t.Parallel()
 
-	options := testschematic.TestSchematicOptionsDefault(&testschematic.TestSchematicOptions{
-		Testing: t,
-		Prefix:  "ocp-all-inc",
-		TarIncludePatterns: []string{
-			"*.tf",
-			"examples/end-to-end-example/*.tf",
-			"examples/end-to-end-example/kubeconfig/README.md",
-		},
-		ResourceGroup:          resourceGroup,
-		TemplateFolder:         CompleteExampleTerraformDir,
-		Tags:                   []string{"test-schematic"},
-		DeleteWorkspaceOnFail:  false,
-		WaitJobCompleteMinutes: 120,
-		IgnoreUpdates: testhelper.Exemptions{
-			List: []string{
-				// skip this due to the dummy value being set to always force update the logs-agent helm release
-				"module.ocp_all_inclusive.module.observability_agents[0].module.logs_agent[0].helm_release.logs_agent",
-			},
-		},
-	})
+	options := setupOptionsBasic(t, "basic-ocp", basicExampleDir)
 
-	// Setting up variables for the Schematics test
-	options.TerraformVars = []testschematic.TestSchematicTerraformVar{
-		{Name: "ibmcloud_api_key", Value: options.RequiredEnvironmentVars["TF_VAR_ibmcloud_api_key"], DataType: "string", Secure: true},
-		{Name: "prefix", Value: options.Prefix, DataType: "string"},
-		{Name: "ocp_version", Value: "4.16", DataType: "string"},
-		{Name: "access_tags", Value: permanentResources["accessTags"], DataType: "list(string)"},
-		{Name: "visibility", Value: "private", DataType: "string"},
-		{Name: "import_default_worker_pool_on_create", Value: false, DataType: "bool"},
+	output, err := options.RunTestUpgrade()
+	if !options.UpgradeTestSkipped {
+		assert.Nil(t, err, "This should not have errored")
+		assert.NotNil(t, output, "Expected some output")
 	}
-	// Run the Schematics test
-	err := options.RunSchematicUpgradeTest()
-	assert.Nil(t, err, "This should not have errored")
 }
