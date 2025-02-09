@@ -63,7 +63,7 @@ This approach is due to a limitation in the Terraform provider that may be lifte
 * [terraform-ibm-ocp-all-inclusive](#terraform-ibm-ocp-all-inclusive)
 * [Examples](./examples)
     * [Basic Example](./examples/basic)
-    * [Complete Example](./examples/end-to-end-example)
+    * [Private-only Example](./examples/private-only-example)
 * [Contributing](#contributing)
 <!-- END OVERVIEW HOOK -->
 
