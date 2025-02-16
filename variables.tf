@@ -299,6 +299,12 @@ variable "allow_default_worker_pool_replacement" {
   nullable    = false
 }
 
+variable "enable_ocp_console" {
+  description = "Flag to specify whether to enable or disable the OpenShift console."
+  type        = bool
+  default     = true
+}
+
 ##############################################################################
 # KMS Variables
 ##############################################################################
