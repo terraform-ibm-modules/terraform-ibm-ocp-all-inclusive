@@ -30,6 +30,18 @@ variable "vpc_subnets" {
   description = "Subnet metadata by VPC tier."
 }
 
+variable "pod_subnet_cidr" {
+  type        = string
+  default     = null
+  description = "Specify a custom subnet CIDR to provide private IP addresses for pods. The subnet must have a CIDR of at least `/23` or larger. Default value is `172.30.0.0/16` when the variable is set to `null`."
+}
+
+variable "service_subnet_cidr" {
+  type        = string
+  default     = null
+  description = "Specify a custom subnet CIDR to provide private IP addresses for services. The subnet must be at least `/24` or larger. Default value is `172.21.0.0/16` when the variable is set to `null`."
+}
+
 variable "verify_worker_network_readiness" {
   type        = bool
   description = "By setting this to true, a script will run kubectl commands to verify that all worker nodes can communicate successfully with the master. If the runtime does not have access to the kube cluster to run kubectl commands, this should be set to false."
@@ -54,11 +66,10 @@ variable "ocp_version" {
     condition = anytrue([
       var.ocp_version == null,
       var.ocp_version == "default",
-      var.ocp_version == "4.12",
-      var.ocp_version == "4.13",
       var.ocp_version == "4.14",
       var.ocp_version == "4.15",
       var.ocp_version == "4.16",
+      var.ocp_version == "4.17",
     ])
     error_message = "The specified ocp_version is not one of the validated versions."
   }

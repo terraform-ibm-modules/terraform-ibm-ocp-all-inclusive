@@ -33,6 +33,8 @@ module "ocp_base" {
   force_delete_storage                  = var.force_delete_storage
   vpc_id                                = var.vpc_id
   vpc_subnets                           = var.vpc_subnets
+  pod_subnet_cidr                       = var.pod_subnet_cidr
+  service_subnet_cidr                   = var.service_subnet_cidr
   worker_pools                          = var.worker_pools
   cluster_ready_when                    = var.cluster_ready_when
   cos_name                              = var.cos_name
