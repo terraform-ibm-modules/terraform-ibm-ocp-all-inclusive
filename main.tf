@@ -23,7 +23,7 @@ locals {
 
 module "ocp_base" {
   source                                = "terraform-ibm-modules/base-ocp-vpc/ibm"
-  version                               = "3.35.7"
+  version                               = "3.36.0"
   cluster_name                          = var.cluster_name
   ocp_version                           = var.ocp_version
   resource_group_id                     = var.resource_group_id
@@ -33,6 +33,8 @@ module "ocp_base" {
   force_delete_storage                  = var.force_delete_storage
   vpc_id                                = var.vpc_id
   vpc_subnets                           = var.vpc_subnets
+  pod_subnet_cidr                       = var.pod_subnet_cidr
+  service_subnet_cidr                   = var.service_subnet_cidr
   worker_pools                          = var.worker_pools
   cluster_ready_when                    = var.cluster_ready_when
   cos_name                              = var.cos_name
@@ -101,7 +103,7 @@ module "trusted_profile" {
 module "observability_agents" {
   count                        = var.logs_agent_enabled == true || var.cloud_monitoring_enabled == true ? 1 : 0
   source                       = "terraform-ibm-modules/observability-agents/ibm"
-  version                      = "2.3.3"
+  version                      = "2.3.6"
   cluster_id                   = module.ocp_base.cluster_id
   cluster_resource_group_id    = var.resource_group_id
   cluster_config_endpoint_type = var.cluster_config_endpoint_type
