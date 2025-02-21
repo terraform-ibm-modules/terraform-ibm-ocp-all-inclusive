@@ -23,7 +23,7 @@ locals {
 
 module "ocp_base" {
   source                                = "terraform-ibm-modules/base-ocp-vpc/ibm"
-  version                               = "3.35.7"
+  version                               = "3.36.0"
   cluster_name                          = var.cluster_name
   ocp_version                           = var.ocp_version
   resource_group_id                     = var.resource_group_id
@@ -73,7 +73,7 @@ locals {
 module "trusted_profile" {
   count                       = (var.logs_agent_enabled && var.logs_agent_iam_mode == "TrustedProfile" && var.existing_trusted_profile_id == null) ? 1 : 0
   source                      = "terraform-ibm-modules/trusted-profile/ibm"
-  version                     = "1.0.4"
+  version                     = "1.0.5"
   trusted_profile_name        = "${var.cluster_name}-trusted-profile"
   trusted_profile_description = "Logs agent Trusted Profile"
   # As a `Sender`, you can send logs to your IBM Cloud Logs service instance - but not query or tail logs. This role is meant to be used by agents and routers sending logs.
@@ -103,7 +103,7 @@ module "trusted_profile" {
 module "observability_agents" {
   count                        = var.logs_agent_enabled == true || var.cloud_monitoring_enabled == true ? 1 : 0
   source                       = "terraform-ibm-modules/observability-agents/ibm"
-  version                      = "2.3.3"
+  version                      = "2.3.6"
   cluster_id                   = module.ocp_base.cluster_id
   cluster_resource_group_id    = var.resource_group_id
   cluster_config_endpoint_type = var.cluster_config_endpoint_type
