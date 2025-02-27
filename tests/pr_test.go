@@ -89,7 +89,6 @@ func TestPrivateOnlyExampleInSchematics(t *testing.T) {
 		{Name: "ocp_version", Value: "4.16", DataType: "string"},
 		{Name: "access_tags", Value: permanentResources["accessTags"], DataType: "list(string)"},
 		{Name: "visibility", Value: "private", DataType: "string"},
-		{Name: "import_default_worker_pool_on_create", Value: false, DataType: "bool"},
 	}
 	// Run the Schematics test
 	err := options.RunSchematicTest()
