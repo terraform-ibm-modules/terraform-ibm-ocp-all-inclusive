@@ -191,7 +191,7 @@ module "cbr_zone_schematics" {
 
 module "observability_instances" {
   source                         = "terraform-ibm-modules/observability-instances/ibm"
-  version                        = "3.4.2"
+  version                        = "3.4.3"
   region                         = var.region
   resource_group_id              = module.resource_group.resource_group_id
   cloud_logs_instance_name       = "${var.prefix}-icl"
@@ -214,7 +214,7 @@ locals {
 
 module "key_protect_all_inclusive" {
   source                      = "terraform-ibm-modules/kms-all-inclusive/ibm"
-  version                     = "4.19.8"
+  version                     = "4.20.0"
   resource_group_id           = module.resource_group.resource_group_id
   region                      = var.region
   key_protect_instance_name   = "${var.prefix}-kp"
