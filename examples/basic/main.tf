@@ -160,7 +160,6 @@ module "observability_instances" {
   cloud_logs_instance_name       = "${var.prefix}-icl"
   cloud_monitoring_instance_name = "${var.prefix}-sysdig"
   cloud_monitoring_plan          = "graduated-tier"
-  enable_platform_logs           = false
   enable_platform_metrics        = false
   cloud_logs_tags                = var.resource_tags
   cloud_monitoring_tags          = var.resource_tags
