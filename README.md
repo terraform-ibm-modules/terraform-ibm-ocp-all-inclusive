@@ -20,11 +20,7 @@ This module is a wrapper module that groups the following modules:
 - Make sure that you have a recent version of the [IBM Cloud CLI](https://cloud.ibm.com/docs/cli?topic=cli-getting-started)
 - Make sure that you have a recent version of the [IBM Cloud Kubernetes service CLI](https://cloud.ibm.com/docs/containers?topic=containers-kubernetes-service-cli)
 
-### Default Worker Pool management
-
-You can manage the default worker pool using Terraform, and make changes to it through this module. This option is enabled by default. Under the hood, the default worker pool is imported as a `ibm_container_vpc_worker_pool` resource. Advanced users may opt-out of this option by setting `import_default_worker_pool_on_create` parameter to `false`. For most use cases it is recommended to keep this variable to `true`.
-
-#### Important Considerations for Terraform and Default Worker Pool
+### Important Considerations for Terraform and Default Worker Pool
 
 **Changes Requiring Re-creation of Default Worker Pool**
 
