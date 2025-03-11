@@ -105,7 +105,7 @@ locals {
 
 module "vpc" {
   source            = "terraform-ibm-modules/landing-zone-vpc/ibm"
-  version           = "7.20.1"
+  version           = "7.20.2"
   resource_group_id = module.resource_group.resource_group_id
   region            = var.region
   prefix            = var.prefix
@@ -191,13 +191,12 @@ module "cbr_zone_schematics" {
 
 module "observability_instances" {
   source                         = "terraform-ibm-modules/observability-instances/ibm"
-  version                        = "3.4.2"
+  version                        = "3.4.3"
   region                         = var.region
   resource_group_id              = module.resource_group.resource_group_id
   cloud_logs_instance_name       = "${var.prefix}-icl"
   cloud_monitoring_instance_name = "${var.prefix}-sysdig"
   cloud_monitoring_plan          = "graduated-tier"
-  enable_platform_logs           = false
   enable_platform_metrics        = false
   cloud_logs_tags                = var.resource_tags
   cloud_monitoring_tags          = var.resource_tags
@@ -214,7 +213,7 @@ locals {
 
 module "key_protect_all_inclusive" {
   source                      = "terraform-ibm-modules/kms-all-inclusive/ibm"
-  version                     = "4.19.8"
+  version                     = "4.21.2"
   resource_group_id           = module.resource_group.resource_group_id
   region                      = var.region
   key_protect_instance_name   = "${var.prefix}-kp"
@@ -256,28 +255,27 @@ locals {
 }
 
 module "ocp_all_inclusive" {
-  source                               = "../.."
-  resource_group_id                    = module.resource_group.resource_group_id
-  region                               = var.region
-  cluster_name                         = "${var.prefix}-cluster"
-  cos_name                             = "${var.prefix}-cos"
-  vpc_id                               = module.vpc.vpc_id
-  vpc_subnets                          = local.cluster_vpc_subnets
-  worker_pools                         = var.worker_pools
-  ocp_version                          = var.ocp_version
-  cluster_tags                         = var.resource_tags
-  access_tags                          = var.access_tags
-  existing_kms_instance_guid           = module.key_protect_all_inclusive.kms_guid
-  existing_kms_root_key_id             = module.key_protect_all_inclusive.keys["${local.key_ring_name}.${local.key_name}"].key_id
-  cloud_logs_ingress_endpoint          = module.observability_instances.cloud_logs_ingress_private_endpoint
-  cloud_logs_ingress_port              = 3443
-  cloud_monitoring_access_key          = module.observability_instances.cloud_monitoring_access_key
-  cloud_monitoring_instance_region     = module.observability_instances.region
-  addons                               = local.addons
-  disable_public_endpoint              = var.disable_public_endpoint
-  cloud_monitoring_agent_tags          = var.resource_tags
-  import_default_worker_pool_on_create = var.import_default_worker_pool_on_create
-  use_private_endpoint                 = true
+  source                           = "../.."
+  resource_group_id                = module.resource_group.resource_group_id
+  region                           = var.region
+  cluster_name                     = "${var.prefix}-cluster"
+  cos_name                         = "${var.prefix}-cos"
+  vpc_id                           = module.vpc.vpc_id
+  vpc_subnets                      = local.cluster_vpc_subnets
+  worker_pools                     = var.worker_pools
+  ocp_version                      = var.ocp_version
+  cluster_tags                     = var.resource_tags
+  access_tags                      = var.access_tags
+  existing_kms_instance_guid       = module.key_protect_all_inclusive.kms_guid
+  existing_kms_root_key_id         = module.key_protect_all_inclusive.keys["${local.key_ring_name}.${local.key_name}"].key_id
+  cloud_logs_ingress_endpoint      = module.observability_instances.cloud_logs_ingress_private_endpoint
+  cloud_logs_ingress_port          = 3443
+  cloud_monitoring_access_key      = module.observability_instances.cloud_monitoring_access_key
+  cloud_monitoring_instance_region = module.observability_instances.region
+  addons                           = local.addons
+  disable_public_endpoint          = var.disable_public_endpoint
+  cloud_monitoring_agent_tags      = var.resource_tags
+  use_private_endpoint             = true
   cbr_rules = [
     {
       description      = "${var.prefix}-OCP-base access only from vpc and schematics"
