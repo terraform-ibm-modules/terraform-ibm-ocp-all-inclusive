@@ -20,40 +20,16 @@ This module is a wrapper module that groups the following modules:
 - Make sure that you have a recent version of the [IBM Cloud CLI](https://cloud.ibm.com/docs/cli?topic=cli-getting-started)
 - Make sure that you have a recent version of the [IBM Cloud Kubernetes service CLI](https://cloud.ibm.com/docs/containers?topic=containers-kubernetes-service-cli)
 
-### Default Worker Pool management
-
-You can manage the default worker pool using Terraform, and make changes to it through this module. This option is enabled by default. Under the hood, the default worker pool is imported as a `ibm_container_vpc_worker_pool` resource. Advanced users may opt-out of this option by setting `import_default_worker_pool_on_create` parameter to `false`. For most use cases it is recommended to keep this variable to `true`.
-
-#### Important Considerations for Terraform and Default Worker Pool
-
-**Terraform Destroy**
-
-When using the default behavior of handling the default worker pool as a stand-alone `ibm_container_vpc_worker_pool`, you must manually remove the default worker pool from the Terraform state before running a terraform destroy command on the module. This is due to a [known limitation](https://cloud.ibm.com/docs/containers?topic=containers-faqs#smallest_cluster) in IBM Cloud.
-
-Terraform CLI Example
-
-For a cluster with 2 worker pools, named 'default' and 'secondarypool', follow these steps:
-
-```sh
-      $ terraform state list | grep ibm_container_vpc_worker_pool
-        > module.ocp_all_inclusive.module.ocp_base.data.ibm_container_vpc_worker_pool.all_pools["default"]
-        > module.ocp_all_inclusive.module.ocp_base.data.ibm_container_vpc_worker_pool.all_pools["secondarypool"]
-        > module.ocp_all_inclusive.module.ocp_base.ibm_container_vpc_worker_pool.pool["default"]
-        > module.ocp_all_inclusive.module.ocp_base.ibm_container_vpc_worker_pool.pool["secondarypool"]
-        > ...
-
-      $ terraform state rm "module.ocp_all_inclusive.module.ocp_base.ibm_container_vpc_worker_pool.pool[\"default\"]"
-```
-
-Schematics Example: For a cluster with 2 worker pools, named 'default' and 'secondarypool', follow these steps:
-
-```sh
-        $ ibmcloud schematics workspace state rm --id <workspace_id> --address "module.ocp_all_inclusive.module.ocp_base.ibm_container_vpc_worker_pool.pool[\"default\"]"
-```
+### Important Considerations for Terraform and Default Worker Pool
 
 **Changes Requiring Re-creation of Default Worker Pool**
 
-If you need to make changes to the default worker pool that require its re-creation (e.g., changing the worker node `operating_system`), you must set the `allow_default_worker_pool_replacement` variable to true, perform the apply, and then set it back to false in the code before the subsequent apply. This is **only** necessary for changes that require the recreation the entire default pool and is **not needed for scenarios that does not require recreating the worker pool such as changing the number of workers in the default worker pool**.
+If you need to make changes to the default worker pool that require its re-creation (e.g., changing the worker node `operating_system`), you need to follow 3 steps:
+1. you must set the `allow_default_worker_pool_replacement` variable to `true`, perform the apply.
+2. Once the first apply is successful, then make the required change to the default worker pool object, perform the apply.
+3. After successful apply of the default worker pool change set `allow_default_worker_pool_replacement` back to `false` in the code before the subsequent apply.
+
+This is **only** necessary for changes that require the recreation the entire default pool and is **not needed for scenarios that does not require recreating the worker pool such as changing the number of workers in the default worker pool**.
 
 This approach is due to a limitation in the Terraform provider that may be lifted in the future.
 
@@ -161,7 +137,7 @@ You need the following permissions to run this module.
 | <a name="requirement_terraform"></a> [terraform](#requirement\_terraform) | >= 1.3.0 |
 | <a name="requirement_external"></a> [external](#requirement\_external) | >= 2.2.3, < 3.0.0 |
 | <a name="requirement_helm"></a> [helm](#requirement\_helm) | >= 2.8.0, < 3.0.0 |
-| <a name="requirement_ibm"></a> [ibm](#requirement\_ibm) | >= 1.66.0, < 2.0.0 |
+| <a name="requirement_ibm"></a> [ibm](#requirement\_ibm) | >= 1.71.0, < 2.0.0 |
 | <a name="requirement_kubernetes"></a> [kubernetes](#requirement\_kubernetes) | >= 2.16.1, < 3.0.0 |
 | <a name="requirement_local"></a> [local](#requirement\_local) | >= 2.2.3, < 3.0.0 |
 | <a name="requirement_null"></a> [null](#requirement\_null) | >= 3.2.1, < 4.0.0 |
@@ -171,9 +147,10 @@ You need the following permissions to run this module.
 
 | Name | Source | Version |
 |------|--------|---------|
-| <a name="module_observability_agents"></a> [observability\_agents](#module\_observability\_agents) | terraform-ibm-modules/observability-agents/ibm | 2.3.6 |
-| <a name="module_ocp_base"></a> [ocp\_base](#module\_ocp\_base) | terraform-ibm-modules/base-ocp-vpc/ibm | 3.36.0 |
-| <a name="module_trusted_profile"></a> [trusted\_profile](#module\_trusted\_profile) | terraform-ibm-modules/trusted-profile/ibm | 2.0.0 |
+| <a name="module_observability_agents"></a> [observability\_agents](#module\_observability\_agents) | terraform-ibm-modules/observability-agents/ibm | 2.5.0 |
+| <a name="module_ocp_base"></a> [ocp\_base](#module\_ocp\_base) | terraform-ibm-modules/base-ocp-vpc/ibm | 3.41.5 |
+| <a name="module_trusted_profile"></a> [trusted\_profile](#module\_trusted\_profile) | terraform-ibm-modules/trusted-profile/ibm | 1.0.5 |
+
 
 ### Resources
 
@@ -187,7 +164,7 @@ No resources.
 | <a name="input_additional_lb_security_group_ids"></a> [additional\_lb\_security\_group\_ids](#input\_additional\_lb\_security\_group\_ids) | Additional security group IDs to add to the load balancers associated with the cluster. These security groups are in addition to the IBM-maintained security group. | `list(string)` | `[]` | no |
 | <a name="input_additional_vpe_security_group_ids"></a> [additional\_vpe\_security\_group\_ids](#input\_additional\_vpe\_security\_group\_ids) | Additional security groups to add to all the load balancers. This comes in addition to the IBM maintained security group. | <pre>object({<br/>    master   = optional(list(string), [])<br/>    registry = optional(list(string), [])<br/>    api      = optional(list(string), [])<br/>  })</pre> | `{}` | no |
 | <a name="input_addons"></a> [addons](#input\_addons) | List of all addons supported by the ocp cluster. | <pre>object({<br/>    debug-tool                = optional(string)<br/>    image-key-synchronizer    = optional(string)<br/>    openshift-data-foundation = optional(string)<br/>    vpc-file-csi-driver       = optional(string)<br/>    static-route              = optional(string)<br/>    cluster-autoscaler        = optional(string)<br/>    vpc-block-csi-driver      = optional(string)<br/>  })</pre> | `null` | no |
-| <a name="input_allow_default_worker_pool_replacement"></a> [allow\_default\_worker\_pool\_replacement](#input\_allow\_default\_worker\_pool\_replacement) | (Advanced users) Set to true to allow the module to recreate a default worker pool. Only use in the case where you are getting an error indicating that the default worker pool cannot be replaced on apply. Once the default worker pool is handled as a stand-alone ibm\_container\_vpc\_worker\_pool, if you wish to make any change to the default worker pool which requires the re-creation of the default pool set this variable to true. | `bool` | `false` | no |
+| <a name="input_allow_default_worker_pool_replacement"></a> [allow\_default\_worker\_pool\_replacement](#input\_allow\_default\_worker\_pool\_replacement) | (Advanced users) Set to true to allow the module to recreate a default worker pool. If you wish to make any change to the default worker pool which requires the re-creation of the default pool follow these [steps](https://github.com/terraform-ibm-modules/terraform-ibm-ocp-all-inclusive?tab=readme-ov-file#important-considerations-for-terraform-and-default-worker-pool). | `bool` | `false` | no |
 | <a name="input_attach_ibm_managed_security_group"></a> [attach\_ibm\_managed\_security\_group](#input\_attach\_ibm\_managed\_security\_group) | Whether to attach the IBM-defined default security group (named `kube-<clusterid>`) to all worker nodes. Applies only if `custom_security_group_ids` is set. | `bool` | `true` | no |
 | <a name="input_cbr_rules"></a> [cbr\_rules](#input\_cbr\_rules) | The list of context-based restriction rules to create. | <pre>list(object({<br/>    description = string<br/>    account_id  = string<br/>    rule_contexts = list(object({<br/>      attributes = optional(list(object({<br/>        name  = string<br/>        value = string<br/>    }))) }))<br/>    enforcement_mode = string<br/>    tags = optional(list(object({<br/>      name  = string<br/>      value = string<br/>    })), [])<br/>    operations = optional(list(object({<br/>      api_types = list(object({<br/>        api_type_id = string<br/>      }))<br/>    })))<br/>  }))</pre> | `[]` | no |
 | <a name="input_cloud_logs_ingress_endpoint"></a> [cloud\_logs\_ingress\_endpoint](#input\_cloud\_logs\_ingress\_endpoint) | The host for IBM Cloud Logs ingestion. It is required if `logs_agent_enabled` is set to `true`. Ensure you use the ingress endpoint. See https://cloud.ibm.com/docs/cloud-logs?topic=cloud-logs-endpoints_ingress. | `string` | `null` | no |
@@ -219,7 +196,6 @@ No resources.
 | <a name="input_existing_trusted_profile_id"></a> [existing\_trusted\_profile\_id](#input\_existing\_trusted\_profile\_id) | The ID of an existing trusted profile which will be used by the Logs agent. Ensure it has the required permissions to send logs to the Cloud Logs instance. This will only be used if logs\_agent\_iam\_mode is set to TrustedProfile. If no value is passed, a new trusted profile will be created and used. | `string` | `null` | no |
 | <a name="input_force_delete_storage"></a> [force\_delete\_storage](#input\_force\_delete\_storage) | Delete attached storage when destroying the cluster - Default: false | `bool` | `false` | no |
 | <a name="input_ignore_worker_pool_size_changes"></a> [ignore\_worker\_pool\_size\_changes](#input\_ignore\_worker\_pool\_size\_changes) | Enable if using worker autoscaling. Stops Terraform managing worker count | `bool` | `false` | no |
-| <a name="input_import_default_worker_pool_on_create"></a> [import\_default\_worker\_pool\_on\_create](#input\_import\_default\_worker\_pool\_on\_create) | (Advanced users) Whether to handle the default worker pool as a stand-alone ibm\_container\_vpc\_worker\_pool resource on cluster creation. Only set to false if you understand the implications of managing the default worker pool as part of the cluster resource. Set to true to import the default worker pool as a separate resource. Set to false to manage the default worker pool as part of the cluster resource. | `bool` | `true` | no |
 | <a name="input_kms_account_id"></a> [kms\_account\_id](#input\_kms\_account\_id) | Id of the account that owns the KMS instance to encrypt the cluster. It is only required if the KMS instance is in another account. | `string` | `null` | no |
 | <a name="input_kms_use_private_endpoint"></a> [kms\_use\_private\_endpoint](#input\_kms\_use\_private\_endpoint) | Set as true to use the Private endpoint when communicating between cluster and KMS instance. | `bool` | `true` | no |
 | <a name="input_kms_wait_for_apply"></a> [kms\_wait\_for\_apply](#input\_kms\_wait\_for\_apply) | Set true to make terraform wait until KMS is applied to master and it is ready and deployed. Default value is true. | `bool` | `true` | no |
