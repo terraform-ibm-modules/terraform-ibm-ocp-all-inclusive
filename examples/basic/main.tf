@@ -154,7 +154,7 @@ module "vpc" {
 
 module "observability_instances" {
   source                         = "terraform-ibm-modules/observability-instances/ibm"
-  version                        = "3.4.3"
+  version                        = "3.5.0"
   region                         = var.region
   resource_group_id              = module.resource_group.resource_group_id
   cloud_logs_instance_name       = "${var.prefix}-icl"
