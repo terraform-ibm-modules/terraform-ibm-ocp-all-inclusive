@@ -23,7 +23,7 @@ locals {
 
 module "ocp_base" {
   source                                = "terraform-ibm-modules/base-ocp-vpc/ibm"
-  version                               = "3.39.0"
+  version                               = "3.41.5"
   cluster_name                          = var.cluster_name
   ocp_version                           = var.ocp_version
   resource_group_id                     = var.resource_group_id
@@ -33,6 +33,8 @@ module "ocp_base" {
   force_delete_storage                  = var.force_delete_storage
   vpc_id                                = var.vpc_id
   vpc_subnets                           = var.vpc_subnets
+  pod_subnet_cidr                       = var.pod_subnet_cidr
+  service_subnet_cidr                   = var.service_subnet_cidr
   worker_pools                          = var.worker_pools
   cluster_ready_when                    = var.cluster_ready_when
   cos_name                              = var.cos_name
@@ -52,7 +54,6 @@ module "ocp_base" {
   cluster_config_endpoint_type          = var.cluster_config_endpoint_type
   enable_registry_storage               = var.enable_registry_storage
   disable_outbound_traffic_protection   = var.disable_outbound_traffic_protection
-  import_default_worker_pool_on_create  = var.import_default_worker_pool_on_create
   allow_default_worker_pool_replacement = var.allow_default_worker_pool_replacement
   cbr_rules                             = var.cbr_rules
   use_private_endpoint                  = var.use_private_endpoint
@@ -72,7 +73,7 @@ locals {
 module "trusted_profile" {
   count                       = (var.logs_agent_enabled && var.logs_agent_iam_mode == "TrustedProfile" && var.existing_trusted_profile_id == null) ? 1 : 0
   source                      = "terraform-ibm-modules/trusted-profile/ibm"
-  version                     = "1.0.4"
+  version                     = "1.0.5"
   trusted_profile_name        = "${var.cluster_name}-trusted-profile"
   trusted_profile_description = "Logs agent Trusted Profile"
   # As a `Sender`, you can send logs to your IBM Cloud Logs service instance - but not query or tail logs. This role is meant to be used by agents and routers sending logs.
@@ -102,7 +103,7 @@ module "trusted_profile" {
 module "observability_agents" {
   count                        = var.logs_agent_enabled == true || var.cloud_monitoring_enabled == true ? 1 : 0
   source                       = "terraform-ibm-modules/observability-agents/ibm"
-  version                      = "2.3.3"
+  version                      = "2.5.0"
   cluster_id                   = module.ocp_base.cluster_id
   cluster_resource_group_id    = var.resource_group_id
   cluster_config_endpoint_type = var.cluster_config_endpoint_type

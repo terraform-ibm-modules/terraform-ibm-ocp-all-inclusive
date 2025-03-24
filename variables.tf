@@ -30,6 +30,18 @@ variable "vpc_subnets" {
   description = "Subnet metadata by VPC tier."
 }
 
+variable "pod_subnet_cidr" {
+  type        = string
+  default     = null
+  description = "Specify a custom subnet CIDR to provide private IP addresses for pods. The subnet must have a CIDR of at least `/23` or larger. Default value is `172.30.0.0/16` when the variable is set to `null`."
+}
+
+variable "service_subnet_cidr" {
+  type        = string
+  default     = null
+  description = "Specify a custom subnet CIDR to provide private IP addresses for services. The subnet must be at least `/24` or larger. Default value is `172.21.0.0/16` when the variable is set to `null`."
+}
+
 variable "verify_worker_network_readiness" {
   type        = bool
   description = "By setting this to true, a script will run kubectl commands to verify that all worker nodes can communicate successfully with the master. If the runtime does not have access to the kube cluster to run kubectl commands, this should be set to false."
@@ -285,16 +297,9 @@ variable "disable_outbound_traffic_protection" {
   default     = false
 }
 
-variable "import_default_worker_pool_on_create" {
-  type        = bool
-  description = "(Advanced users) Whether to handle the default worker pool as a stand-alone ibm_container_vpc_worker_pool resource on cluster creation. Only set to false if you understand the implications of managing the default worker pool as part of the cluster resource. Set to true to import the default worker pool as a separate resource. Set to false to manage the default worker pool as part of the cluster resource."
-  default     = true
-  nullable    = false
-}
-
 variable "allow_default_worker_pool_replacement" {
   type        = bool
-  description = "(Advanced users) Set to true to allow the module to recreate a default worker pool. Only use in the case where you are getting an error indicating that the default worker pool cannot be replaced on apply. Once the default worker pool is handled as a stand-alone ibm_container_vpc_worker_pool, if you wish to make any change to the default worker pool which requires the re-creation of the default pool set this variable to true."
+  description = "(Advanced users) Set to true to allow the module to recreate a default worker pool. If you wish to make any change to the default worker pool which requires the re-creation of the default pool follow these [steps](https://github.com/terraform-ibm-modules/terraform-ibm-ocp-all-inclusive?tab=readme-ov-file#important-considerations-for-terraform-and-default-worker-pool)."
   default     = false
   nullable    = false
 }
