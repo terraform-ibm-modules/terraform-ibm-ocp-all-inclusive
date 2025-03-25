@@ -23,7 +23,7 @@ locals {
 
 module "ocp_base" {
   source                                = "terraform-ibm-modules/base-ocp-vpc/ibm"
-  version                               = "3.41.5"
+  version                               = "3.41.7"
   cluster_name                          = var.cluster_name
   ocp_version                           = var.ocp_version
   resource_group_id                     = var.resource_group_id
@@ -57,6 +57,7 @@ module "ocp_base" {
   allow_default_worker_pool_replacement = var.allow_default_worker_pool_replacement
   cbr_rules                             = var.cbr_rules
   use_private_endpoint                  = var.use_private_endpoint
+  enable_ocp_console                    = var.enable_ocp_console
 }
 
 ##############################################################################
