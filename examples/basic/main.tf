@@ -154,7 +154,7 @@ module "vpc" {
 
 module "observability_instances" {
   source                         = "terraform-ibm-modules/observability-instances/ibm"
-  version                        = "3.4.3"
+  version                        = "3.5.0"
   region                         = var.region
   resource_group_id              = module.resource_group.resource_group_id
   cloud_logs_instance_name       = "${var.prefix}-icl"
@@ -176,7 +176,7 @@ locals {
 
 module "key_protect_all_inclusive" {
   source                    = "terraform-ibm-modules/kms-all-inclusive/ibm"
-  version                   = "4.21.2"
+  version                   = "4.21.3"
   resource_group_id         = module.resource_group.resource_group_id
   region                    = var.region
   key_protect_instance_name = "${var.prefix}-kp"
@@ -235,6 +235,5 @@ module "ocp_all_inclusive" {
   addons                           = local.addons
   disable_public_endpoint          = var.disable_public_endpoint
   cloud_monitoring_agent_tags      = var.resource_tags
-
-  use_private_endpoint = false
+  use_private_endpoint             = false
 }
