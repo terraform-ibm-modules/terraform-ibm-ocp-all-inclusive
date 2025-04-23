@@ -3,6 +3,8 @@
 ##############################################################################
 
 locals {
+  # tflint-ignore: terraform_unused_declarations
+  validate_kp_inputs = (var.existing_kms_instance_guid == null && var.existing_kms_root_key_id != null) || (var.existing_kms_root_key_id != null && var.existing_kms_instance_guid == null) ? tobool("To enable encryption, values must be passed for both var.existing_kms_instance_guid and var.existing_kms_root_key_id. Set them both to null to create cluster without encryption (not recommended).") : true
   # If encryption enabled generate kms config to be passed to cluster
   kms_config = var.existing_kms_instance_guid != null && var.existing_kms_root_key_id != null ? {
     crk_id           = var.existing_kms_root_key_id

@@ -327,10 +327,6 @@ variable "existing_kms_instance_guid" {
   type        = string
   description = "The GUID of an existing KMS instance which will be used for cluster encryption. If no value passed, cluster data is stored in the Kubernetes etcd, which ends up on the local disk of the Kubernetes master (not recommended)."
   default     = null
-  validation {
-    condition     = (var.existing_kms_instance_guid == null) == (var.existing_kms_root_key_id == null)
-    error_message = "To enable encryption, both 'existing_kms_instance_guid' and 'existing_kms_root_key_id' must be set. Set both to null to disable encryption (not recommended)."
-  }
 }
 
 variable "existing_kms_root_key_id" {
