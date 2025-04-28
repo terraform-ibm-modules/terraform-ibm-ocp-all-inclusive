@@ -105,7 +105,7 @@ locals {
 
 module "vpc" {
   source            = "terraform-ibm-modules/landing-zone-vpc/ibm"
-  version           = "7.23.1"
+  version           = "7.23.3"
   resource_group_id = module.resource_group.resource_group_id
   region            = var.region
   prefix            = var.prefix
@@ -154,7 +154,7 @@ module "vpc" {
 
 module "observability_instances" {
   source                         = "terraform-ibm-modules/observability-instances/ibm"
-  version                        = "3.5.1"
+  version                        = "3.5.2"
   region                         = var.region
   resource_group_id              = module.resource_group.resource_group_id
   cloud_logs_instance_name       = "${var.prefix}-icl"
