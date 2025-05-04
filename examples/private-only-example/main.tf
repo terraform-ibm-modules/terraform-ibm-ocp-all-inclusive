@@ -105,7 +105,7 @@ locals {
 
 module "vpc" {
   source            = "terraform-ibm-modules/landing-zone-vpc/ibm"
-  version           = "7.23.4"
+  version           = "7.23.5"
   resource_group_id = module.resource_group.resource_group_id
   region            = var.region
   prefix            = var.prefix
