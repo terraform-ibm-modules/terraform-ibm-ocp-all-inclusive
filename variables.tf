@@ -207,6 +207,10 @@ variable "cos_name" {
   type        = string
   description = "Name of the COS instance to provision for OpenShift internal registry storage. New instance only provisioned if 'enable_registry_storage' is true and 'use_existing_cos' is false. Default: '<cluster_name>_cos'"
   default     = null
+  validation {
+    condition     = var.use_existing_cos || var.cos_name != null
+    error_message = "A value must be passed for 'cos_name' if 'use_existing_cos' is false."
+  }
 }
 
 variable "use_existing_cos" {
@@ -219,6 +223,10 @@ variable "existing_cos_id" {
   type        = string
   description = "The COS id of an already existing COS instance to use for OpenShift internal registry storage. Only required if 'enable_registry_storage' and 'use_existing_cos' are true"
   default     = null
+  validation {
+    condition     = !var.use_existing_cos || var.existing_cos_id != null
+    error_message = "A value must be passed for 'existing_cos_id' if 'use_existing_cos' is true."
+  }
 }
 
 variable "enable_registry_storage" {
