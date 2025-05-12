@@ -98,7 +98,7 @@ module "trusted_profile" {
 module "observability_agents" {
   count                        = var.logs_agent_enabled == true || var.cloud_monitoring_enabled == true ? 1 : 0
   source                       = "terraform-ibm-modules/observability-agents/ibm"
-  version                      = "2.7.0"
+  version                      = "2.7.2"
   cluster_id                   = module.ocp_base.cluster_id
   cluster_resource_group_id    = var.resource_group_id
   cluster_config_endpoint_type = var.cluster_config_endpoint_type
