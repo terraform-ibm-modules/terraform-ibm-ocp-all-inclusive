@@ -9,6 +9,14 @@
 [![Renovate enabled](https://img.shields.io/badge/renovate-enabled-brightgreen.svg)](https://renovatebot.com/)
 [![semantic-release](https://img.shields.io/badge/%20%20%F0%9F%93%A6%F0%9F%9A%80-semantic--release-e10079.svg)](https://github.com/semantic-release/semantic-release)
 
+---
+🕸️ Archived: This repo is no longer maintained and is archived. All of the functionality is available in the following modules:<br><br>
+    - [terraform-ibm-base-ocp-vpc](https://github.com/terraform-ibm-modules/terraform-ibm-base-ocp-vpc) - cluster provisioning<br>
+    - [terraform-ibm-logs-agent](https://github.com/terraform-ibm-modules/terraform-ibm-logs-agent)  - logs agent provisioning<br>
+    - [terraform-ibm-monitoring-agent](https://github.com/terraform-ibm-modules/terraform-ibm-monitoring-agent) - monitoring agent provisioning<br>
+    - [terraform-ibm-trusted-profile](https://github.com/terraform-ibm-modules/terraform-ibm-trusted-profile) - trusted profile provisioning (for logs agent)<br>
+---
+
 This module is a wrapper module that groups the following modules:
 - [base-ocp-vpc-module](https://github.com/terraform-ibm-modules/terraform-ibm-base-ocp-vpc) - Provisions a base (bare) Red Hat OpenShift Container Platform cluster on VPC Gen2 (supports passing Key Protect details to encrypt cluster).
 - [observability-agents-module](https://github.com/terraform-ibm-modules/terraform-ibm-observability-agents) - Deploys Logs Agent and Cloud Monitoring agents to a cluster.
